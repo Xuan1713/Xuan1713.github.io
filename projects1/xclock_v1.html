@@ -1,0 +1,3597 @@
+<!--
+时钟 Xclock
+版本: v1.0.0
+作者: 轩_1713
+状态: 开发中 - 欢迎反馈与贡献
+描述: 多功能时钟，集成农历、天气、目标管理，适配触屏设备
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>时钟 v1.0.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3148ad;
+            --accent-color: #4cc9f0;
+            --background-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --text-secondary: #718096;
+            --border-color: #e2e8f0;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --radius: 6px;
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            --font-size-xs: 8px;
+            --font-size-sm: 9px;
+            --font-size-base: 10px;
+            --font-size-lg: 11px;
+            --font-size-xl: 13px;
+            --spacing-xs: 1px;
+            --spacing-sm: 3px;
+            --spacing-md: 4px;
+            --spacing-lg: 6px;
+            --header-height: 34px;
+            --card-min-height: 125px;
+            --clock-height: 70px;
+            --grid-gap: 4px;
+            --weather-primary: #3b82f6;
+            --weather-secondary: #1d4ed8;
+            --weather-accent: #60a5fa;
+            --weather-warning: #f59e0b;
+            --weather-danger: #ef4444;
+            --weather-success: #10b981;
+        }
+        
+        .dark-theme {
+            --primary-color: #5e72e4;
+            --secondary-color: #3148ad;
+            --accent-color: #64b5f6;
+            --background-color: #121826;
+            --card-bg: #1e293b;
+            --text-color: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            --weather-primary: #60a5fa;
+            --weather-secondary: #3b82f6;
+            --weather-accent: #93c5fd;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: 1.1;
+            min-height: 100vh;
+            padding: var(--spacing-sm);
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            height: calc(100vh - 8px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+            padding: var(--spacing-xs) 0;
+            height: var(--header-height);
+            flex-shrink: 0;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            min-width: 0;
+        }
+        
+        .header h1 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--primary-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: var(--font-size-xs);
+            padding: 1px 3px;
+            border-radius: 6px;
+            background: var(--border-color);
+            white-space: nowrap;
+        }
+        
+        .api-status i {
+            font-size: 5px;
+        }
+        
+        .api-status.online {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+        
+        .api-status.offline {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .api-status.loading {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .api-status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: var(--font-size-base);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .icon-btn:active {
+            background-color: rgba(67, 97, 238, 0.1);
+            transform: scale(0.95);
+        }
+        
+        /* 时钟区域 */
+        .clock-container {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow);
+            color: white;
+            position: relative;
+            flex-shrink: 0;
+            min-height: var(--clock-height);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .clock-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1px;
+        }
+        
+        .digital-clock {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-variant-numeric: tabular-nums;
+            font-family: 'SF Mono', 'Monaco', 'Roboto Mono', monospace;
+        }
+        
+        /* 秒进度环 */
+        .seconds-ring {
+            width: 38px;
+            height: 38px;
+            position: relative;
+        }
+        
+        .seconds-ring-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        
+        .seconds-ring-circle {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 2.5;
+        }
+        
+        .seconds-ring-progress {
+            fill: none;
+            stroke: white;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.05s linear;
+        }
+        
+        .seconds-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 9px;
+            font-weight: 600;
+            color: white;
+            font-family: 'SF Mono', 'Monaco', 'Roboto Mono', monospace;
+        }
+        
+        .date-display {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            font-size: var(--font-size-xs);
+            opacity: 0.9;
+        }
+        
+        /* 卡片网格 */
+        .cards-container {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--grid-gap);
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: var(--spacing-sm);
+        }
+        
+        @media (min-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) and (orientation: landscape) {
+            .cards-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        /* 卡片 - 进一步压缩 */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: var(--spacing-sm);
+            box-shadow: var(--shadow);
+            min-height: var(--card-min-height);
+            border: 1px solid var(--border-color);
+            transition: transform 0.1s;
+            display: flex;
+            flex-direction: column;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .card:active {
+            transform: translateY(1px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: 2px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .card-icon {
+            width: 16px;
+            height: 16px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-sm);
+            font-size: 8px;
+            flex-shrink: 0;
+        }
+        
+        .card-title {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .card-content {
+            font-size: var(--font-size-sm);
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 两列布局 */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm);
+            height: 100%;
+        }
+        
+        .column {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* 紧凑的列表项 */
+        .compact-item {
+            padding: 1px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        
+        .compact-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-title {
+            font-weight: 500;
+            margin-bottom: 0;
+            font-size: var(--font-size-sm);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+        }
+        
+        .item-subtitle {
+            font-size: 7px;
+            color: var(--text-secondary);
+            line-height: 1.1;
+        }
+        
+        /* 改进1：精确倒计时样式 - 橙色较大字体 */
+        .precise-countdown {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--warning-color);
+            font-family: 'SF Mono', 'Monaco', 'Roboto Mono', monospace;
+            margin: 2px 0;
+            line-height: 1.3;
+            text-align: center;
+        }
+        
+        /* 进度条 - 改进：显示百分比 */
+        .progress-container {
+            margin: 2px 0;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1px;
+            font-size: var(--font-size-xs);
+            line-height: 1.1;
+        }
+        
+        .progress-text {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        
+        .progress-values {
+            display: flex;
+            gap: 4px;
+            font-family: 'SF Mono', 'Monaco', 'Roboto Mono', monospace;
+        }
+        
+        .progress-value {
+            color: var(--text-secondary);
+        }
+        
+        .progress-percent {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 3px;
+            background: var(--border-color);
+            border-radius: 1px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 1px;
+            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        
+        /* 迷你日历 */
+        .mini-calendar {
+            font-size: var(--font-size-sm);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+        
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            margin-bottom: 1px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 8px;
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5px;
+            flex: 1;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1px;
+            font-size: 8px;
+            cursor: default;
+        }
+        
+        .calendar-day.today {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .calendar-day.other-month {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+        
+        /* 天气卡片特定样式 */
+        .weather-alarm {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+            padding: 1px 4px;
+            border-radius: 10px;
+            font-size: var(--font-size-xs);
+            margin-left: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .weather-alarm:active {
+            background: rgba(239, 68, 68, 0.3);
+            transform: scale(0.95);
+        }
+        
+        .weather-alarm i {
+            font-size: 7px;
+            margin-right: 1px;
+        }
+        
+        .weather-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+        
+        .weather-temp-icon {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .weather-temp {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--weather-primary);
+            font-family: 'SF Mono', 'Monaco', 'Roboto Mono', monospace;
+            line-height: 1;
+        }
+        
+        .weather-icon {
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .weather-condition {
+            font-size: var(--font-size-sm);
+            color: var(--text-color);
+            font-weight: 500;
+            line-height: 1.2;
+        }
+        
+        .weather-details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            margin-top: 3px;
+        }
+        
+        .weather-detail-item {
+            font-size: var(--font-size-xs);
+            line-height: 1.2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .weather-detail-label {
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+        
+        .weather-detail-value {
+            color: var(--text-color);
+            font-weight: 500;
+            text-align: right;
+            flex-shrink: 0;
+            max-width: 50%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* 温度折线图容器 */
+        .temp-chart-container {
+            height: 60px;
+            position: relative;
+            margin: 3px 0;
+        }
+        
+        .temp-chart {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        
+        .chart-line {
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        .chart-line-high {
+            stroke: var(--weather-warning);
+        }
+        
+        .chart-line-low {
+            stroke: var(--weather-accent);
+        }
+        
+        .chart-days {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3px;
+            padding-top: 2px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .chart-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .chart-day-icon {
+            width: 14px;
+            height: 14px;
+            margin-bottom: 1px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .chart-day-date {
+            font-size: 7px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+        
+        .chart-day-temp {
+            font-size: 8px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 1px;
+        }
+        
+        .chart-day-temp-high {
+            color: var(--weather-warning);
+        }
+        
+        .chart-day-temp-low {
+            color: var(--weather-accent);
+        }
+        
+        /* 预警模态框 */
+        .alarm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: var(--spacing-sm);
+        }
+        
+        .alarm-modal.show {
+            display: flex;
+        }
+        
+        .alarm-content {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 300px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .alarm-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .alarm-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+        
+        .alarm-close {
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .alarm-close:active {
+            background: var(--border-color);
+        }
+        
+        .alarm-list {
+            padding: var(--spacing-md);
+        }
+        
+        .alarm-item {
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .alarm-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .alarm-item-title {
+            color: var(--danger-color);
+            font-weight: 600;
+            margin-bottom: 2px;
+            font-size: var(--font-size-base);
+        }
+        
+        .alarm-item-content {
+            font-size: var(--font-size-sm);
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+        
+        .alarm-item-time {
+            color: var(--text-secondary);
+            font-size: var(--font-size-xs);
+        }
+        
+        /* 更新时间显示 */
+        .api-time-display {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            margin-top: 3px;
+            text-align: right;
+        }
+        
+        /* 工具类 */
+        .text-center { text-align: center; }
+        .text-small { font-size: var(--font-size-sm); }
+        .text-xs { font-size: var(--font-size-xs); }
+        .text-xl { font-size: var(--font-size-xl); }
+        .mt-1 { margin-top: var(--spacing-sm); }
+        .mb-1 { margin-bottom: var(--spacing-sm); }
+        .hidden { display: none; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-1 { gap: var(--spacing-sm); }
+        .w-full { width: 100%; }
+        
+        /* 多行文本截断 */
+        .multi-line-truncate {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.2;
+            font-size: var(--font-size-sm);
+        }
+        
+        /* 单行截断 */
+        .single-line-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+        }
+        
+        /* 加载状态 */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .loading:after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        /* 设置模态框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: var(--spacing-sm);
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .modal-close:active {
+            background: var(--border-color);
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 var(--spacing-md);
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .tab-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            white-space: nowrap;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .tab-btn:active {
+            opacity: 0.7;
+        }
+        
+        .tab-content {
+            padding: var(--spacing-md);
+        }
+        
+        .setting-section {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .setting-section h4 {
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-base);
+            color: var(--text-color);
+        }
+        
+        .setting-item {
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+        }
+        
+        .setting-label {
+            margin-left: var(--spacing-sm);
+            flex-grow: 1;
+            font-size: var(--font-size-sm);
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .3s;
+            border-radius: 18px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 12px;
+            width: 12px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(16px);
+        }
+        
+        .input-group {
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 2px;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: var(--font-size-base);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        .input-group textarea {
+            min-height: 50px;
+            resize: vertical;
+            font-family: monospace;
+            font-size: var(--font-size-xs);
+        }
+        
+        .input-group input[type="datetime-local"] {
+            font-size: var(--font-size-sm);
+        }
+        
+        /* 按钮 */
+        .btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: var(--radius);
+            background: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .btn:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+        
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-small {
+            padding: 2px 5px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+        
+        /* 排序按钮样式 */
+        .sort-btn {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--border-color);
+            border: none;
+            border-radius: 3px;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 8px;
+            transition: all 0.2s;
+        }
+        
+        .sort-btn:active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .sort-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* 自定义字体大小输入框 */
+        .font-size-input {
+            width: 50px;
+            text-align: center;
+            margin: 0 3px;
+        }
+        
+        /* 移除焦点样式 */
+        *:focus { outline: none !important; }
+        input:focus, button:focus, textarea:focus { outline: none !important; box-shadow: none !important; }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 3px;
+            height: 3px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+            border-radius: 2px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 2px;
+        }
+        
+        /* 立即请求API按钮 */
+        .refresh-btn {
+            background: none;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: var(--font-size-base);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            position: relative;
+        }
+        
+        .refresh-btn:active {
+            background-color: rgba(67, 97, 238, 0.1);
+            transform: scale(0.95) rotate(180deg);
+        }
+        
+        .refresh-btn.refreshing i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 预加载状态提示 */
+        .preload-notice {
+            position: absolute;
+            bottom: 2px;
+            right: 5px;
+            font-size: 6px;
+            opacity: 0.6;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        
+        /* 天气刷新按钮 */
+        .weather-refresh-btn {
+            background: none;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--weather-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: var(--font-size-base);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .weather-refresh-btn:active {
+            background-color: rgba(59, 130, 246, 0.1);
+            transform: scale(0.95);
+        }
+        
+        .weather-refresh-btn.refreshing i {
+            animation: spin 1s linear infinite;
+        }
+        
+        /* API状态行 */
+        .api-status-row {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            margin-top: 2px;
+        }
+        
+        /* 新增：Toast提示样式 */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 300px;
+        }
+        
+        .toast {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 10px 14px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastSlideIn 0.3s ease;
+            max-width: 100%;
+        }
+        
+        .toast.hiding {
+            animation: toastSlideOut 0.3s ease forwards;
+        }
+        
+        .toast-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .toast.info .toast-icon { color: var(--primary-color); }
+        .toast.success .toast-icon { color: var(--success-color); }
+        .toast.warning .toast-icon { color: var(--warning-color); }
+        .toast.error .toast-icon { color: var(--danger-color); }
+        
+        .toast-message {
+            font-size: var(--font-size-sm);
+            flex-grow: 1;
+            word-break: break-word;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 2px;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .toast-close:active {
+            background: var(--border-color);
+        }
+        
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes toastSlideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        /* 返回主页按钮 */
+        .home-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .home-button a {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .home-button a:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-left">
+                <h1>时钟 v1.0.0</h1>
+                <div class="api-status" id="api-status">
+                    <i class="fas fa-circle"></i>
+                    <span>未连接</span>
+                </div>
+                <div class="api-status-row">
+                    <div class="text-xs" id="api-time"></div>
+                    <div class="text-xs" id="weather-time"></div>
+                </div>
+            </div>
+            <div class="header-controls">
+                <button class="weather-refresh-btn" id="refresh-weather" title="刷新天气数据">
+                    <i class="fas fa-cloud-sun"></i>
+                </button>
+                <button class="refresh-btn" id="refresh-api" title="立即请求日历API数据">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="icon-btn" id="theme-toggle" title="切换主题">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="icon-btn" id="settings-btn" title="设置">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 时钟区域 -->
+        <div class="clock-container">
+            <div class="clock-main">
+                <div class="digital-clock" id="digital-clock">00:00:00</div>
+                <div class="seconds-ring">
+                    <svg class="seconds-ring-svg" viewBox="0 0 36 36">
+                        <path class="seconds-ring-circle"
+                            d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <path class="seconds-ring-progress" id="seconds-ring-progress"
+                            stroke-dasharray="100, 100"
+                            d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                    </svg>
+                    <div class="seconds-number" id="seconds-number">00</div>
+                </div>
+            </div>
+            <div class="date-display">
+                <div id="current-date">加载中...</div>
+                <div id="lunar-date">加载中...</div>
+                <div class="preload-notice" id="preload-notice"></div>
+            </div>
+        </div>
+        
+        <!-- 卡片区域 -->
+        <div class="cards-container">
+            <div class="cards-grid" id="cards-container">
+                <!-- 卡片动态生成 -->
+            </div>
+        </div>
+        
+        <!-- 预警信息模态框 -->
+        <div class="alarm-modal" id="alarm-modal">
+            <div class="alarm-content">
+                <div class="alarm-header">
+                    <h3 class="alarm-title">天气预警</h3>
+                    <button class="alarm-close" id="close-alarm">&times;</button>
+                </div>
+                <div class="alarm-list" id="alarm-list">
+                    <!-- 预警列表动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 完整的设置模态框 -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">设置</h3>
+                <button class="modal-close" id="close-settings">&times;</button>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="api">日历API配置</button>
+                <button class="tab-btn" data-tab="weather-api">天气API配置</button>
+                <button class="tab-btn" data-tab="debug">日历API调试</button>
+                <button class="tab-btn" data-tab="weather-debug">天气API调试</button>
+                <button class="tab-btn" data-tab="targets">时间点管理</button>
+                <button class="tab-btn" data-tab="layout">布局管理</button>
+                <button class="tab-btn" data-tab="theme">主题设置</button>
+                <button class="tab-btn" data-tab="about">关于本程序</button>
+            </div>
+            
+            <div class="tab-content" id="api-tab">
+                <div class="setting-section">
+                    <h4>日历API配置</h4>
+                    <div class="input-group">
+                        <label for="api-key">API密钥（从https://api.shwgij.com/申请）</label>
+                        <input type="text" id="api-key" placeholder="请输入API密钥">
+                    </div>
+                    <div class="input-group">
+                        <label for="api-url">API地址</label>
+                        <input type="text" id="api-url" value="https://api.shwgij.com/api/lunars/lunarpro" readonly>
+                    </div>
+                    <button class="btn" id="test-api">测试连接</button>
+                    <div class="text-xs mt-1" id="api-test-result"></div>
+                </div>
+                
+                <div class="setting-section">
+                    <h4>数据预加载</h4>
+                    <div class="setting-item">
+                        <label class="switch">
+                            <input type="checkbox" id="preload-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span class="setting-label">启用次日数据预加载</span>
+                    </div>
+                    <div class="text-xs text-secondary">
+                        当前预加载状态: <span id="preload-status-text">未加载</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="weather-api-tab" style="display: none;">
+                <div class="setting-section">
+                    <h4>天气API配置</h4>
+                    <div class="input-group">
+                        <label for="weather-api-key">天气API密钥（从https://api.shwgij.com/申请）</label>
+                        <input type="text" id="weather-api-key" placeholder="请输入天气API密钥">
+                    </div>
+                    <div class="input-group">
+                        <label for="weather-api-url">API地址</label>
+                        <input type="text" id="weather-api-url" value="https://api.shwgij.com/api/tianqi/tianqi" readonly>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>地区设置</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-sm);">
+                            <input type="text" id="weather-province" placeholder="省" value="">
+                            <input type="text" id="weather-city" placeholder="市" value="">
+                            <input type="text" id="weather-county" placeholder="县/区" value="">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="weather-refresh-interval">自动刷新间隔</label>
+                        <select id="weather-refresh-interval">
+                            <option value="0">不自动请求</option>
+                            <option value="5">5分钟</option>
+                            <option value="15" selected>15分钟</option>
+                            <option value="30">30分钟</option>
+                            <option value="60">1小时</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn" id="test-weather-api">测试天气API</button>
+                    <div class="text-xs mt-1" id="weather-api-test-result"></div>
+                </div>
+                
+                <div class="setting-section">
+                    <div class="text-xs text-secondary">
+                        上次请求时间: <span id="weather-last-request">从未请求</span><br>
+                        距离上次请求: <span id="weather-time-since">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="debug-tab" style="display: none;">
+                <div class="setting-section">
+                    <h4>日历API调试界面</h4>
+                    <div class="input-group">
+                        <label for="debug-date">请求日期</label>
+                        <input type="date" id="debug-date">
+                    </div>
+                    <div class="input-group">
+                        <label for="debug-params">额外参数</label>
+                        <input type="text" id="debug-params" placeholder="&format=json&type=1">
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-small" id="debug-today">刷新今日</button>
+                        <button class="btn btn-small" id="debug-tomorrow">刷新明日</button>
+                        <button class="btn btn-small" id="debug-custom">自定义请求</button>
+                    </div>
+                </div>
+                
+                <div class="setting-section">
+                    <label class="text-xs text-secondary">今日数据（当前缓存）:</label>
+                    <textarea id="debug-today-response" readonly rows="4" placeholder="无缓存数据" class="w-full"></textarea>
+                </div>
+                
+                <div class="setting-section">
+                    <label class="text-xs text-secondary">明日数据（当前缓存）:</label>
+                    <textarea id="debug-tomorrow-response" readonly rows="4" placeholder="无缓存数据" class="w-full"></textarea>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="weather-debug-tab" style="display: none;">
+                <div class="setting-section">
+                    <h4>天气API调试界面</h4>
+                    <div class="btn-group">
+                        <button class="btn btn-small" id="weather-debug-now">立即请求</button>
+                        <button class="btn btn-small" id="weather-clear-cache">清除缓存</button>
+                    </div>
+                </div>
+                
+                <div class="setting-section">
+                    <label class="text-xs text-secondary">当前天气数据:</label>
+                    <textarea id="weather-debug-response" readonly rows="6" placeholder="无缓存数据" class="w-full"></textarea>
+                </div>
+                
+                <div class="setting-section">
+                    <label class="text-xs text-secondary">缓存信息:</label>
+                    <div class="text-xs">
+                        缓存时间: <span id="weather-cache-time">无缓存</span><br>
+                        缓存大小: <span id="weather-cache-size">0 KB</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="targets-tab" style="display: none;">
+                <div class="setting-section">
+                    <h4>时间点（目标）管理</h4>
+                    <div id="targets-list" style="max-height: 150px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius); padding: var(--spacing-sm); margin-bottom: var(--spacing-md);">
+                        <!-- 目标列表 -->
+                    </div>
+                </div>
+                
+                <div class="setting-section">
+                    <h4>添加新目标</h4>
+                    <div class="input-group">
+                        <label for="target-name">目标名称</label>
+                        <input type="text" id="target-name" placeholder="例如：项目上线">
+                    </div>
+                    <div class="input-group">
+                        <label for="target-datetime">目标时间 (精确到秒)</label>
+                        <input type="datetime-local" id="target-datetime" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="target-desc">目标描述 (可选)</label>
+                        <textarea id="target-desc" placeholder="描述你的目标..." rows="2"></textarea>
+                    </div>
+                    <button class="btn w-full" id="add-target">添加目标</button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="layout-tab" style="display: none;">
+                <div class="setting-section">
+                    <h4>卡片布局管理</h4>
+                    <p class="text-xs text-secondary mb-1">
+                        轻触卡片旁的上下按钮调整卡片顺序
+                    </p>
+                    
+                    <div id="sortable-cards" style="min-height: 120px; margin-bottom: var(--spacing-md);">
+                        <!-- 卡片排序列表 -->
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn" id="save-layout">保存布局</button>
+                        <button class="btn btn-outline" id="reset-layout">重置为默认</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="theme-tab" style="display: none;">
+                <div class="setting-section">
+                    <h4>主题设置</h4>
+                    <div class="btn-group">
+                        <button class="btn" id="theme-light">白天模式</button>
+                        <button class="btn" id="theme-dark">黑夜模式</button>
+                    </div>
+                    
+                    <div class="setting-item mt-1">
+                        <label class="switch">
+                            <input type="checkbox" id="auto-theme">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="setting-label">跟随系统主题</span>
+                    </div>
+                </div>
+                
+                <div class="setting-section">
+                    <h4>字体大小</h4>
+                    <div class="btn-group">
+                        <button class="btn btn-small" data-font="small">小</button>
+                        <button class="btn btn-small active" data-font="normal">中</button>
+                        <button class="btn btn-small" data-font="large">大</button>
+                    </div>
+                    <div class="mt-1 flex items-center">
+                        <span class="text-xs mr-2">自定义:</span>
+                        <input type="number" id="font-size-custom" min="8" max="20" class="font-size-input" placeholder="px">
+                        <button class="btn-small ml-1" id="apply-custom-font">应用</button>
+                    </div>
+                    <div class="text-xs text-secondary mt-1">
+                        当前基准字体: <span id="current-font-size">10px</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="about-tab" style="display: none;">
+                <div class="setting-section">
+                    <h4>关于本程序</h4>
+                    <div class="mb-1">
+                        <p><strong>项目名称：</strong> 时钟</p>
+                        <p><strong>版本：</strong> 1.0.0</p>
+                        <p><strong>开发者：</strong> Xuan1713</p>
+                        <p><strong>更新时间：</strong> 2026-02-05</p>
+                        <p><strong>项目状态：</strong> 开发中，持续优化</p>
+                    </div>
+                    
+                    
+                    <div class="setting-section">
+                        <h4>开发说明</h4>
+                        <div class="text-xs text-secondary">
+                            <p>本项目在开发过程中使用了以下资源：</p>
+                            <ul style="padding-left: 15px; margin-top: 5px;">
+                                <li>日历和天气数据来自第三方API服务（https://api.shwgij.com/）</li>
+                                <li>图标使用Font Awesome免费版</li>
+                            </ul>
+                            <p class="mt-1">作者对项目的整体设计、架构、核心算法拥有著作权。</p>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid var(--border-color); padding-top: var(--spacing-md);">
+                        <p class="text-xs text-secondary">
+                            本项目暂时不考虑开源。这是一个正在开发中的项目，部分功能可能不稳定。感谢理解。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast-container" id="toast-container"></div>
+    
+    <div class="home-button">
+        <a href="../index.html">
+            <i class="fas fa-home"></i>
+            返回主页
+        </a>
+    </div>
+
+    <script>
+
+        const APP_VERSION = '1.0.0';
+        const API_BASE_URL = 'https://api.shwgij.com/api/lunars/lunarpro';
+        const WEATHER_API_BASE_URL = 'https://api.shwgij.com/api/tianqi/tianqi';
+        
+        let apiKey = '';
+        let calendarData = {};
+        let targets = [];
+        let currentTheme = 'light';
+        let cardOrder = [
+            'identity', 'solar-term', 'progress', 
+            'primary-target', 'target-list', 'mini-calendar',
+            'current-weather', 'weather-forecast'
+        ];
+        let apiCache = {};
+        let apiStatus = 'disconnected';
+        let apiLastUpdate = null;
+        let isPreloadEnabled = true;
+        let isAutoTheme = false;
+
+        let weatherApiKey = '';
+        let weatherData = null;
+        let weatherLastUpdate = null;
+        let weatherRefreshInterval = 15; 
+        let weatherAutoRefreshTimer = null;
+        let weatherStatus = 'disconnected';
+        let weatherProvince = '辽宁';
+        let weatherCity = '鞍山';
+        let weatherCounty = '铁东';
+
+        let animationId = null;
+        let lastUpdateTime = 0;
+        const UPDATE_INTERVAL = 50;
+        let targetCountdownInterval = null;
+        let progressUpdateInterval = null;
+        let lastCheckedSecond = -1;
+        let lastLocalDate = null;
+        let isCheckingDateAlignment = false;
+        let nextDayPreloaded = false;
+        let urgentPreloadScheduled = false;
+        
+        const cardsConfig = {
+            'identity': {
+                title: '今日身份',
+                icon: 'far fa-calendar-alt',
+                color: '#4361ee'
+            },
+            'solar-term': {
+                title: '节气物候',
+                icon: 'fas fa-leaf',
+                color: '#10b981'
+            },
+            'progress': {
+                title: '进度信息',
+                icon: 'fas fa-chart-line',
+                color: '#f59e0b'
+            },
+            'primary-target': {
+                title: '首要目标',
+                icon: 'fas fa-bullseye',
+                color: '#ef4444'
+            },
+            'target-list': {
+                title: '目标列表',
+                icon: 'fas fa-stream',
+                color: '#8b5cf6'
+            },
+            'mini-calendar': {
+                title: '迷你日历',
+                icon: 'far fa-calendar',
+                color: '#06b6d4'
+            },
+            'current-weather': {
+                title: '当前天气',
+                icon: 'fas fa-cloud-sun',
+                color: '#3b82f6'
+            },
+            'weather-forecast': {
+                title: '天气预报',
+                icon: 'fas fa-chart-line',
+                color: '#f59e0b'
+            }
+        };
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+            initClock();
+            initCards();
+            initSettings();
+            loadTargets();
+            
+            if (apiKey) {
+                loadCalendarData();
+            }
+            
+            if (weatherApiKey) {
+                loadWeatherData();
+            }
+            
+            lastLocalDate = getDateString(new Date());
+            startWeatherAutoRefresh();
+            setTimeout(() => {
+                showToast('时钟已加载完成', 'success');
+            }, 1000);
+        });
+        
+        function initClock() {
+            lastUpdateTime = performance.now();
+            animationId = requestAnimationFrame(updateClockAnimation);
+        }
+        
+        function updateClockAnimation(timestamp) {
+            if (timestamp - lastUpdateTime >= UPDATE_INTERVAL) {
+                updateClock();
+                lastUpdateTime = timestamp;
+            }
+            animationId = requestAnimationFrame(updateClockAnimation);
+        }
+        
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const milliseconds = now.getMilliseconds();
+            
+            document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            const secondsProgress = (seconds * 1000 + milliseconds) / 60000 * 100;
+            document.getElementById('seconds-ring-progress').style.strokeDashoffset = 100 - secondsProgress;
+            document.getElementById('seconds-number').textContent = seconds;
+            
+            if (seconds !== lastCheckedSecond) {
+                lastCheckedSecond = seconds;
+                checkDateAlignment(now);
+            }
+            
+            if (!urgentPreloadScheduled && !nextDayPreloaded) {
+                const timeToMidnight = getTimeToMidnight(now);
+                if (timeToMidnight.totalSeconds < 60) {
+                    urgentPreloadScheduled = true;
+                    console.log('距离午夜不到1分钟，立即预加载次日数据');
+                    preloadTomorrowData();
+                }
+            }
+            
+            if (seconds % 10 === 0) {
+                updateDateDisplay(now);
+                updateWeatherTimeDisplay();
+            }
+        }
+        
+        // 更新天气时间显示
+        function updateWeatherTimeDisplay() {
+            const timeEl = document.getElementById('weather-time');
+            if (weatherLastUpdate) {
+                const now = new Date();
+                const diff = Math.floor((now - weatherLastUpdate) / 1000);
+                
+                let timeText = '';
+                if (diff < 60) {
+                    timeText = `${diff}秒前`;
+                } else if (diff < 3600) {
+                    timeText = `${Math.floor(diff / 60)}分钟前`;
+                } else if (diff < 86400) {
+                    timeText = `${Math.floor(diff / 3600)}小时前`;
+                } else {
+                    timeText = `${Math.floor(diff / 86400)}天前`;
+                }
+                
+                timeEl.textContent = `天气: ${timeText}`;
+                timeEl.style.color = diff > 3600 ? 'var(--warning-color)' : 'var(--text-secondary)';
+            } else {
+                timeEl.textContent = '天气: 从未更新';
+                timeEl.style.color = 'var(--text-secondary)';
+            }
+        }
+        
+        async function checkDateAlignment(currentTime) {
+            if (!calendarData.data || !calendarData.data.Solar) return;
+            
+
+            const currentDateStr = getDateString(currentTime);
+            if (currentDateStr !== lastLocalDate) {
+                console.log(`检测到本地日期变化: ${lastLocalDate} -> ${currentDateStr}`);
+                lastLocalDate = currentDateStr;
+                
+
+                updateAllCards();
+                updateDateDisplay(currentTime);
+                
+
+                const todayStr = formatDate(currentTime);
+                delete apiCache[`api_${todayStr}`];
+                if (apiKey) {
+                    await loadCalendarData(currentTime);
+                }
+
+                nextDayPreloaded = false;
+                urgentPreloadScheduled = false;
+                updatePreloadNotice();
+                
+                return;
+            }
+                
+
+                
+
+            if (isCheckingDateAlignment) return;
+            const localDateStr = formatDate(currentTime);
+            const apiSolar = calendarData.data.Solar || '';
+            const apiDateMatch = apiSolar.match(/(\d+)年(\d+)月(\d+)日/);
+            
+            if (!apiDateMatch) return;
+            
+            const apiYear = parseInt(apiDateMatch[1]);
+            const apiMonth = parseInt(apiDateMatch[2]);
+            const apiDay = parseInt(apiDateMatch[3]);
+            
+            const apiDate = new Date(apiYear, apiMonth - 1, apiDay);
+            const apiDateStr = formatDate(apiDate);
+            
+            // 比较日期是否一致
+            if (localDateStr !== apiDateStr) {
+                console.log(`日期不一致！本地: ${localDateStr}, API: ${apiDateStr}`);
+                console.log('以本地时间为准，重新请求API数据');
+                
+                isCheckingDateAlignment = true;
+                
+                try {
+                    delete apiCache[`api_${localDateStr}`];
+                    delete apiCache[`api_${apiDateStr}`];
+                    await loadCalendarData(currentTime);
+                    if (isPreloadEnabled) {
+                        await preloadTomorrowData();
+                    }
+                    updateAPIStatus('connected', '日期已同步');
+                    
+                } catch (error) {
+                    console.error('日期同步失败:', error);
+                    showToast('日期同步失败，请检查网络', 'error');
+                } finally {
+                    isCheckingDateAlignment = false;
+                }
+            }
+        }
+
+        function getDateString(date) {
+            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        }
+
+        function getTimeToMidnight(now) {
+            const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            const diff = midnight - now;
+            
+            return {
+                totalSeconds: Math.floor(diff / 1000),
+                hours: Math.floor(diff / (1000 * 60 * 60)),
+                minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+                seconds: Math.floor((diff % (1000 * 60)) / 1000)
+            };
+        }
+
+        async function preloadTomorrowData() {
+            if (!apiKey) return;
+            
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = formatDate(tomorrow);
+
+            if (apiCache[`api_${tomorrowStr}`]) {
+                console.log('明日数据已缓存，跳过预加载');
+                nextDayPreloaded = true;
+                updatePreloadNotice();
+                return;
+            }
+            
+            try {
+                console.log('开始预加载明日数据...');
+                updatePreloadNotice('预加载中...');
+                
+                const data = await loadCalendarData(tomorrow);
+                if (data && data.code === 200) {
+                    nextDayPreloaded = true;
+                    console.log('明日数据预加载成功');
+                    updatePreloadNotice('已预加载');
+                    document.getElementById('preload-status-text').textContent = '已加载';
+                    showToast('明日数据预加载完成', 'success');
+                }
+            } catch (error) {
+                console.error('明日数据预加载失败:', error);
+                updatePreloadNotice('预加载失败');
+                showToast('预加载失败，请检查网络', 'error');
+            }
+        }
+
+        function updatePreloadNotice(text = '') {
+            const notice = document.getElementById('preload-notice');
+            if (text) {
+                notice.textContent = text;
+                notice.style.display = 'block';
+            } else if (nextDayPreloaded) {
+                notice.textContent = '已预加载';
+                notice.style.display = 'block';
+            } else {
+                notice.style.display = 'none';
+            }
+        }
+        
+        function updateDateDisplay(now) {
+            const dateStr = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                weekday: 'long'
+            });
+            document.getElementById('current-date').textContent = dateStr;
+            
+            if (calendarData.data) {
+                const data = calendarData.data;
+                const lunarStr = `${data.LunarYear}（${data.GanZhiYear}${data.ThisYear}） ${data.Lunar}`;
+                document.getElementById('lunar-date').textContent = lunarStr;
+            }
+        }
+
+        function initCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = '';
+            
+            cardOrder.forEach(cardId => {
+                if (cardsConfig[cardId]) {
+                    createCard(cardId, container);
+                }
+            });
+
+            startProgressUpdates();
+        }
+        
+        function createCard(cardId, container) {
+            const config = cardsConfig[cardId];
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.cardId = cardId;
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-icon" style="background-color: ${config.color}">
+                        <i class="${config.icon}"></i>
+                    </div>
+                    <div class="card-title">${config.title}</div>
+                </div>
+                <div class="card-content" id="${cardId}-content">
+                    <div class="loading">加载中</div>
+                </div>
+            `;
+            
+            container.appendChild(card);
+            updateCardContent(cardId);
+        }
+
+        function startProgressUpdates() {
+            if (progressUpdateInterval) {
+                clearInterval(progressUpdateInterval);
+            }
+            
+            // 更新进度条
+            progressUpdateInterval = setInterval(() => {
+                updateCardContent('progress');
+            }, 1000);
+        }
+
+        function updateCardContent(cardId) {
+            const contentEl = document.getElementById(`${cardId}-content`);
+            if (!contentEl) return;
+            
+            switch(cardId) {
+                case 'identity':
+                    updateIdentityCard(contentEl);
+                    break;
+                case 'solar-term':
+                    updateSolarTermCard(contentEl);
+                    break;
+                case 'progress':
+                    updateProgressCard(contentEl);
+                    break;
+                case 'primary-target':
+                    updatePrimaryTargetCard(contentEl);
+                    break;
+                case 'target-list':
+                    updateTargetListCard(contentEl);
+                    break;
+                case 'mini-calendar':
+                    updateMiniCalendarCard(contentEl);
+                    break;
+                case 'current-weather':
+                    updateCurrentWeatherCard(contentEl);
+                    break;
+                case 'weather-forecast':
+                    updateWeatherForecastCard(contentEl);
+                    break;
+            }
+        }
+        
+        function updateIdentityCard(container) {
+            if (!calendarData.data) {
+                container.innerHTML = '<div class="loading">加载中</div>';
+                return;
+            }
+            
+            const data = calendarData.data;
+
+            let festivalInfo = '';
+            const festivals = [
+                data.Festivals,
+                data.OtherFestivals,
+                data.Lunar_Festivals,
+                data.Lunar_OtherFestivals
+            ].filter(f => f && f.trim());
+            
+            festivalInfo = festivals.join('、');
+            if (!festivalInfo) festivalInfo = '无节日信息';
+            
+            container.innerHTML = `
+                <div class="compact-item">
+                    <div class="item-subtitle">公历日期</div>
+                    <div class="item-title">${data.Solar} ${data.Week}</div>
+                </div>
+                <div class="compact-item">
+                    <div class="item-subtitle">农历信息</div>
+                    <div class="item-title">${data.LunarYear}（${data.GanZhiYear}${data.ThisYear}） ${data.Lunar}</div>
+                </div>
+                <div class="compact-item">
+                    <div class="item-subtitle">星座</div>
+                    <div class="item-title">${data.Constellation || '未知'}</div>
+                </div>
+                <div class="compact-item">
+                    <div class="item-subtitle">节日信息</div>
+                    <div class="item-title single-line-truncate" title="${festivalInfo}">${festivalInfo}</div>
+                </div>
+            `;
+        }
+        
+        function updateSolarTermCard(container) {
+            if (!calendarData.data) {
+                container.innerHTML = '<div class="loading">加载中</div>';
+                return;
+            }
+            
+            const data = calendarData.data;
+            
+            // 节气信息
+            let termInfo = data.JieQi1 || '未知';
+            let nextTermInfo = data.JieQi2 || '未知';
+            
+            // 数九信息
+            let shuJiuInfo = data.ShuJiu || '';
+            
+            // 月相信息
+            let yueXiangInfo = data.YueXiang || '';
+            
+            // 物候信息
+            let wuHouInfo = data.WuHou || '';
+            
+            // 三伏信息
+            let sanFuInfo = data.SanFu || '';
+            
+            container.innerHTML = `
+                <div class="two-columns">
+                    <div class="column">
+                        <div class="compact-item">
+                            <div class="item-subtitle">当前节气</div>
+                            <div class="item-title single-line-truncate">${termInfo}</div>
+                        </div>
+                        ${shuJiuInfo ? `
+                        <div class="compact-item">
+                            <div class="item-subtitle">数九</div>
+                            <div class="item-title single-line-truncate">${shuJiuInfo}</div>
+                        </div>
+                        ` : ''}
+                        ${sanFuInfo ? `
+                        <div class="compact-item">
+                            <div class="item-subtitle">三伏</div>
+                            <div class="item-title single-line-truncate">${sanFuInfo}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="column">
+                        <div class="compact-item">
+                            <div class="item-subtitle">下一节气</div>
+                            <div class="item-title single-line-truncate">${nextTermInfo}</div>
+                        </div>
+                        ${yueXiangInfo ? `
+                        <div class="compact-item">
+                            <div class="item-subtitle">月相</div>
+                            <div class="item-title single-line-truncate">${yueXiangInfo}</div>
+                        </div>
+                        ` : ''}
+                        ${wuHouInfo ? `
+                        <div class="compact-item">
+                            <div class="item-subtitle">物候</div>
+                            <div class="item-title single-line-truncate">${wuHouInfo}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateProgressCard(container) {
+            const now = new Date();
+            
+            // 1. 今日进度
+            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            const dayTotal = 24 * 60 * 60 * 1000;
+            const dayElapsed = now - startOfDay;
+            const dayProgress = (dayElapsed / dayTotal) * 100;
+            const dayHours = Math.floor(dayElapsed / (1000 * 60 * 60));
+            const dayMinutes = Math.floor((dayElapsed % (1000 * 60 * 60)) / (1000 * 60));
+            const daySeconds = Math.floor((dayElapsed % (1000 * 60)) / 1000);
+            
+            // 2. 本月进度
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const dayOfMonth = now.getDate();
+            const monthProgress = ((dayOfMonth - 1 + (dayProgress / 100)) / daysInMonth) * 100;
+            
+            // 3. 今年进度
+            const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+            const daysInYear = isLeapYear ? 366 : 365;
+            const startOfYear = new Date(year, 0, 1);
+            const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+            const yearProgress = ((dayOfYear - 1 + (dayProgress / 100)) / daysInYear) * 100;
+            
+            // 4. 节气进度
+            let solarTermProgress = 0;
+            let solarTermText = '';
+            let solarTermValue = '';
+            let solarTermPercent = '';
+            
+            if (calendarData.data && calendarData.data.JieQi1) {
+                const match = calendarData.data.JieQi1.match(/(.+?)\s+第(\d+)天/);
+                if (match) {
+                    const termName = match[1];
+                    const termDay = parseInt(match[2]);
+                    solarTermProgress = Math.min(100, Math.round((termDay / 15) * 100));
+                    solarTermText = `${termName}进度`;
+                    solarTermValue = `${termDay}/15天`;
+                    solarTermPercent = `${solarTermProgress}%`;
+                }
+            }
+            
+            container.innerHTML = `
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span class="progress-text">今日进度</span>
+                        <div class="progress-values">
+                            <span class="progress-value">${dayHours}:${dayMinutes.toString().padStart(2, '0')}:${daySeconds.toString().padStart(2, '0')}/24:00:00</span>
+                            <span class="progress-percent">${dayProgress.toFixed(2)}%</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${dayProgress}%"></div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span class="progress-text">本月进度</span>
+                        <div class="progress-values">
+                            <span class="progress-value">${dayOfMonth}/${daysInMonth}天</span>
+                            <span class="progress-percent">${monthProgress.toFixed(2)}%</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${monthProgress}%"></div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span class="progress-text">今年进度</span>
+                        <div class="progress-values">
+                            <span class="progress-value">${dayOfYear}/${daysInYear}天</span>
+                            <span class="progress-percent">${yearProgress.toFixed(2)}%</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${yearProgress}%"></div>
+                    </div>
+                </div>
+                ${solarTermText ? `
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span class="progress-text">${solarTermText}</span>
+                        <div class="progress-values">
+                            <span class="progress-value">${solarTermValue}</span>
+                            <span class="progress-percent">${solarTermPercent}</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${solarTermProgress}%"></div>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+        }
+        
+        function updatePrimaryTargetCard(container) {
+            if (targets.length === 0) {
+                container.innerHTML = '<div class="text-center text-xs text-secondary">暂无目标</div>';
+                return;
+            }
+            
+            const now = new Date();
+            const upcomingTargets = targets.filter(t => new Date(t.datetime) > now);
+            
+            if (upcomingTargets.length === 0) {
+                container.innerHTML = '<div class="text-center text-xs text-secondary">无未完成目标</div>';
+                return;
+            }
+            
+            upcomingTargets.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+            const target = upcomingTargets[0];
+            const targetDate = new Date(target.datetime);
+
+            if (targetCountdownInterval) {
+                clearInterval(targetCountdownInterval);
+            }
+
+            function updateCountdown() {
+                const now = new Date();
+                const diff = targetDate - now;
+                
+                let countdownText = '已过期';
+                
+                if (diff > 0) {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    
+                    if (days > 0) {
+                        countdownText = `${days}天${hours.toString().padStart(2, '0')}时${minutes.toString().padStart(2, '0')}分${seconds.toString().padStart(2, '0')}秒`;
+                    } else if (hours > 0) {
+                        countdownText = `${hours}时${minutes.toString().padStart(2, '0')}分${seconds.toString().padStart(2, '0')}秒`;
+                    } else if (minutes > 0) {
+                        countdownText = `${minutes}分${seconds.toString().padStart(2, '0')}秒`;
+                    } else {
+                        countdownText = `${seconds}秒`;
+                    }
+                }
+                
+                const countdownEl = container.querySelector('.precise-countdown');
+                if (countdownEl) {
+                    countdownEl.textContent = countdownText;
+                }
+            }
+            
+            // 初始化HTML
+            container.innerHTML = `
+                <div class="compact-item">
+                    <div class="item-title">${target.name}</div>
+                    <div class="item-subtitle">${targetDate.toLocaleString('zh-CN')}</div>
+                </div>
+                <div class="compact-item">
+                    <div class="item-subtitle">精确倒计时</div>
+                    <div class="precise-countdown">计算中...</div>
+                </div>
+            `;
+            
+            // 立即更新一次
+            updateCountdown();
+            
+            targetCountdownInterval = setInterval(updateCountdown, 1000);
+        }
+        
+        function updateTargetListCard(container) {
+            if (targets.length === 0) {
+                container.innerHTML = '<div class="text-center text-xs text-secondary">暂无目标</div>';
+                return;
+            }
+            
+            const sorted = [...targets]
+                .sort((a, b) => new Date(a.datetime) - new Date(b.datetime))
+                .slice(0, 3);
+            
+            let html = '';
+            sorted.forEach(target => {
+                const date = new Date(target.datetime);
+                const now = new Date();
+                const diff = date - now;
+                
+                let status = '';
+                if (diff < 0) {
+                    status = '<span style="color: var(--danger-color)">已过期</span>';
+                } else {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    status = days < 1 ? 
+                        `<span style="color: var(--warning-color)">${hours}小时后</span>` : 
+                        `${days}天后`;
+                }
+                
+                html += `
+                    <div class="compact-item">
+                        <div class="item-title">${target.name}</div>
+                        <div class="item-subtitle">
+                            ${date.toLocaleDateString('zh-CN')} • ${status}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function updateMiniCalendarCard(container) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const today = now.getDate();
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const firstDayOfWeek = firstDay.getDay();
+            const daysInMonth = lastDay.getDate();
+            const prevMonthDays = new Date(year, month, 0).getDate();
+            
+            let html = `
+                <div class="calendar-header">
+                    <div style="font-weight: 500;">${year}年${month + 1}月</div>
+                </div>
+                <div class="calendar-weekdays">
+                    <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+                </div>
+                <div class="calendar-days">
+            `;
+            
+            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                html += `<div class="calendar-day other-month">${prevMonthDays - i}</div>`;
+            }
+            
+            for (let i = 1; i <= daysInMonth; i++) {
+                const cls = i === today ? 'calendar-day today' : 'calendar-day';
+                html += `<div class="${cls}">${i}</div>`;
+            }
+            
+            const remaining = 42 - firstDayOfWeek - daysInMonth;
+            for (let i = 1; i <= remaining; i++) {
+                html += `<div class="calendar-day other-month">${i}</div>`;
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function updateCurrentWeatherCard(container) {
+            if (!weatherData || !weatherData.data) {
+                container.innerHTML = '<div class="loading">加载中</div>';
+                return;
+            }
+            
+            const data = weatherData.data;
+            const observe = data.observe || {};
+            const air = data.air || {};
+            const alarms = data.alarm || [];
+            const rise = data.rise || {};
+
+            const todayRise = rise["0"] || {};
+            const temp = parseFloat(observe.degree) || 0;
+            const humidity = parseFloat(observe.humidity) || 50;
+            const windPower = observe.wind_power || '1-2';
+            const windMatch = windPower.match(/(\d+)-(\d+)/);
+            const windSpeed = windMatch ? (parseInt(windMatch[1]) + parseInt(windMatch[2])) / 2 : 2;
+            
+            let feelsLike = temp;
+            if (temp <= 10 && windSpeed > 0) {
+                feelsLike = Math.round(13.12 + 0.6215 * temp - 11.37 * Math.pow(windSpeed, 0.16) + 0.3965 * temp * Math.pow(windSpeed, 0.16));
+            } else if (temp >= 27 && humidity > 40) {
+                feelsLike = Math.round(temp + 0.5 * (humidity - 40) / 10);
+            }
+
+            let alarmButton = '';
+            if (alarms.length > 0) {
+                alarmButton = `
+                    <div class="weather-alarm" id="show-alarms" onclick="showAlarmModal()">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>${alarms.length}</span>
+                    </div>
+                `;
+            }
+
+            const weatherIconUrl = observe.weather_url || observe.weather_first || '';
+            const weatherIconHtml = weatherIconUrl ? 
+                `<div class="weather-icon" style="background-image: url('${weatherIconUrl}')"></div>` : '';
+            
+            container.innerHTML = `
+                <div class="weather-main">
+                    <div class="weather-temp-icon">
+                        <div class="weather-temp">${temp}°</div>
+                        ${weatherIconHtml}
+                    </div>
+                    <div class="weather-condition">
+                        ${observe.weather || '未知'} ${alarmButton}
+                    </div>
+                </div>
+                
+                <div class="two-columns">
+                    <div class="column">
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">体感温度:</span>
+                            <span class="weather-detail-value">${feelsLike}°</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">湿度:</span>
+                            <span class="weather-detail-value">${observe.humidity || '--'}%</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">风速:</span>
+                            <span class="weather-detail-value">${observe.wind_power || '--'} ${observe.wind_direction_name || ''}</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">气压:</span>
+                            <span class="weather-detail-value">${observe.pressure || '--'} hPa</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">降水量:</span>
+                            <span class="weather-detail-value">${observe.precipitation || '0'} mm</span>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">空气质量:</span>
+                            <span class="weather-detail-value" style="color: ${getAQIColor(air.aqi)}">${air.aqi_name || '--'}</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">AQI指数:</span>
+                            <span class="weather-detail-value">${air.aqi || '--'}</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">PM2.5:</span>
+                            <span class="weather-detail-value">${air.pm25 || air['pm2.5'] || '--'}</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">日出:</span>
+                            <span class="weather-detail-value">${todayRise.sunrise || '--'}</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="weather-detail-label">日落:</span>
+                            <span class="weather-detail-value">${todayRise.sunset || '--'}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="api-time-display">
+                    更新: ${weatherLastUpdate ? weatherLastUpdate.toLocaleTimeString('zh-CN', {hour12: false, hour: '2-digit', minute: '2-digit'}) : '--'}
+                </div>
+            `;
+        }
+
+        function updateWeatherForecastCard(container) {
+            if (!weatherData || !weatherData.data || !weatherData.data.forecast_24h) {
+                container.innerHTML = '<div class="loading">加载中</div>';
+                return;
+            }
+            
+            const forecasts = weatherData.data.forecast_24h.slice(0, 5); 
+            
+            if (forecasts.length === 0) {
+                container.innerHTML = '<div class="text-center text-xs text-secondary">无预报数据</div>';
+                return;
+            }
+
+            const temps = forecasts.map(f => ({
+                high: parseFloat(f.max_degree) || 0,
+                low: parseFloat(f.min_degree) || 0,
+                date: new Date(f.time),
+                dayWeather: f.day_weather,
+                dayWeatherUrl: f.day_weather_url
+            }));
+
+            const maxTemp = Math.max(...temps.map(t => t.high));
+            const minTemp = Math.min(...temps.map(t => t.low));
+            const tempRange = Math.max(maxTemp - minTemp, 10);
+            const chartHeight = 40;
+
+            let svg = `<svg class="temp-chart" viewBox="0 0 100 ${chartHeight + 10}">`;
+
+            const highPoints = temps.map((t, i) => {
+                const x = (i / (temps.length - 1)) * 80 + 10;
+                const y = chartHeight - ((t.high - minTemp) / tempRange) * chartHeight;
+                return `${x},${y}`;
+            }).join(' ');
+
+            const lowPoints = temps.map((t, i) => {
+                const x = (i / (temps.length - 1)) * 80 + 10;
+                const y = chartHeight - ((t.low - minTemp) / tempRange) * chartHeight;
+                return `${x},${y}`;
+            }).join(' ');
+            
+            svg += `<polyline class="chart-line chart-line-high" points="${highPoints}" />`;
+            svg += `<polyline class="chart-line chart-line-low" points="${lowPoints}" />`;
+            svg += '</svg>';
+            let daysHtml = '<div class="chart-days">';
+            temps.forEach((temp, i) => {
+                const dateStr = temp.date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+                const weekDay = temp.date.toLocaleDateString('zh-CN', { weekday: 'short' });
+                
+                daysHtml += `
+                    <div class="chart-day">
+                        ${temp.dayWeatherUrl ? `<div class="chart-day-icon" style="background-image: url('${temp.dayWeatherUrl}')"></div>` : ''}
+                        <div class="chart-day-date">${dateStr}</div>
+                        <div class="chart-day-temp chart-day-temp-high">${Math.round(temp.high)}°</div>
+                        <div class="chart-day-temp chart-day-temp-low">${Math.round(temp.low)}°</div>
+                    </div>
+                `;
+            });
+            daysHtml += '</div>';
+            
+            container.innerHTML = `
+                <div class="temp-chart-container">
+                    ${svg}
+                </div>
+                ${daysHtml}
+            `;
+        }
+        
+        function getAQIColor(aqi) {
+            if (!aqi) return 'var(--text-color)';
+            if (aqi <= 50) return 'var(--weather-success)';
+            if (aqi <= 100) return 'var(--weather-warning)';
+            if (aqi <= 150) return 'var(--weather-warning)';
+            if (aqi <= 200) return 'var(--weather-danger)';
+            return 'var(--weather-danger)';
+        }
+
+        window.showAlarmModal = function() {
+            const modal = document.getElementById('alarm-modal');
+            const list = document.getElementById('alarm-list');
+            
+            if (!weatherData || !weatherData.data || !weatherData.data.alarm || weatherData.data.alarm.length === 0) {
+                list.innerHTML = '<div class="alarm-item"><div class="alarm-item-title">无预警信息</div></div>';
+            } else {
+                const alarms = weatherData.data.alarm;
+                list.innerHTML = alarms.map(alarm => `
+                    <div class="alarm-item">
+                        <div class="alarm-item-title">${alarm.type || '预警'} - ${alarm.level || ''}</div>
+                        <div class="alarm-item-content">${alarm.content || ''}</div>
+                        <div class="alarm-item-time">发布时间: ${alarm.time || ''}</div>
+                    </div>
+                `).join('');
+            }
+            
+            modal.classList.add('show');
+            
+            document.getElementById('close-alarm').onclick = function() {
+                modal.classList.remove('show');
+            };
+            
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            };
+        };
+        
+        // 加载设置
+        function loadSettings() {
+            try {
+                const saved = localStorage.getItem('clockDashboardSettings');
+                if (saved) {
+                    const settings = JSON.parse(saved);
+                    apiKey = settings.apiKey || '';
+                    currentTheme = settings.theme || 'light';
+                    cardOrder = settings.cardOrder || cardOrder;
+                    isPreloadEnabled = settings.preloadEnabled !== false;
+                    isAutoTheme = settings.autoTheme || false;
+                    
+                    // 天气设置
+                    weatherApiKey = settings.weatherApiKey || '';
+                    weatherProvince = settings.weatherProvince || '辽宁';
+                    weatherCity = settings.weatherCity || '鞍山';
+                    weatherCounty = settings.weatherCounty || '铁东';
+                    weatherRefreshInterval = settings.weatherRefreshInterval || 15;
+                    weatherLastUpdate = settings.weatherLastUpdate ? new Date(settings.weatherLastUpdate) : null;
+                    weatherData = settings.weatherData || null;
+                }
+                setTheme(currentTheme);
+                document.getElementById('api-key').value = apiKey;
+                document.getElementById('preload-toggle').checked = isPreloadEnabled;
+                document.getElementById('auto-theme').checked = isAutoTheme;
+                
+                // 天气设置
+                document.getElementById('weather-api-key').value = weatherApiKey;
+                document.getElementById('weather-province').value = weatherProvince;
+                document.getElementById('weather-city').value = weatherCity;
+                document.getElementById('weather-county').value = weatherCounty;
+                document.getElementById('weather-refresh-interval').value = weatherRefreshInterval;
+                
+                // 更新
+                updateWeatherTimeDisplay();
+            } catch (e) {
+                console.error('加载设置失败:', e);
+                showToast('加载设置失败，使用默认配置', 'warning');
+            }
+        }
+        
+        function saveSettings() {
+            const settings = {
+                apiKey: apiKey,
+                theme: currentTheme,
+                cardOrder: cardOrder,
+                preloadEnabled: isPreloadEnabled,
+                autoTheme: isAutoTheme,
+                
+                // 天气设置
+                weatherApiKey: weatherApiKey,
+                weatherProvince: weatherProvince,
+                weatherCity: weatherCity,
+                weatherCounty: weatherCounty,
+                weatherRefreshInterval: weatherRefreshInterval,
+                weatherLastUpdate: weatherLastUpdate,
+                weatherData: weatherData,
+                
+                version: APP_VERSION
+            };
+            localStorage.setItem('clockDashboardSettings', JSON.stringify(settings));
+        }
+        
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+            const icon = document.querySelector('#theme-toggle i');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            saveSettings();
+        }
+        
+        async function loadCalendarData(date = null) {
+            if (!apiKey) {
+                updateAPIStatus('disconnected', '未配置API');
+                showToast('请先在设置中配置日历API密钥', 'warning');
+                return null;
+            }
+            
+            const targetDate = date || new Date();
+            const dateStr = formatDate(targetDate);
+            const cacheKey = `api_${dateStr}`;
+            
+            const today = new Date();
+            const todayStr = formatDate(today);
+            
+            if (dateStr === todayStr && apiCache[cacheKey] && Date.now() - apiCache[cacheKey].timestamp < 3600000) {
+                console.log(`使用缓存数据: ${dateStr}`);
+                if (!date) {
+                    calendarData = apiCache[cacheKey].data;
+                    updateAllCards();
+                }
+                updateAPIStatus('connected', '使用缓存');
+                return apiCache[cacheKey].data;
+            }
+            
+            try {
+                updateAPIStatus('loading', '请求中...');
+                const url = `${API_BASE_URL}?key=${apiKey}&date=${dateStr}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    apiCache[cacheKey] = {
+                        data: data,
+                        timestamp: Date.now()
+                    };
+                    
+                    if (!date) {
+                        calendarData = data;
+                        updateAllCards();
+                    }
+                    
+                    apiLastUpdate = new Date();
+                    const timeStr = apiLastUpdate.toLocaleTimeString('zh-CN', {hour12: false, hour: '2-digit', minute: '2-digit'});
+                    updateAPIStatus('connected', timeStr);
+                    
+                    if (!date) {
+                        showToast('日历数据加载成功', 'success');
+                    }
+                    
+                    return data;
+                } else {
+                    throw new Error(data.msg || 'API返回错误');
+                }
+            } catch (error) {
+                console.error('API请求失败:', error);
+                updateAPIStatus('error', '请求失败');
+                showToast('日历数据加载失败: ' + error.message, 'error');
+                if (!date) {
+                    useFallbackData();
+                    showToast('使用后备数据，功能可能受限', 'warning');
+                }
+                
+                return null;
+            }
+        }
+        
+        // 天气API请求
+        async function loadWeatherData() {
+            if (!weatherApiKey) {
+                console.log('天气API未配置');
+                return null;
+            }
+            
+            const cacheKey = `weather_${weatherProvince}_${weatherCity}_${weatherCounty}`;
+            const now = Date.now();
+            
+            // 检查缓存
+            if (weatherData && weatherData._timestamp && (now - weatherData._timestamp < weatherRefreshInterval * 60 * 1000)) {
+                console.log('使用缓存的天气数据');
+                updateCardContent('current-weather');
+                updateCardContent('weather-forecast');
+                updateWeatherTimeDisplay();
+                return weatherData;
+            }
+            
+            try {
+                // 显示加载状态
+                const weatherStatusEl = document.getElementById('weather-api-test-result');
+                if (weatherStatusEl) {
+                    weatherStatusEl.textContent = '请求中...';
+                }
+                
+                // 构建请求URL
+                const url = `${WEATHER_API_BASE_URL}?key=${weatherApiKey}&m=2&ip=&province=${encodeURIComponent(weatherProvince)}&city=${encodeURIComponent(weatherCity)}&county=${encodeURIComponent(weatherCounty)}`;
+                
+                console.log('请求天气API:', url);
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.code === 201) {
+                    // 添加时间戳
+                    data._timestamp = now;
+                    data._cacheKey = cacheKey;
+                    
+                    // 保存数据
+                    weatherData = data;
+                    weatherLastUpdate = new Date();
+                    
+                    // 更新UI
+                    updateCardContent('current-weather');
+                    updateCardContent('weather-forecast');
+                    updateWeatherTimeDisplay();
+                    saveSettings();
+                    
+                    console.log('天气数据加载成功');
+                    showToast('天气数据更新成功', 'success');
+                    
+                    if (weatherStatusEl) {
+                        weatherStatusEl.textContent = '请求成功';
+                    }
+                    
+                    return data;
+                } else {
+                    throw new Error(data.msg || '天气API错误');
+                }
+            } catch (error) {
+                console.error('天气API请求失败:', error);
+                weatherStatus = 'error';
+                
+                // 使用缓存
+                if (weatherData && weatherData._timestamp) {
+                    console.log('使用旧的缓存天气数据');
+                    updateCardContent('current-weather');
+                    updateCardContent('weather-forecast');
+                    updateWeatherTimeDisplay();
+                    showToast('使用缓存天气数据，可能不是最新', 'warning');
+                } else {
+                    showToast('天气数据加载失败: ' + error.message, 'error');
+                }
+                
+                const weatherStatusEl = document.getElementById('weather-api-test-result');
+                if (weatherStatusEl) {
+                    weatherStatusEl.textContent = '请求失败: ' + error.message;
+                }
+                
+                return null;
+            }
+        }
+        
+        async function refreshWeatherData() {
+            if (!weatherApiKey) {
+                showToast('请先在设置中配置天气API密钥', 'warning');
+                return;
+            }
+            
+            const refreshBtn = document.getElementById('refresh-weather');
+            refreshBtn.classList.add('refreshing');
+            refreshBtn.disabled = true;
+            
+            try {
+                weatherData = null;
+                weatherLastUpdate = null;
+                
+                await loadWeatherData();
+                showToast('天气数据已刷新', 'success');
+            } catch (error) {
+                console.error('刷新天气数据失败:', error);
+                showToast('天气数据刷新失败: ' + error.message, 'error');
+            } finally {
+                refreshBtn.classList.remove('refreshing');
+                refreshBtn.disabled = false;
+            }
+        }
+        
+        function startWeatherAutoRefresh() {
+            if (weatherAutoRefreshTimer) {
+                clearInterval(weatherAutoRefreshTimer);
+            }
+            
+            if (weatherRefreshInterval > 0 && weatherApiKey) {
+                weatherAutoRefreshTimer = setInterval(async () => {
+                    console.log('自动刷新天气数据...');
+                    await loadWeatherData();
+                }, weatherRefreshInterval * 60 * 1000);
+            }
+        }
+        
+        async function refreshAPIData() {
+            if (!apiKey) {
+                showToast('请先在设置中配置日历API密钥', 'warning');
+                return;
+            }
+            
+            const refreshBtn = document.getElementById('refresh-api');
+            refreshBtn.classList.add('refreshing');
+            refreshBtn.disabled = true;
+            
+            try {
+                updateAPIStatus('loading', '立即请求中...');
+                showToast('正在刷新数据...', 'info');
+                
+                const today = new Date();
+                const todayStr = formatDate(today);
+                delete apiCache[`api_${todayStr}`];
+                
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const tomorrowStr = formatDate(tomorrow);
+                delete apiCache[`api_${tomorrowStr}`];
+                
+                const [todayData, tomorrowData] = await Promise.all([
+                    loadCalendarData(today),
+                    loadCalendarData(tomorrow)
+                ]);
+                
+                if (todayData && tomorrowData) {
+                    updateAPIStatus('connected', '数据已刷新');
+                    nextDayPreloaded = true;
+                    updatePreloadNotice('已预加载');
+                    showToast('API数据已成功刷新！', 'success');
+                }
+            } catch (error) {
+                console.error('刷新数据失败:', error);
+                updateAPIStatus('error', '刷新失败');
+                showToast('数据刷新失败: ' + error.message, 'error');
+            } finally {
+                refreshBtn.classList.remove('refreshing');
+                refreshBtn.disabled = false;
+            }
+        }
+        
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                info: 'fas fa-info-circle',
+                success: 'fas fa-check-circle',
+                warning: 'fas fa-exclamation-triangle',
+                error: 'fas fa-times-circle'
+            };
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="${icons[type] || icons.info}"></i>
+                </div>
+                <div class="toast-message">${message}</div>
+                <button class="toast-close" onclick="this.parentElement.classList.add('hiding'); setTimeout(() => this.parentElement.remove(), 300);">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('hiding');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+        
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        function useFallbackData() {
+            const now = new Date();
+            calendarData = {
+                code: 200,
+                data: {
+                    Solar: `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`,
+                    Week: ['日','一','二','三','四','五','六'][now.getDay()],
+                    LunarYear: '二〇二五年',
+                    Lunar: '农历',
+                    GanZhiYear: '干支',
+                    ThisYear: '蛇年',
+                    Constellation: '摩羯座',
+                    Festivals: '',
+                    OtherFestivals: '',
+                    Lunar_Festivals: '',
+                    Lunar_OtherFestivals: '',
+                    JieQi1: '冬至 第5天',
+                    JieQi2: '距离 小寒 还有14天',
+                    ShuJiu: '一九第2天',
+                    YueXiang: '蛾眉新',
+                    WuHou: '蚯蚓结',
+                    SanFu: ''
+                }
+            };
+            updateAllCards();
+        }
+        
+        function updateAPIStatus(status, message = '') {
+            apiStatus = status;
+            const el = document.getElementById('api-status');
+            const timeEl = document.getElementById('api-time');
+            
+            el.className = `api-status ${status}`;
+            el.innerHTML = `<i class="fas fa-circle"></i><span>${message || status}</span>`;
+            
+            if (timeEl && apiLastUpdate) {
+                timeEl.textContent = `日历: ${apiLastUpdate.toLocaleTimeString('zh-CN', {hour12: false, hour: '2-digit', minute: '2-digit'})}`;
+            }
+        }
+        
+        function loadTargets() {
+            try {
+                const saved = localStorage.getItem('dashboardTargets');
+                targets = saved ? JSON.parse(saved) : [];
+            } catch (e) {
+                targets = [];
+                console.error('加载目标失败:', e);
+            }
+        }
+        
+        function saveTargets() {
+            localStorage.setItem('dashboardTargets', JSON.stringify(targets));
+        }
+        
+        function initSettings() {
+            const modal = document.getElementById('settings-modal');
+            const settingsBtn = document.getElementById('settings-btn');
+            const closeBtn = document.getElementById('close-settings');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            document.getElementById('refresh-api').addEventListener('click', refreshAPIData);
+            document.getElementById('refresh-weather').addEventListener('click', refreshWeatherData);
+            
+            settingsBtn.addEventListener('click', () => {
+                modal.style.display = 'flex';
+                updateTargetsList();
+                updateSortableCards();
+                const today = new Date();
+                document.getElementById('debug-date').valueAsDate = today;
+                
+                updateDebugCacheDisplay();
+                updateWeatherDebugInfo();
+            });
+            
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.style.display = 'none';
+            });
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.dataset.tab;
+                    
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.style.display = 'none';
+                    });
+                    
+                    const tabElement = document.getElementById(`${tabId}-tab`);
+                    if (tabElement) {
+                        tabElement.style.display = 'block';
+                    }
+                    
+                    if (tabId === 'debug') {
+                        updateDebugCacheDisplay();
+                    } else if (tabId === 'weather-debug') {
+                        updateWeatherDebugInfo();
+                    }
+                });
+            });
+            
+            // 日历API测试
+            document.getElementById('test-api').addEventListener('click', async () => {
+                const key = document.getElementById('api-key').value.trim();
+                if (!key) {
+                    showToast('请输入API密钥', 'warning');
+                    return;
+                }
+                
+                apiKey = key;
+                document.getElementById('api-test-result').textContent = '测试中...';
+                
+                try {
+                    await loadCalendarData();
+                    document.getElementById('api-test-result').textContent = '连接成功';
+                    showToast('日历API连接成功', 'success');
+                    saveSettings();
+                } catch (error) {
+                    document.getElementById('api-test-result').textContent = '连接失败';
+                    showToast('日历API连接失败: ' + error.message, 'error');
+                }
+            });
+            
+            // 天气API测试
+            document.getElementById('test-weather-api').addEventListener('click', async () => {
+                const key = document.getElementById('weather-api-key').value.trim();
+                if (!key) {
+                    showToast('请输入天气API密钥', 'warning');
+                    return;
+                }
+                
+                weatherApiKey = key;
+                weatherProvince = document.getElementById('weather-province').value.trim();
+                weatherCity = document.getElementById('weather-city').value.trim();
+                weatherCounty = document.getElementById('weather-county').value.trim();
+                weatherRefreshInterval = parseInt(document.getElementById('weather-refresh-interval').value);
+                
+                document.getElementById('weather-api-test-result').textContent = '测试中...';
+                
+                try {
+                    await loadWeatherData();
+                    document.getElementById('weather-api-test-result').textContent = '连接成功';
+                    
+                    // 更新显示
+                    document.getElementById('weather-last-request').textContent = 
+                        weatherLastUpdate ? weatherLastUpdate.toLocaleString('zh-CN') : '从未请求';
+                    
+                    // 重启自动刷新
+                    startWeatherAutoRefresh();
+                    
+                    saveSettings();
+                    showToast('天气API连接成功', 'success');
+                } catch (error) {
+                    document.getElementById('weather-api-test-result').textContent = '连接失败: ' + error.message;
+                    showToast('天气API连接失败: ' + error.message, 'error');
+                }
+            });
+            
+            // 天气刷新间隔变化
+            document.getElementById('weather-refresh-interval').addEventListener('change', function() {
+                weatherRefreshInterval = parseInt(this.value);
+                startWeatherAutoRefresh();
+                saveSettings();
+                showToast(`天气自动刷新间隔设置为${this.value}分钟`, 'info');
+            });
+            
+            // 地区设置变化
+            ['weather-province', 'weather-city', 'weather-county'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    if (this.id === 'weather-province') weatherProvince = this.value;
+                    if (this.id === 'weather-city') weatherCity = this.value;
+                    if (this.id === 'weather-county') weatherCounty = this.value;
+                    saveSettings();
+                });
+            });
+            
+            // 预加载设置
+            const preloadToggle = document.getElementById('preload-toggle');
+            preloadToggle.addEventListener('change', function() {
+                isPreloadEnabled = this.checked;
+                saveSettings();
+                document.getElementById('preload-status-text').textContent = 
+                    isPreloadEnabled ? '已启用' : '已禁用';
+                    
+                if (isPreloadEnabled && !nextDayPreloaded) {
+                    preloadTomorrowData();
+                }
+                
+                showToast(`数据预加载${isPreloadEnabled ? '启用' : '禁用'}`, 'info');
+            });
+            
+            // 日历API调试
+            document.getElementById('debug-today').addEventListener('click', async () => {
+                const data = await loadCalendarData(new Date());
+                if (data) {
+                    document.getElementById('debug-today-response').value = JSON.stringify(data, null, 2);
+                    showToast('今日数据已刷新', 'success');
+                }
+            });
+            
+            document.getElementById('debug-tomorrow').addEventListener('click', async () => {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const data = await loadCalendarData(tomorrow);
+                if (data) {
+                    document.getElementById('debug-tomorrow-response').value = JSON.stringify(data, null, 2);
+                    showToast('明日数据已刷新', 'success');
+                }
+            });
+            
+            document.getElementById('debug-custom').addEventListener('click', async () => {
+                const dateInput = document.getElementById('debug-date').value;
+                if (!dateInput) {
+                    showToast('请选择日期', 'warning');
+                    return;
+                }
+                
+                const date = new Date(dateInput);
+                const params = document.getElementById('debug-params').value.trim();
+                
+                if (!apiKey) {
+                    showToast('请先设置API密钥', 'warning');
+                    return;
+                }
+                
+                const dateStr = formatDate(date);
+                const url = `${API_BASE_URL}?key=${apiKey}&date=${dateStr}${params}`;
+                
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    document.getElementById('debug-today-response').value = JSON.stringify(data, null, 2);
+                    showToast('自定义请求成功', 'success');
+                } catch (error) {
+                    showToast('自定义请求失败: ' + error.message, 'error');
+                }
+            });
+            
+            // 天气API调试
+            document.getElementById('weather-debug-now').addEventListener('click', async () => {
+                const data = await loadWeatherData();
+                if (data) {
+                    document.getElementById('weather-debug-response').value = JSON.stringify(data, null, 2);
+                    updateWeatherDebugInfo();
+                    showToast('天气数据已刷新', 'success');
+                }
+            });
+            
+            document.getElementById('weather-clear-cache').addEventListener('click', function() {
+                weatherData = null;
+                weatherLastUpdate = null;
+                saveSettings();
+                updateWeatherDebugInfo();
+                updateCardContent('current-weather');
+                updateCardContent('weather-forecast');
+                showToast('天气缓存已清除', 'success');
+            });
+            
+            // 添加目标
+            document.getElementById('add-target').addEventListener('click', () => {
+                const name = document.getElementById('target-name').value.trim();
+                const datetime = document.getElementById('target-datetime').value;
+                const desc = document.getElementById('target-desc').value.trim();
+                
+                if (!name || !datetime) {
+                    showToast('请填写目标名称和时间', 'warning');
+                    return;
+                }
+                
+                const targetDate = new Date(datetime);
+                if (targetDate <= new Date()) {
+                    showToast('不能设置过去的时间', 'warning');
+                    return;
+                }
+                
+                targets.push({
+                    id: Date.now(),
+                    name: name,
+                    datetime: targetDate.toISOString(),
+                    desc: desc
+                });
+                
+                saveTargets();
+                updateTargetsList();
+                updateAllCards();
+                
+                document.getElementById('target-name').value = '';
+                document.getElementById('target-datetime').value = '';
+                document.getElementById('target-desc').value = '';
+                
+                showToast('目标已添加', 'success');
+            });
+            
+            // 主题设置
+            document.getElementById('theme-light').addEventListener('click', () => {
+                setTheme('light');
+                document.getElementById('auto-theme').checked = false;
+                isAutoTheme = false;
+                saveSettings();
+                showToast('已切换为白天模式', 'info');
+            });
+            
+            document.getElementById('theme-dark').addEventListener('click', () => {
+                setTheme('dark');
+                document.getElementById('auto-theme').checked = false;
+                isAutoTheme = false;
+                saveSettings();
+                showToast('已切换为黑夜模式', 'info');
+            });
+            
+            const autoThemeToggle = document.getElementById('auto-theme');
+            autoThemeToggle.addEventListener('change', function() {
+                isAutoTheme = this.checked;
+                saveSettings();
+                if (isAutoTheme) {
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    setTheme(prefersDark ? 'dark' : 'light');
+                    showToast(`已启用自动主题，当前为${prefersDark ? '黑夜' : '白天'}模式`, 'info');
+                } else {
+                    showToast('已禁用自动主题', 'info');
+                }
+            });
+            
+            // 字体大小设置
+            document.querySelectorAll('[data-font]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const size = this.dataset.font;
+                    
+                    document.querySelectorAll('[data-font]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    applyFontSize(size);
+                    showToast(`字体大小已切换为${size === 'small' ? '小' : size === 'large' ? '大' : '中'}`, 'info');
+                });
+            });
+            
+            // 自定义字体大小
+            document.getElementById('apply-custom-font').addEventListener('click', function() {
+                const sizeInput = document.getElementById('font-size-custom');
+                const size = parseInt(sizeInput.value);
+                
+                if (isNaN(size) || size < 8 || size > 20) {
+                    showToast('请输入8-20之间的数字', 'warning');
+                    return;
+                }
+                
+                applyCustomFontSize(size);
+                sizeInput.value = '';
+                showToast(`字体大小已设置为${size}px`, 'success');
+            });
+            
+            // 保存布局
+            document.getElementById('save-layout').addEventListener('click', () => {
+                saveSettings();
+                initCards();
+                showToast('布局已保存', 'success');
+            });
+            
+            // 重置布局
+            document.getElementById('reset-layout').addEventListener('click', () => {
+                cardOrder = [
+                    'identity', 'solar-term', 'progress', 
+                    'primary-target', 'target-list', 'mini-calendar',
+                    'current-weather', 'weather-forecast'
+                ];
+                saveSettings();
+                updateSortableCards();
+                showToast('布局已重置为默认', 'success');
+            });
+            
+            document.getElementById('theme-toggle').addEventListener('click', () => {
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                setTheme(newTheme);
+                isAutoTheme = false;
+                document.getElementById('auto-theme').checked = false;
+                saveSettings();
+                showToast(`已切换为${newTheme === 'light' ? '白天' : '黑夜'}模式`, 'info');
+            });
+            
+            setInterval(updateWeatherTimeDisplay, 60000);
+        }
+
+        function updateDebugCacheDisplay() {
+            const today = new Date();
+            const todayStr = formatDate(today);
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = formatDate(tomorrow);
+            
+            const todayCache = apiCache[`api_${todayStr}`];
+            const tomorrowCache = apiCache[`api_${tomorrowStr}`];
+            
+            if (todayCache) {
+                document.getElementById('debug-today-response').value = JSON.stringify(todayCache.data, null, 2);
+            } else {
+                document.getElementById('debug-today-response').value = '无缓存数据';
+            }
+            
+            if (tomorrowCache) {
+                document.getElementById('debug-tomorrow-response').value = JSON.stringify(tomorrowCache.data, null, 2);
+            } else {
+                document.getElementById('debug-tomorrow-response').value = '无缓存数据';
+            }
+        }
+        
+        function updateWeatherDebugInfo() {
+            const timeEl = document.getElementById('weather-cache-time');
+            const sizeEl = document.getElementById('weather-cache-size');
+            const responseEl = document.getElementById('weather-debug-response');
+            const lastRequestEl = document.getElementById('weather-last-request');
+            const timeSinceEl = document.getElementById('weather-time-since');
+            
+            if (weatherData && weatherData._timestamp) {
+                const date = new Date(weatherData._timestamp);
+                timeEl.textContent = date.toLocaleString('zh-CN');
+                
+                const size = JSON.stringify(weatherData).length;
+                sizeEl.textContent = `${(size / 1024).toFixed(2)} KB`;
+                
+                responseEl.value = JSON.stringify(weatherData, null, 2);
+            } else {
+                timeEl.textContent = '无缓存';
+                sizeEl.textContent = '0 KB';
+                responseEl.value = '无缓存数据';
+            }
+            
+            if (weatherLastUpdate) {
+                lastRequestEl.textContent = weatherLastUpdate.toLocaleString('zh-CN');
+                
+                const now = new Date();
+                const diff = Math.floor((now - weatherLastUpdate) / 1000);
+                let timeSince = '';
+                
+                if (diff < 60) {
+                    timeSince = `${diff}秒`;
+                } else if (diff < 3600) {
+                    timeSince = `${Math.floor(diff / 60)}分钟`;
+                } else if (diff < 86400) {
+                    timeSince = `${Math.floor(diff / 3600)}小时`;
+                } else {
+                    timeSince = `${Math.floor(diff / 86400)}天`;
+                }
+                
+                timeSinceEl.textContent = timeSince;
+            } else {
+                lastRequestEl.textContent = '从未请求';
+                timeSinceEl.textContent = '-';
+            }
+        }
+        
+        function updateTargetsList() {
+            const container = document.getElementById('targets-list');
+            if (targets.length === 0) {
+                container.innerHTML = '<div class="text-xs text-secondary text-center">暂无目标</div>';
+                return;
+            }
+            
+            let html = '';
+            targets.forEach((target, index) => {
+                const date = new Date(target.datetime);
+                const now = new Date();
+                const diff = date - now;
+                
+                let statusClass = '';
+                if (diff < 0) {
+                    statusClass = 'text-danger';
+                } else if (diff < 24 * 60 * 60 * 1000) {
+                    statusClass = 'text-warning';
+                } else {
+                    statusClass = 'text-secondary';
+                }
+                
+                html += `
+                    <div style="padding: 3px 0; border-bottom: 1px dashed var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: var(--font-size-sm); font-weight: 500;">${target.name}</div>
+                            <div class="text-xs ${statusClass}">
+                                ${date.toLocaleString('zh-CN')}
+                                ${target.desc ? ` • ${target.desc}` : ''}
+                            </div>
+                        </div>
+                        <button class="btn-small btn-outline" onclick="deleteTarget(${index})">删除</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+        
+        window.deleteTarget = function(index) {
+            if (confirm('确定删除这个目标吗？')) {
+                targets.splice(index, 1);
+                saveTargets();
+                updateTargetsList();
+                updateAllCards();
+                showToast('目标已删除', 'success');
+            }
+        };
+        
+        function updateSortableCards() {
+            const container = document.getElementById('sortable-cards');
+            container.innerHTML = '';
+            
+            cardOrder.forEach((cardId, index) => {
+                const config = cardsConfig[cardId];
+                if (config) {
+                    const item = document.createElement('div');
+                    item.style.cssText = 'background: var(--card-bg); border: 1px solid var(--border-color); padding: var(--spacing-sm); margin-bottom: var(--spacing-sm); border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center;';
+                    item.dataset.cardId = cardId;
+                    item.dataset.index = index;
+                    item.innerHTML = `
+                        <div style="display: flex; align-items: center;">
+                            <div style="margin-right: var(--spacing-sm); color: var(--text-secondary);">
+                                <i class="fas fa-grip-lines"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 500; font-size: var(--font-size-sm);">${config.title}</div>
+                                <div style="font-size: 8px; color: var(--text-secondary);">${cardId}</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 2px;">
+                            <button class="sort-btn" onclick="moveCardUp(${index})" ${index === 0 ? 'disabled' : ''} title="上移">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                            <button class="sort-btn" onclick="moveCardDown(${index})" ${index === cardOrder.length - 1 ? 'disabled' : ''} title="下移">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                }
+            });
+        }
+        
+        window.moveCardUp = function(index) {
+            if (index <= 0) return;
+            
+            [cardOrder[index], cardOrder[index - 1]] = [cardOrder[index - 1], cardOrder[index]];
+            
+            updateSortableCards();
+        };
+    
+        window.moveCardDown = function(index) {
+            if (index >= cardOrder.length - 1) return;
+            
+            [cardOrder[index], cardOrder[index + 1]] = [cardOrder[index + 1], cardOrder[index]];
+            
+            updateSortableCards();
+        };
+        
+        function applyFontSize(size) {
+            let fontSizeBase, fontSizeSm, fontSizeLg, fontSizeXs, fontSizeXl;
+            
+            switch(size) {
+                case 'small':
+                    fontSizeXs = '7px';
+                    fontSizeSm = '8px';
+                    fontSizeBase = '9px';
+                    fontSizeLg = '10px';
+                    fontSizeXl = '11px';
+                    break;
+                case 'large':
+                    fontSizeXs = '9px';
+                    fontSizeSm = '10px';
+                    fontSizeBase = '11px';
+                    fontSizeLg = '12px';
+                    fontSizeXl = '14px';
+                    break;
+                default: // normal
+                    fontSizeXs = '8px';
+                    fontSizeSm = '9px';
+                    fontSizeBase = '10px';
+                    fontSizeLg = '11px';
+                    fontSizeXl = '13px';
+            }
+            
+            document.documentElement.style.setProperty('--font-size-xs', fontSizeXs);
+            document.documentElement.style.setProperty('--font-size-sm', fontSizeSm);
+            document.documentElement.style.setProperty('--font-size-base', fontSizeBase);
+            document.documentElement.style.setProperty('--font-size-lg', fontSizeLg);
+            document.documentElement.style.setProperty('--font-size-xl', fontSizeXl);
+            
+            // 更新显示
+            document.getElementById('current-font-size').textContent = fontSizeBase;
+            
+            localStorage.setItem('fontSize', size);
+        }
+        
+        function applyCustomFontSize(baseSize) {
+            // 计算字体大小
+            const fontSizeBase = `${baseSize}px`;
+            const fontSizeSm = `${Math.max(baseSize - 1, 7)}px`;
+            const fontSizeXs = `${Math.max(baseSize - 2, 6)}px`;
+            const fontSizeLg = `${Math.min(baseSize + 1, 15)}px`;
+            const fontSizeXl = `${Math.min(baseSize + 3, 18)}px`;
+            
+            document.documentElement.style.setProperty('--font-size-xs', fontSizeXs);
+            document.documentElement.style.setProperty('--font-size-sm', fontSizeSm);
+            document.documentElement.style.setProperty('--font-size-base', fontSizeBase);
+            document.documentElement.style.setProperty('--font-size-lg', fontSizeLg);
+            document.documentElement.style.setProperty('--font-size-xl', fontSizeXl);
+            
+            // 更新显示
+            document.getElementById('current-font-size').textContent = fontSizeBase;
+            
+            document.querySelectorAll('[data-font]').forEach(b => b.classList.remove('active'));
+            
+            localStorage.setItem('fontSize', 'custom');
+            localStorage.setItem('customFontSize', baseSize);
+        }
+        
+        // 更新所有卡片
+        function updateAllCards() {
+            cardOrder.forEach(updateCardContent);
+        }
+        
+        // 清理
+        window.addEventListener('beforeunload', () => {
+            if (animationId) cancelAnimationFrame(animationId);
+            if (targetCountdownInterval) clearInterval(targetCountdownInterval);
+            if (progressUpdateInterval) clearInterval(progressUpdateInterval);
+            if (weatherAutoRefreshTimer) clearInterval(weatherAutoRefreshTimer);
+        });
+    </script>
+</body>
+</html>

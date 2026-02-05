@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xuan1713的主页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --bg-gradient-start: #f5f7fa;
+            --bg-gradient-end: #c3cfe2;
+            --text-primary: #333;
+            --text-secondary: #8d8d8d;
+            --card-bg: white;
+            --card-border: rgba(255, 255, 255, 0.2);
+            --time-color: #2d3748;
+            --date-color: #718096;
+            --section-title-color: #2d3748;
+            --work-btn-bg: white;
+            --work-btn-border: #e2e8f0;
+            --work-title-color: #2d3748;
+            --work-desc-color: #718096;
+            --arrow-color: #a0aec0;
+            --arrow-hover: #4361ee;
+            --footer-color: #94a3b8;
+            --github-bg: rgba(255, 255, 255, 0.7);
+            --github-text: #64748b;
+            --github-hover-bg: white;
+            --github-hover-text: #1a202c;
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode {
+            --bg-gradient-start: #1a202c;
+            --bg-gradient-end: #2d3748;
+            --text-primary: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --card-bg: #2d3748;
+            --card-border: #4a5568;
+            --time-color: #f7fafc;
+            --date-color: #cbd5e0;
+            --section-title-color: #f7fafc;
+            --work-btn-bg: #2d3748;
+            --work-btn-border: #4a5568;
+            --work-title-color: #f7fafc;
+            --work-desc-color: #a0aec0;
+            --arrow-color: #718096;
+            --arrow-hover: #818cf8;
+            --footer-color: #718096;
+            --github-bg: rgba(45, 55, 72, 0.7);
+            --github-text: #cbd5e0;
+            --github-hover-bg: #2d3748;
+            --github-hover-text: #f7fafc;
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* 标题区域 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .greeting {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .greeting {
+            background: linear-gradient(90deg, #5263ff 0%, #1a56fa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: normal;
+            transition: color 0.3s ease;
+        }
+
+        .time-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease 0.2s both;
+            transition: all 0.3s ease;
+        }
+
+        .time-display {
+            font-size: 2.8rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--time-color);
+            margin-bottom: 8px;
+            font-family: 'SF Mono', 'Monaco', 'Roboto Mono', monospace;
+            transition: color 0.3s ease;
+        }
+
+        .date-display {
+            font-size: 1.1rem;
+            color: var(--date-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .works-section {
+            animation: fadeIn 1s ease 0.4s both;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--section-title-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .section-title i {
+            color: #4361ee;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .section-title i {
+            color: #818cf8;
+        }
+
+        .work-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .work-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--work-btn-bg);
+            border: 2px solid var(--work-btn-border);
+            border-radius: 16px;
+            padding: 20px 25px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-btn:hover {
+            transform: translateY(-3px);
+            border-color: #4361ee;
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.15);
+        }
+
+        .dark-mode .work-btn:hover {
+            border-color: #818cf8;
+            box-shadow: 0 10px 25px rgba(129, 140, 248, 0.15);
+        }
+
+        .work-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .work-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .dark-mode .work-icon {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .work-btn:hover .work-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .work-info {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .work-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--work-title-color);
+            transition: color 0.3s ease;
+        }
+
+        .work-desc {
+            font-size: 0.9rem;
+            color: var(--work-desc-color);
+            line-height: 1.4;
+            transition: color 0.3s ease;
+        }
+
+        .work-arrow {
+            color: var(--arrow-color);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .work-btn:hover .work-arrow {
+            transform: translateX(5px);
+            color: var(--arrow-hover);
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--footer-color);
+            font-size: 0.9rem;
+            animation: fadeIn 1s ease 0.6s both;
+            transition: color 0.3s ease;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--github-text);
+            text-decoration: none;
+            margin-top: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: var(--github-bg);
+            transition: all 0.3s ease;
+        }
+
+        .github-link:hover {
+            background: var(--github-hover-bg);
+            color: var(--github-hover-text);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.5);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .dark-mode .theme-toggle {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .dark-mode .theme-toggle:hover {
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .theme-icon {
+            transition: all 0.3s ease;
+        }
+
+        @keyframes rotateIn {
+            from {
+                transform: rotate(-180deg) scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: rotate(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .theme-toggle .theme-icon {
+            animation: rotateIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .greeting {
+                font-size: 1.8rem;
+            }
+
+            .time-display {
+                font-size: 2.2rem;
+            }
+
+            .work-btn {
+                padding: 18px 20px;
+            }
+
+            .work-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+
+            .theme-toggle {
+                width: 48px;
+                height: 48px;
+                font-size: 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="container">
+        <!-- 标题 -->
+        <div class="header">
+            <h1 class="greeting">HI！这里是Xuan1713的主页</h1>
+            <p class="subtitle">做的有些潦草，但是又不是不能用😉</p>
+            <p class="subtitle">会持续优化的</p>
+        </div>
+
+        <!-- 时间卡片 -->
+        <div class="time-card">
+            <div class="time-display" id="current-time">00:00:00</div>
+            <div class="date-display" id="current-date">加载中...</div>
+        </div>
+
+        <!-- 作品区域 -->
+        <div class="works-section">
+            <h2 class="section-title">
+                <i class="fas fa-code"></i>
+                我的作品：
+            </h2>
+
+            <div class="work-buttons">
+
+                <a href="projects1/xclock_v1.html" class="work-btn" target="_blank">
+                    <div class="work-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="work-info">
+                        <div class="work-title">在线时钟 v1.0.0</div>
+                        <div class="work-desc">时钟面板 · 农历/天气集成 · 触屏优化【测试阶段】</div>
+                    </div>
+                    <div class="work-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+                <a href="#" class="work-btn" style="opacity:0.7; cursor:default;">
+                    <div class="work-icon">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="work-info">
+                        <div class="work-title">更多作品筹备中</div>
+                        <div class="work-desc">新项目正在开发，敬请期待...</div>
+                    </div>
+                    <div class="work-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>© 2026 Xuan1713. 保留所有权利.</p>
+            <p>所有项目均部署于 GitHub Pages</p>
+            <p>当前主页版本：V1.0.0</p>
+            <a href="https://github.com/Xuan1713" class="github-link" target="_blank">
+                <i class="fab fa-github"></i>
+                访问我的 GitHub
+            </a>
+        </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="切换主题">
+        <i class="fas fa-moon theme-icon" id="themeIcon"></i>
+    </button>
+
+    <script>
+        // 时间更新
+        function updateTime() {
+            const now = new Date();
+
+            const timeStr = now.toLocaleTimeString('zh-CN', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            const dateStr = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            });
+
+            document.getElementById('current-time').textContent = timeStr;
+            document.getElementById('current-date').textContent = dateStr;
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // 主题切换
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+            themeIcon.style.animation = 'none';
+            setTimeout(() => {
+                themeIcon.style.animation = 'rotateIn 0.4s ease';
+            }, 10);
+        });
+        document.querySelectorAll('.work-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.style.opacity === '0.7') {
+                    e.preventDefault();
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
