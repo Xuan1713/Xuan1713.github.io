@@ -35,6 +35,12 @@
             --github-hover-bg: white;
             --github-hover-text: #1a202c;
             --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --tag-bg: #f1f5f9;
+            --tag-text: #64748b;
+            --tag-bg-hover: #e2e8f0;
+            --announcement-bg: #fef3c7;
+            --announcement-border: #fbbf24;
+            --announcement-text: #92400e;
         }
 
         body.dark-mode {
@@ -59,6 +65,12 @@
             --github-hover-bg: #2d3748;
             --github-hover-text: #f7fafc;
             --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --tag-bg: #4a5568;
+            --tag-text: #cbd5e0;
+            --tag-bg-hover: #2d3748;
+            --announcement-bg: #78350f;
+            --announcement-border: #d97706;
+            --announcement-text: #fef3c7;
         }
 
         body {
@@ -74,7 +86,7 @@
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
         }
 
         /* 标题区域 */
@@ -107,6 +119,42 @@
             font-size: 1rem;
             font-weight: normal;
             transition: color 0.3s ease;
+        }
+
+        /* 公告栏 */
+        .announcement {
+            background: var(--announcement-bg);
+            border: 1px solid var(--announcement-border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: fadeIn 1s ease 0.3s both;
+        }
+
+        .announcement-icon {
+            color: var(--announcement-text);
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+
+        .announcement-content {
+            flex: 1;
+        }
+
+        .announcement-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--announcement-text);
+            font-size: 0.95rem;
+        }
+
+        .announcement-text {
+            color: var(--announcement-text);
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
 
         .time-card {
@@ -166,12 +214,12 @@
         .work-buttons {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 20px;
         }
 
         .work-btn {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 15px;
             background: var(--work-btn-bg);
             border: 2px solid var(--work-btn-border);
@@ -224,32 +272,87 @@
         .work-info {
             flex-grow: 1;
             text-align: left;
+            min-width: 0;
+        }
+
+        .work-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .work-title {
             font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 5px;
             color: var(--work-title-color);
             transition: color 0.3s ease;
+        }
+
+        .work-version {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: var(--tag-bg);
+            padding: 3px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
         }
 
         .work-desc {
             font-size: 0.9rem;
             color: var(--work-desc-color);
             line-height: 1.4;
+            margin-bottom: 10px;
             transition: color 0.3s ease;
+        }
+
+        .work-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 5px;
+        }
+
+        .work-tag {
+            font-size: 0.75rem;
+            color: var(--tag-text);
+            background: var(--tag-bg);
+            padding: 4px 10px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .work-btn:hover .work-tag {
+            background: var(--tag-bg-hover);
         }
 
         .work-arrow {
             color: var(--arrow-color);
             font-size: 1.2rem;
             transition: all 0.3s ease;
+            margin-top: 5px;
         }
 
         .work-btn:hover .work-arrow {
             transform: translateX(5px);
             color: var(--arrow-hover);
+        }
+
+        .work-btn.disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        .work-btn.disabled:hover {
+            transform: none;
+            border-color: var(--work-btn-border);
+            box-shadow: none;
+        }
+
+        .work-btn.disabled:hover .work-icon {
+            transform: none;
         }
 
         .footer {
@@ -364,12 +467,24 @@
 
             .work-btn {
                 padding: 18px 20px;
+                flex-direction: column;
+                align-items: flex-start;
             }
 
             .work-icon {
                 width: 45px;
                 height: 45px;
                 font-size: 1.1rem;
+            }
+
+            .work-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .work-arrow {
+                align-self: flex-end;
+                margin-top: -30px;
             }
 
             .theme-toggle {
@@ -385,24 +500,30 @@
 </head>
 <body>
     <div class="container">
-        <!-- 标题 -->
         <div class="header">
             <h1 class="greeting">HI！这里是Xuan1713的主页</h1>
             <p class="subtitle">做的有些潦草，但是又不是不能用😉</p>
             <p class="subtitle">会持续优化的</p>
         </div>
 
-        <!-- 时间卡片 -->
+        <div class="announcement">
+            <i class="fas fa-bullhorn announcement-icon"></i>
+            <div class="announcement-content">
+                <div class="announcement-title">公告</div>
+                <div class="announcement-text">当前没有公告</div>
+            </div>
+        </div>
+
         <div class="time-card">
             <div class="time-display" id="current-time">00:00:00</div>
             <div class="date-display" id="current-date">加载中...</div>
         </div>
 
-        <!-- 作品区域 -->
+        <!-- 作品 -->
         <div class="works-section">
             <h2 class="section-title">
                 <i class="fas fa-code"></i>
-                我的作品：
+                我的作品
             </h2>
 
             <div class="work-buttons">
@@ -412,20 +533,61 @@
                         <i class="fas fa-clock"></i>
                     </div>
                     <div class="work-info">
-                        <div class="work-title">在线时钟 v1.0.0</div>
-                        <div class="work-desc">时钟面板 · 农历/天气集成 · 触屏优化【测试阶段】</div>
+                        <div class="work-header">
+                            <div class="work-title">在线时钟</div>
+                            <div class="work-version">v1.0.0 | 2026-02-05 更新</div>
+                        </div>
+                        <div class="work-desc">一个功能丰富的在线时钟，集成农历显示和天气信息，支持触屏操作。</div>
+                        <div class="work-tags">
+                            <span class="work-tag">工具</span>
+                            <span class="work-tag">农历</span>
+                            <span class="work-tag">需要API</span>
+                            <span class="work-tag">响应式</span>
+                        </div>
                     </div>
                     <div class="work-arrow">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </a>
-                <a href="#" class="work-btn" style="opacity:0.7; cursor:default;">
+
+
+                <a href="projects1\Xcalendar_v1.html" class="work-btn" target="_blank">
+                    <div class="work-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="work-info">
+                        <div class="work-header">
+                            <div class="work-title">日历</div>
+                            <div class="work-version">v1.0.0 | 开发中.</div>
+                        </div>
+                        <div class="work-desc">就是个简易日历</div>
+                        <div class="work-tags">
+                            <span class="work-tag">工具</span>
+                            <span class="work-tag">节日</span>
+                            <span class="work-tag">农历</span>
+                            <span class="work-tag">响应式</span>
+                        </div>
+                    </div>
+                    <div class="work-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+
+
+                <a href="#" class="work-btn disabled">
                     <div class="work-icon">
                         <i class="fas fa-plus"></i>
                     </div>
                     <div class="work-info">
-                        <div class="work-title">更多作品筹备中</div>
-                        <div class="work-desc">新项目正在开发，敬请期待...</div>
+                        <div class="work-header">
+                            <div class="work-title">待开发项目</div>
+                            <div class="work-version">敬请期待</div>
+                        </div>
+                        <div class="work-desc">新项目正在规划中。</div>
+                        <div class="work-tags">
+                            <span class="work-tag">规划中</span>
+                        </div>
                     </div>
                     <div class="work-arrow">
                         <i class="fas fa-chevron-right"></i>
@@ -433,22 +595,23 @@
                 </a>
             </div>
         </div>
+
         <div class="footer">
-            <p>© 2026 Xuan1713. 保留所有权利.</p>
+            <p>© 2024 Xuan1713. 保留所有权利.</p>
             <p>所有项目均部署于 GitHub Pages</p>
-            <p>当前主页版本：V1.0.0</p>
+            <p>当前主页版本：V1.1.0</p>
             <a href="https://github.com/Xuan1713" class="github-link" target="_blank">
                 <i class="fab fa-github"></i>
                 访问我的 GitHub
             </a>
         </div>
     </div>
+
     <button class="theme-toggle" id="themeToggle" title="切换主题">
         <i class="fas fa-moon theme-icon" id="themeIcon"></i>
     </button>
 
     <script>
-        // 时间更新
         function updateTime() {
             const now = new Date();
 
@@ -472,8 +635,6 @@
 
         updateTime();
         setInterval(updateTime, 1000);
-
-        // 主题切换
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const body = document.body;
@@ -500,15 +661,14 @@
                 themeIcon.style.animation = 'rotateIn 0.4s ease';
             }, 10);
         });
-        document.querySelectorAll('.work-btn').forEach(btn => {
+
+        document.querySelectorAll('.work-btn.disabled').forEach(btn => {
             btn.addEventListener('click', function(e) {
-                if (this.style.opacity === '0.7') {
-                    e.preventDefault();
-                    this.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 200);
-                }
+                e.preventDefault();
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
             });
         });
     </script>
