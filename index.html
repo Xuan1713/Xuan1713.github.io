@@ -41,6 +41,12 @@
             --announcement-bg: #fef3c7;
             --announcement-border: #fbbf24;
             --announcement-text: #92400e;
+            --toast-bg: #ffffff;
+            --toast-border: #e2e8f0;
+            --toast-success: #10b981;
+            --toast-warning: #f59e0b;
+            --toast-error: #ef4444;
+            --toast-info: #3b82f6;
         }
 
         body.dark-mode {
@@ -71,6 +77,8 @@
             --announcement-bg: #78350f;
             --announcement-border: #d97706;
             --announcement-text: #fef3c7;
+            --toast-bg: #2d3748;
+            --toast-border: #4a5568;
         }
 
         body {
@@ -298,6 +306,13 @@
             padding: 3px 10px;
             border-radius: 20px;
             white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .work-version:hover {
+            background: var(--tag-bg-hover);
+            transform: scale(1.05);
         }
 
         .work-desc {
@@ -452,6 +467,255 @@
             }
         }
 
+        /* Toast 弹窗样式 */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        .toast {
+            background: var(--toast-bg);
+            border: 1px solid var(--toast-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: toastSlideIn 0.3s ease;
+            max-width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .toast.hiding {
+            animation: toastSlideOut 0.3s ease forwards;
+        }
+
+        .toast-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            width: 20px;
+            text-align: center;
+        }
+
+        .toast.info .toast-icon { color: var(--toast-info); }
+        .toast.success .toast-icon { color: var(--toast-success); }
+        .toast.warning .toast-icon { color: var(--toast-warning); }
+        .toast.error .toast-icon { color: var(--toast-error); }
+
+        .toast-message {
+            font-size: 0.95rem;
+            flex-grow: 1;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .toast-close:hover {
+            background: var(--tag-bg);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes toastSlideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* 模态框样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--card-border);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--work-title-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-title i {
+            color: #4361ee;
+        }
+
+        .dark-mode .modal-title i {
+            color: #818cf8;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--tag-bg);
+            color: var(--work-title-color);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .changelog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .changelog-item {
+            padding: 16px;
+            background: var(--tag-bg);
+            border-radius: 12px;
+            border-left: 4px solid #4361ee;
+        }
+
+        .dark-mode .changelog-item {
+            border-left-color: #818cf8;
+        }
+
+        .changelog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .changelog-version {
+            font-weight: 600;
+            color: var(--work-title-color);
+            font-size: 1.1rem;
+        }
+
+        .changelog-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .changelog-content {
+            color: var(--work-desc-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .changelog-content ul {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .changelog-content li {
+            margin-bottom: 4px;
+        }
+
+        .project-info {
+            padding: 16px;
+            background: var(--tag-bg);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .project-info h4 {
+            margin-bottom: 8px;
+            color: var(--work-title-color);
+            font-size: 1.1rem;
+        }
+
+        .project-info p {
+            color: var(--work-desc-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 0 10px;
@@ -494,9 +758,20 @@
                 bottom: 20px;
                 right: 20px;
             }
+
+            .modal-content {
+                max-width: 90vw;
+                max-height: 85vh;
+            }
+
+            .toast-container {
+                max-width: 90vw;
+                right: 10px;
+                left: 10px;
+            }
         }
     </style>
-<base target="_blank">
+    <base target="_blank">
 </head>
 <body>
     <div class="container">
@@ -527,7 +802,7 @@
             </h2>
 
             <div class="work-buttons">
-
+                <!-- 在线时钟 -->
                 <a href="projects1/xclock_v1.html" class="work-btn" target="_blank">
                     <div class="work-icon">
                         <i class="fas fa-clock"></i>
@@ -535,12 +810,14 @@
                     <div class="work-info">
                         <div class="work-header">
                             <div class="work-title">在线时钟</div>
-                            <div class="work-version">v1.0.0 | 2026-02-05 更新</div>
+                            <div class="work-version" onclick="showChangelog('clock')">
+                                v1.0.0 | 2026-02-05 更新
+                            </div>
                         </div>
                         <div class="work-desc">一个功能丰富的在线时钟，集成农历显示和天气信息，支持触屏操作。</div>
                         <div class="work-tags">
                             <span class="work-tag">工具</span>
-                            <span class="work-tag">农历</span>
+                            <span class="work-tag">日期与时间</span>
                             <span class="work-tag">需要API</span>
                             <span class="work-tag">响应式</span>
                         </div>
@@ -550,21 +827,22 @@
                     </div>
                 </a>
 
-
-                <a href="projects1\Xcalendar_v1.html" class="work-btn" target="_blank">
+                <!-- 日历 -->
+                <a href="projects1/Xcalendar_v1.html" class="work-btn" target="_blank">
                     <div class="work-icon">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
                     <div class="work-info">
                         <div class="work-header">
                             <div class="work-title">日历</div>
-                            <div class="work-version">v1.0.0 | 开发中.</div>
+                            <div class="work-version" onclick="showChangelog('calendar')">
+                                v1.0.0 | 2026-02-06 更新
+                            </div>
                         </div>
                         <div class="work-desc">就是个简易日历</div>
                         <div class="work-tags">
                             <span class="work-tag">工具</span>
-                            <span class="work-tag">节日</span>
-                            <span class="work-tag">农历</span>
+                            <span class="work-tag">日期与时间</span>
                             <span class="work-tag">响应式</span>
                         </div>
                     </div>
@@ -574,8 +852,8 @@
                 </a>
 
 
-
-                <a href="#" class="work-btn disabled">
+                <!-- 待开发项目 -->
+                <a href="#" class="work-btn disabled" id="future-project">
                     <div class="work-icon">
                         <i class="fas fa-plus"></i>
                     </div>
@@ -598,63 +876,198 @@
 
         <div class="footer">
             <p>© 2026 Xuan1713. 保留所有权利.</p>
-            <p>所有项目均部署于 GitHub Pages</p>
-            <p>当前主页版本：V1.1.0</p>
+            <p>所有项目均已部署于 GitHub Pages</p>
+            <p>当前主页版本：V2.0.0</p>
             <a href="https://github.com/Xuan1713" class="github-link" target="_blank">
                 <i class="fab fa-github"></i>
                 访问我的 GitHub
             </a>
         </div>
     </div>
-
     <button class="theme-toggle" id="themeToggle" title="切换主题">
         <i class="fas fa-moon theme-icon" id="themeIcon"></i>
     </button>
+    <div class="toast-container" id="toast-container"></div>
+    <div class="modal-overlay" id="changelog-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-history"></i>
+                    更新日志
+                </h3>
+                <button class="modal-close" id="close-changelog">&times;</button>
+            </div>
+            <div class="modal-body" id="changelog-content">
+            </div>
+        </div>
+    </div>
 
     <script>
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                info: 'fas fa-info-circle',
+                success: 'fas fa-check-circle',
+                warning: 'fas fa-exclamation-triangle',
+                error: 'fas fa-times-circle'
+            };
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="${icons[type] || icons.info}"></i>
+                </div>
+                <div class="toast-message">${message}</div>
+                <button class="toast-close" onclick="closeToast(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.add('hiding');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 3000);
+        }
+        
+        function closeToast(button) {
+            const toast = button.closest('.toast');
+            toast.classList.add('hashing');
+            setTimeout(() => toast.remove(), 300);
+        }
+        const changelogs = {
+            clock: {
+                title: '在线时钟',
+                description: '多功能时钟，集成农历、天气、目标管理，适配触屏设备',
+                versions: [
+                    {
+                        version: 'v1.0.0',
+                        date: '2026-02-05',
+                        content: '初始版本发布<br>主要功能：<ul><li>实时数字时钟显示</li><li>农历日期和节气信息</li><li>天气信息集成</li><li>目标倒计时功能</li><li>响应式设计</li><li>主题切换功能</li></ul>'
+                    },
+                ]
+            },
+            calendar: {
+                title: '日历',
+                description: '简易日历',
+                versions: [
+                    {
+                        version: 'v1.0.0',
+                        date: '2026-02-07',
+                        content: '初始版本发布<br>主要功能：<ul><li>日历基本显示</li><li>农历和节日标注</li><li>响应式设计</li></ul>'
+                    }
+                ]
+            },
+            homepage: {
+                title: 'Xuan1713的个人主页',
+                description: '我的个人主页',
+                versions: [
+                    {
+                        version: 'v2.0.0',
+                        date: '2026-02-07',
+                        content: '当前版本<br>内容：<ul><li>添加Toast提示系统</li><li>添加更新日志查看功能</li><li>优化响应式设计</li><li>改进暗色模式体验</li></ul>'
+                    },
+                    {
+                        version: 'v1.1.0',
+                        date: '2026-02-05',
+                        content: '作品列表更新<br>内容：<ul><li>添加日历</li></ul>'
+                    },
+                    {
+                        version: 'v1.0.0',
+                        date: '2026-01-15',
+                        content: '初始版本<br>主要功能：<ul><li>个人作品展示</li><li>实时时钟显示</li><li>主题切换功能</li><li>响应式布局</li><li>GitHub链接</li></ul>'
+                    }
+                ]
+            }
+        };
+
+        function showChangelog(project) {
+            const modal = document.getElementById('changelog-modal');
+            const content = document.getElementById('changelog-content');
+            if (!changelogs[project]) {
+                showToast('未找到该项目的更新日志', 'warning');
+                return;
+            }
+            
+            const data = changelogs[project];
+            let html = `
+                <div class="project-info">
+                    <h4>${data.title}</h4>
+                    <p>${data.description}</p>
+                </div>
+                <div class="changelog-list">
+            `;
+            
+            data.versions.forEach(item => {
+                html += `
+                    <div class="changelog-item">
+                        <div class="changelog-header">
+                            <div class="changelog-version">${item.version}</div>
+                            <div class="changelog-date">${item.date}</div>
+                        </div>
+                        <div class="changelog-content">${item.content}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+            modal.style.display = 'flex';
+            modal.querySelector('.modal-content').addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('changelog-modal').style.display = 'none';
+        }
+
+        // 时钟
         function updateTime() {
             const now = new Date();
-
             const timeStr = now.toLocaleTimeString('zh-CN', { 
                 hour12: false,
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit'
             });
-
             const dateStr = now.toLocaleDateString('zh-CN', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
                 weekday: 'long'
             });
-
             document.getElementById('current-time').textContent = timeStr;
             document.getElementById('current-date').textContent = dateStr;
         }
 
-        updateTime();
-        setInterval(updateTime, 1000);
+        // 主题
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const body = document.body;
+        
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             body.classList.add('dark-mode');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
         }
 
         themeToggle.addEventListener('click', function() {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
                 localStorage.setItem('theme', 'dark');
+                showToast('已切换到暗色模式', 'success');
             } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
                 localStorage.setItem('theme', 'light');
+                showToast('已切换到亮色模式', 'success');
             }
             themeIcon.style.animation = 'none';
             setTimeout(() => {
@@ -662,16 +1075,42 @@
             }, 10);
         });
 
-        document.querySelectorAll('.work-btn.disabled').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+        document.getElementById('future-project').addEventListener('click', function(e) {
+            e.preventDefault();
+            showToast('该项目正在规划中，敬请期待！', 'info');
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+
+        document.querySelectorAll('.work-version').forEach(version => {
+            version.addEventListener('click', function(e) {
+                e.stopPropagation();
                 e.preventDefault();
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 200);
             });
+        });
+
+        document.getElementById('close-changelog').addEventListener('click', closeModal);
+        document.getElementById('changelog-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // 初始化
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        function showHomepageChangelog() {
+            showChangelog('homepage');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'h' || e.key === 'H') {
+                showHomepageChangelog();
+            }
         });
     </script>
 </body>
-
 </html>
