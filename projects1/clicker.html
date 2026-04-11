@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点击计数器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --gold: #d4af37;
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --counter-color: #ffffff;
+            --header-bg: rgba(0, 0, 0, 0.3);
+            --accent-glow: rgba(99, 102, 241, 0.5);
+        }
+
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #e8e8e8 0%, #f0f0f0 100%);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text-primary: #2c3e50;
+            --text-secondary: #666;
+            --counter-color: #2c3e50;
+            --header-bg: rgba(255, 255, 255, 0.5);
+            --accent-glow: rgba(99, 102, 241, 0.3);
+        }
+
+        html { min-width: 1000px; overflow-x: auto; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow: hidden;
+            transition: background 0.3s ease;
+            font-size: 16px;
+        }
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 1000;
+        }
+
+        .nav-links { display: flex; gap: 20px; }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .click-area {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .counter-display {
+            font-size: 12rem;
+            font-weight: 700;
+            color: var(--counter-color);
+            text-shadow: 0 0 40px var(--accent-glow);
+            transition: transform 0.1s ease;
+            line-height: 1;
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .counter-display.clicked {
+            transform: scale(0.9);
+        }
+        .counter-display.milestone {
+            animation: milestonePulse 0.6s ease;
+        }
+
+        @keyframes milestonePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); text-shadow: 0 0 60px var(--gold), 0 0 100px var(--gold); }
+        }
+
+        .hint-text {
+            margin-top: 20px;
+            color: var(--text-secondary);
+            font-size: 0.875em;
+            letter-spacing: 0.1em;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .cps-display {
+            position: fixed;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .cps-display.top-right { top: 70px; right: 20px; }
+        .cps-display.top-left { top: 70px; left: 20px; }
+        .cps-display.bottom-right { bottom: 20px; right: 20px; }
+        .cps-display.bottom-left { bottom: 20px; left: 20px; }
+
+        .cps-label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+
+        .cps-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-animation 0.6s ease-out;
+            background-color: rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(8); 
+                opacity: 0;
+            }
+        }
+
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 50;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+        }
+
+        @keyframes confettiFall {
+            0% { opacity: 1; transform: translateY(-100px) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+        }
+
+        .settings-overlay, .stats-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .settings-overlay.active, .stats-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .settings-modal, .stats-modal {
+            background: #1e1e2e;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 480px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            color: #fff;
+        }
+
+        [data-theme="light"] .settings-modal, [data-theme="light"] .stats-modal {
+            background: #fff;
+            color: #333;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .settings-header, .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="light"] .settings-header, [data-theme="light"] .stats-header {
+            border-bottom-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-title, .stats-title {
+            font-size: 1.125em;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 24px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        [data-theme="light"] .close-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #333;
+        }
+
+        .settings-body, .stats-body { padding: 24px; }
+
+        .setting-section { margin-bottom: 28px; }
+        .setting-section:last-child { margin-bottom: 0; }
+
+        .section-title {
+            font-size: 0.875em;
+            color: #999;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        [data-theme="light"] .section-title { color: #666; }
+
+        .color-picker-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .color-label {
+            font-size: 0.875em;
+            color: #ccc;
+            min-width: 80px;
+        }
+
+        [data-theme="light"] .color-label { color: #666; }
+
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .color-input {
+            width: 50px;
+            height: 36px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: none;
+        }
+
+        .color-text {
+            font-size: 0.875em;
+            color: #888;
+            font-family: monospace;
+        }
+
+        [data-theme="light"] .color-text { color: #666; }
+
+        .theme-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .theme-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            font-size: 0.875em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .theme-btn:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+        }
+
+        .theme-btn.active { box-shadow: 0 0 0 2px #818cf8; }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .toggle-label {
+            font-size: 0.875em;
+            color: #ccc;
+        }
+
+        [data-theme="light"] .toggle-label { color: #666; }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #4b5563;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active { background: #4f46e5; }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active::after { transform: translateX(20px); }
+
+        .position-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .position-btn {
+            padding: 10px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875em;
+        }
+
+        .position-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .position-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px #818cf8;
+        }
+
+        .danger-btn {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875em;
+            font-weight: 500;
+        }
+
+        .danger-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .about-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 0.8125em;
+            line-height: 1.8;
+        }
+
+        [data-theme="light"] .about-content { background: rgba(0, 0, 0, 0.03); }
+
+        .about-item {
+            display: flex;
+            margin-bottom: 4px;
+        }
+
+        .about-label {
+            color: #888;
+            min-width: 80px;
+        }
+
+        [data-theme="light"] .about-label { color: #666; }
+
+        .about-value {
+            color: #fff;
+            flex: 1;
+        }
+
+        [data-theme="light"] .about-value { color: #333; }
+
+        .about-value a {
+            color: #818cf8;
+            text-decoration: none;
+        }
+
+        .about-value a:hover { text-decoration: underline; }
+
+        .about-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="light"] .about-section { border-top-color: rgba(0, 0, 0, 0.1); }
+
+        .about-title {
+            font-size: 0.8125em;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        [data-theme="light"] .about-title { color: #666; }
+
+        .about-list {
+            list-style: disc;
+            padding-left: 20px;
+            color: #ccc;
+            font-size: 0.75em;
+        }
+
+        [data-theme="light"] .about-list { color: #666; }
+
+        .about-list li { margin-bottom: 4px; }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 3em;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.875em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-item-value {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-item-label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+        }
+
+        .session-info {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .session-title {
+            font-size: 0.875em;
+            color: var(--gold);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .session-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.875em;
+        }
+
+        .session-row:last-child { margin-bottom: 0; }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track { background: transparent; }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+        [data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); }
+        [data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-links">
+            <button class="nav-btn" onclick="openSettings()">⚙️ 设置</button>
+            <button class="nav-btn" onclick="openStats()">📊 统计</button>
+            <a href="../index.html" target="_blank" class="nav-btn">返回主页</a>
+        </div>
+    </nav>
+    <div class="click-area" id="clickArea">
+        <div class="counter-display" id="counterDisplay">0</div>
+        <div class="hint-text">点击屏幕任意位置以计数</div>
+    </div>
+    <div class="cps-display top-right" id="cpsDisplay">
+        <div class="cps-label">CPS</div>
+        <div class="cps-value" id="cpsValue">0.0</div>
+    </div>
+    <div class="confetti-container" id="confettiContainer"></div>
+    <div class="settings-overlay" id="settingsOverlay" onclick="closeSettingsOnOverlay(event)">
+        <div class="settings-modal" onclick="event.stopPropagation()">
+            <div class="settings-header">
+                <h2 class="settings-title">设置</h2>
+                <button class="close-btn" onclick="closeSettings()">×</button>
+            </div>
+            
+            <div class="settings-body">
+                <div class="setting-section">
+                    <div class="section-title">主题设置</div>
+                    <div class="theme-buttons">
+                        <button class="theme-btn" id="btnLight" onclick="setTheme('light')">白昼模式</button>
+                        <button class="theme-btn" id="btnDark" onclick="setTheme('dark')">黑夜模式</button>
+                    </div>
+                    
+                    <div class="color-picker-row">
+                        <span class="color-label">背景颜色</span>
+                        <div class="color-input-wrapper">
+                            <input type="color" class="color-input" id="bgColorPicker" value="#1a1a2e" onchange="updateCustomColor('bg', this.value)">
+                            <span class="color-text" id="bgColorText">#1a1a2e</span>
+                        </div>
+                    </div>
+                    
+                    <div class="color-picker-row">
+                        <span class="color-label">计数颜色</span>
+                        <div class="color-input-wrapper">
+                            <input type="color" class="color-input" id="counterColorPicker" value="#ffffff" onchange="updateCustomColor('counter', this.value)">
+                            <span class="color-text" id="counterColorText">#ffffff</span>
+                        </div>
+                    </div>
+                    
+                    <div class="color-picker-row">
+                        <span class="color-label">主题强调色</span>
+                        <div class="color-input-wrapper">
+                            <input type="color" class="color-input" id="accentColorPicker" value="#6366f1" onchange="updateCustomColor('accent', this.value)">
+                            <span class="color-text" id="accentColorText">#6366f1</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <div class="section-title">个性设置</div>
+                    
+                    <div class="toggle-row">
+                        <span class="toggle-label">点击动效</span>
+                        <div class="toggle-switch active" id="clickEffectToggle" onclick="toggleSetting('clickEffect')"></div>
+                    </div>
+                    
+                    <div class="toggle-row">
+                        <span class="toggle-label">彩条效果（100倍数时触发）</span>
+                        <div class="toggle-switch active" id="confettiToggle" onclick="toggleSetting('confetti')"></div>
+                    </div>
+                    
+                    <div class="section-title" style="margin-top: 16px;">CPS显示位置</div>
+                    <div class="position-grid">
+                        <button class="position-btn" onclick="setCpsPosition('top-left')">左上</button>
+                        <button class="position-btn active" onclick="setCpsPosition('top-right')">右上</button>
+                        <button class="position-btn" onclick="setCpsPosition('bottom-left')">左下</button>
+                        <button class="position-btn" onclick="setCpsPosition('bottom-right')">右下</button>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button class="danger-btn" onclick="clearAllData()">🗑️ 清除所有数据</button>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <div class="section-title">关于</div>
+                    <div class="about-content">
+                        <div class="about-item">
+                            <span class="about-label">项目名称：</span>
+                            <span class="about-value">计数器</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">版本：</span>
+                            <span class="about-value">1.0.0</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">开发者：</span>
+                            <span class="about-value">Xuan1713</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">更新时间：</span>
+                            <span class="about-value">2026-04-11</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">项目状态：</span>
+                            <span class="about-value">暂不开发</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">Tips：</span>
+                            <span class="about-value">没有</span>
+                        </div>
+                        
+                        <div class="about-section" style="text-align: center; padding-top: 12px;">
+                            <a href="https://github.com/Xuan1713" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; color: #818cf8; text-decoration: none; font-size: 0.8125em;">
+                                <svg height="16" viewBox="0 0 16 16" width="16" fill="currentColor">
+                                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                                </svg>
+                                访问作者的 GitHub 主页
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 统计面板 -->
+    <div class="stats-overlay" id="statsOverlay" onclick="closeStatsOnOverlay(event)">
+        <div class="stats-modal" onclick="event.stopPropagation()">
+            <div class="stats-header">
+                <h2 class="stats-title">📊 统计数据</h2>
+                <button class="close-btn" onclick="closeStats()">×</button>
+            </div>
+            
+            <div class="stats-body">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalClicks">0</div>
+                    <div class="stat-label">总点击次数</div>
+                </div>
+                
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-item-value" id="maxCps">0.0</div>
+                        <div class="stat-item-label">最高 CPS</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value" id="avgCps">0.0</div>
+                        <div class="stat-item-label">平均 CPS</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value" id="sessionClicks">0</div>
+                        <div class="stat-item-label">本次点击</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value" id="milestonesReached">0</div>
+                        <div class="stat-item-label">达成里程碑</div>
+                    </div>
+                </div>
+                
+                <div class="stat-item" style="margin-bottom: 16px;">
+                    <div class="stat-item-value" id="historyHigh">0</div>
+                    <div class="stat-item-label">历史最高点击记录</div>
+                </div>
+                
+                <div class="session-info">
+                    <div class="session-title">本次会话详情</div>
+                    <div class="session-row">
+                        <span>开始时间</span>
+                        <span id="sessionStart">--:--:--</span>
+                    </div>
+                    <div class="session-row">
+                        <span>持续时间</span>
+                        <span id="sessionDuration">00:00:00</span>
+                    </div>
+                    <div class="session-row">
+                        <span>当前CPS</span>
+                        <span id="currentCpsStat" style="color: var(--primary); font-weight: 600;">0.0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 状态变量
+        let count = 0, sessionCount = 0, clickTimes = [], maxCps = 0;
+        let totalCpsSum = 0, cpsCount = 0, milestonesReached = 0, historyHigh = 0;
+        let sessionStartTime = new Date();
+        
+        let settings = {
+            theme: 'dark', clickEffect: true, confetti: true, cpsPosition: 'top-right',
+            bgColor: '#1a1a2e', counterColor: '#ffffff', accentColor: '#6366f1'
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            loadSettings();
+            applySettings();
+            updateDisplay();
+            document.getElementById('clickArea').addEventListener('click', handleClick);
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && !e.repeat) {
+                    e.preventDefault();
+                    handleClick({ clientX: window.innerWidth/2, clientY: window.innerHeight/2 });
+                }
+            });
+        
+            setInterval(updateCps, 100);
+            setInterval(updateSessionDuration, 1000);
+        });
+        function createRipple(x, y) {
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            const size = 40;
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (x - size/2) + 'px';
+            ripple.style.top = (y - size/2) + 'px';
+            
+            document.body.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        }
+        function handleClick(e) {
+            count++; sessionCount++;
+            const now = Date.now();
+            clickTimes.push(now);
+            clickTimes = clickTimes.filter(time => now - time <= 1000);
+            if (count % 100 === 0 && count > 0) {
+                milestonesReached++;
+                if (settings.confetti) {
+                    triggerConfetti();
+                    document.getElementById('counterDisplay').classList.add('milestone');
+                    setTimeout(() => {
+                        document.getElementById('counterDisplay').classList.remove('milestone');
+                    }, 600);
+                }
+            }
+            if (count > historyHigh) historyHigh = count;
+            
+            // 点击动效
+            if (settings.clickEffect) {
+                const display = document.getElementById('counterDisplay');
+                display.classList.add('clicked');
+                setTimeout(() => display.classList.remove('clicked'), 100);
+                if (e) createRipple(e.clientX, e.clientY);
+            }
+            
+            updateDisplay();
+            saveData();
+        }
+        function updateCps() {
+            const now = Date.now();
+            clickTimes = clickTimes.filter(time => now - time <= 1000);
+            const cps = clickTimes.length;
+            
+            document.getElementById('cpsValue').textContent = cps.toFixed(1);
+            document.getElementById('currentCpsStat').textContent = cps.toFixed(1);
+            
+            if (cps > maxCps) maxCps = cps;
+            if (cps > 0) { totalCpsSum += cps; cpsCount++; }
+        }
+        function updateDisplay() {
+            document.getElementById('counterDisplay').textContent = count;
+        }
+        function updateSessionDuration() {
+            const diff = Math.floor((new Date() - sessionStartTime) / 1000);
+            const h = Math.floor(diff / 3600).toString().padStart(2, '0');
+            const m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
+            const s = (diff % 60).toString().padStart(2, '0');
+            document.getElementById('sessionDuration').textContent = `${h}:${m}:${s}`;
+        }
+
+        // 彩条
+        function triggerConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#00b894'];
+            
+            for (let i = 0; i < 50; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + '%';
+                c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                c.style.animation = `confettiFall ${1 + Math.random()}s ease-out forwards`;
+                c.style.animationDelay = Math.random() * 0.5 + 's';
+                container.appendChild(c);
+                setTimeout(() => c.remove(), 2000);
+            }
+        }
+
+        // 面板控制
+        function openSettings() { document.getElementById('settingsOverlay').classList.add('active'); }
+        function closeSettings() { document.getElementById('settingsOverlay').classList.remove('active'); }
+        function closeSettingsOnOverlay(e) { if (e.target === e.currentTarget) closeSettings(); }
+        
+        function openStats() { 
+            document.getElementById('statsOverlay').classList.add('active'); 
+            updateStats();
+        }
+        function closeStats() { document.getElementById('statsOverlay').classList.remove('active'); }
+        function closeStatsOnOverlay(e) { if (e.target === e.currentTarget) closeStats(); }
+
+        // 更新统计面板数据
+        function updateStats() {
+            document.getElementById('totalClicks').textContent = count;
+            document.getElementById('maxCps').textContent = maxCps.toFixed(1);
+            document.getElementById('avgCps').textContent = cpsCount > 0 ? (totalCpsSum / cpsCount).toFixed(1) : '0.0';
+            document.getElementById('sessionClicks').textContent = sessionCount;
+            document.getElementById('milestonesReached').textContent = milestonesReached;
+            document.getElementById('historyHigh').textContent = historyHigh;
+            document.getElementById('sessionStart').textContent = sessionStartTime.toLocaleTimeString('zh-CN');
+        }
+
+        // 设置
+        function setTheme(theme) {
+            settings.theme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('btnLight').classList.toggle('active', theme === 'light');
+            document.getElementById('btnDark').classList.toggle('active', theme === 'dark');
+            saveSettings();
+        }
+
+        function toggleSetting(key) {
+            settings[key] = !settings[key];
+            document.getElementById(key + 'Toggle').classList.toggle('active', settings[key]);
+            saveSettings();
+        }
+
+        function setCpsPosition(pos) {
+            settings.cpsPosition = pos;
+            document.getElementById('cpsDisplay').className = 'cps-display ' + pos;
+            document.querySelectorAll('.position-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes(pos.replace('-', ''))) btn.classList.add('active');
+            });
+            saveSettings();
+        }
+        function updateCustomColor(type, value) {
+            settings[type + 'Color'] = value;
+            document.getElementById(type + 'ColorText').textContent = value;
+            
+            if (type === 'bg') {
+                document.documentElement.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${value} 0%, ${adjustColor(value, 20)} 100%)`);
+            } else if (type === 'counter') {
+                document.documentElement.style.setProperty('--counter-color', value);
+            } else if (type === 'accent') {
+                document.documentElement.style.setProperty('--primary', value);
+                document.documentElement.style.setProperty('--accent-glow', value + '80');
+            }
+            saveSettings();
+        }
+        function adjustColor(color, amount) {
+            const num = parseInt(color.replace('#', ''), 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+            const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
+            const b = Math.min(255, Math.max(0, (num & 0x00FF) + amount));
+            return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+        }
+        function clearAllData() {
+            if (!confirm('确定要清除所有数据吗？此操作不可恢复！')) return;
+            count = sessionCount = maxCps = totalCpsSum = cpsCount = milestonesReached = historyHigh = 0;
+            clickTimes = [];
+            sessionStartTime = new Date();
+            localStorage.removeItem('clickerData');
+            updateDisplay();
+            closeSettings();
+        }
+        function saveData() {
+            localStorage.setItem('clickerData', JSON.stringify({
+                count, maxCps, totalCpsSum, cpsCount, milestonesReached, historyHigh
+            }));
+        }
+
+        function loadData() {
+            const d = JSON.parse(localStorage.getItem('clickerData') || '{}');
+            count = d.count || 0; maxCps = d.maxCps || 0; totalCpsSum = d.totalCpsSum || 0;
+            cpsCount = d.cpsCount || 0; milestonesReached = d.milestonesReached || 0; historyHigh = d.historyHigh || 0;
+        }
+
+        function saveSettings() { localStorage.setItem('clickerSettings', JSON.stringify(settings)); }
+        
+        function loadSettings() {
+            const s = JSON.parse(localStorage.getItem('clickerSettings') || '{}');
+            settings = { ...settings, ...s };
+        }
+        function applySettings() {
+            setTheme(settings.theme);
+            document.getElementById('clickEffectToggle').classList.toggle('active', settings.clickEffect);
+            document.getElementById('confettiToggle').classList.toggle('active', settings.confetti);
+            setCpsPosition(settings.cpsPosition);
+            
+            ['bg', 'counter', 'accent'].forEach(type => {
+                document.getElementById(type + 'ColorPicker').value = settings[type + 'Color'];
+                document.getElementById(type + 'ColorText').textContent = settings[type + 'Color'];
+                updateCustomColor(type, settings[type + 'Color']);
+            });
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { closeSettings(); closeStats(); }
+        });
+    </script>
+</body>
+</html>
