@@ -1,0 +1,80 @@
+{
+  "projects": [
+    {
+      "id": "clock",
+      "title": "在线时钟",
+      "url": "projects1/xclock_v1.html",
+      "icon": "fa-clock",
+      "version": "v1.0.0",
+      "date": "2026-02-05",
+      "description": "一个功能丰富的在线时钟，集成农历显示和天气信息，支持触屏操作。",
+      "tags": ["工具", "日期与时间", "需要API", "响应式"],
+      "changelog": [
+        {
+          "version": "v1.0.0",
+          "date": "2026-02-05",
+          "content": "初始版本发布<br>主要功能：<ul><li>实时数字时钟显示</li><li>农历日期和节气信息</li><li>天气信息集成</li><li>目标倒计时功能</li><li>响应式设计</li><li>主题切换功能</li></ul>"
+        }
+      ]
+    },
+    {
+      "id": "calendar",
+      "title": "日历",
+      "url": "projects1/Xcalendar_v1.html",
+      "icon": "fa-calendar-alt",
+      "version": "v1.0.0",
+      "date": "2026-02-06",
+      "description": "就是个简易日历",
+      "tags": ["工具", "日期与时间", "非响应式"],
+      "changelog": [
+        {
+          "version": "v1.0.0",
+          "date": "2026-02-07",
+          "content": "初始版本发布<br>主要功能：<ul><li>日历基本显示</li><li>农历和节日标注</li><li>响应式设计</li></ul>"
+        }
+      ]
+    },
+    {
+      "id": "counter",
+      "title": "点击计数器",
+      "url": "projects1/clicker.html",
+      "icon": "fa-calculator",
+      "version": "v1.0.0",
+      "date": "2026-04-11",
+      "description": "一个简单的点击计数工具，记录你的点击次数。",
+      "tags": ["娱乐", "工具", "非响应式"],
+      "changelog": [
+        {
+          "version": "v1.0.0",
+          "date": "2026-04-11",
+          "content": "初始版本发布<br>主要功能：<ul><li>点击按钮增加计数</li><li>重置计数功能</li><li>简洁界面设计</li></ul>"
+        }
+      ]
+    }
+  ],
+  "homepage": {
+    "version": "v3.0.0",
+    "changelog": [
+      {
+        "version": "v3.0.0",
+        "date": "2026-04-12",
+        "content": "重大更新<br>内容：<ul><li>作品数据迁移至 JSON 统一配置</li><li>主页动态渲染作品列表</li><li>更新日志集中管理</li><li>优化加载体验</li><li>修复图标显示问题</li></ul>"
+      },
+      {
+        "version": "v2.0.0",
+        "date": "2026-02-07",
+        "content": "小更新<br>内容：<ul><li>添加Toast提示系统</li><li>添加更新日志查看功能</li><li>优化响应式设计</li><li>改进暗色模式体验</li></ul>"
+      },
+      {
+        "version": "v1.1.0",
+        "date": "2026-02-05",
+        "content": "作品列表更新<br>内容：<ul><li>添加日历</li></ul>"
+      },
+      {
+        "version": "v1.0.0",
+        "date": "2026-01-15",
+        "content": "初始版本<br>主要功能：<ul><li>个人作品展示</li><li>实时时钟显示</li><li>主题切换功能</li><li>响应式布局</li><li>GitHub链接</li></ul>"
+      }
+    ]
+  }
+}
