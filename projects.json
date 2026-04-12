@@ -41,13 +41,13 @@
       "icon": "fa-calculator",
       "version": "v1.0.0",
       "date": "2026-04-11",
-      "description": "一个简单的点击计数工具，记录你的点击次数。",
-      "tags": ["娱乐", "工具", "非响应式"],
+      "description": "计数器",
+      "tags": ["娱乐", "非响应式"],
       "changelog": [
         {
           "version": "v1.0.0",
           "date": "2026-04-11",
-          "content": "初始版本发布<br>主要功能：<ul><li>点击按钮增加计数</li><li>重置计数功能</li><li>简洁界面设计</li></ul>"
+          "content": "初始版本发布<br>主要功能：<ul><li>点击计数功能</li><li>计数重置</li></ul>"
         }
       ]
     }
@@ -57,8 +57,8 @@
     "changelog": [
       {
         "version": "v3.0.0",
-        "date": "2026-04-12",
-        "content": "重大更新<br>内容：<ul><li>作品数据迁移至 JSON 统一配置</li><li>主页动态渲染作品列表</li><li>更新日志集中管理</li><li>优化加载体验</li><li>修复图标显示问题</li></ul>"
+        "date": "2026-04-11",
+        "content": "作品列表更新<br>内容：<ul><li>添加点击计数器</li><li>改用 JSON 统一配置</li></ul>"
       },
       {
         "version": "v2.0.0",
