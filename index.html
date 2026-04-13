@@ -6,9 +6,765 @@
     <title>Xuan1713的主页</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 这里保持你原来的所有 CSS 不变，为了节省篇幅省略，你用原来的就行 */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        /* ... 你的完整 CSS ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --bg-gradient-start: #f5f7fa;
+            --bg-gradient-end: #c3cfe2;
+            --text-primary: #333;
+            --text-secondary: #8d8d8d;
+            --card-bg: white;
+            --card-border: rgba(255, 255, 255, 0.2);
+            --time-color: #2d3748;
+            --date-color: #718096;
+            --section-title-color: #2d3748;
+            --work-btn-bg: white;
+            --work-btn-border: #e2e8f0;
+            --work-title-color: #2d3748;
+            --work-desc-color: #718096;
+            --arrow-color: #a0aec0;
+            --arrow-hover: #4361ee;
+            --footer-color: #94a3b8;
+            --github-bg: rgba(255, 255, 255, 0.7);
+            --github-text: #64748b;
+            --github-hover-bg: white;
+            --github-hover-text: #1a202c;
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --tag-bg: #f1f5f9;
+            --tag-text: #64748b;
+            --tag-bg-hover: #e2e8f0;
+            --announcement-bg: #fef3c7;
+            --announcement-border: #fbbf24;
+            --announcement-text: #92400e;
+            --toast-bg: #ffffff;
+            --toast-border: #e2e8f0;
+            --toast-success: #10b981;
+            --toast-warning: #f59e0b;
+            --toast-error: #ef4444;
+            --toast-info: #3b82f6;
+        }
+
+        body.dark-mode {
+            --bg-gradient-start: #1a202c;
+            --bg-gradient-end: #2d3748;
+            --text-primary: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --card-bg: #2d3748;
+            --card-border: #4a5568;
+            --time-color: #f7fafc;
+            --date-color: #cbd5e0;
+            --section-title-color: #f7fafc;
+            --work-btn-bg: #2d3748;
+            --work-btn-border: #4a5568;
+            --work-title-color: #f7fafc;
+            --work-desc-color: #a0aec0;
+            --arrow-color: #718096;
+            --arrow-hover: #818cf8;
+            --footer-color: #718096;
+            --github-bg: rgba(45, 55, 72, 0.7);
+            --github-text: #cbd5e0;
+            --github-hover-bg: #2d3748;
+            --github-hover-text: #f7fafc;
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --tag-bg: #4a5568;
+            --tag-text: #cbd5e0;
+            --tag-bg-hover: #2d3748;
+            --announcement-bg: #78350f;
+            --announcement-border: #d97706;
+            --announcement-text: #fef3c7;
+            --toast-bg: #2d3748;
+            --toast-border: #4a5568;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .greeting {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .greeting {
+            background: linear-gradient(90deg, #5263ff 0%, #1a56fa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: normal;
+            transition: color 0.3s ease;
+        }
+
+        .announcement {
+            background: var(--announcement-bg);
+            border: 1px solid var(--announcement-border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: fadeIn 1s ease 0.3s both;
+        }
+
+        .announcement-icon {
+            color: var(--announcement-text);
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+
+        .announcement-content {
+            flex: 1;
+        }
+
+        .announcement-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--announcement-text);
+            font-size: 0.95rem;
+        }
+
+        .announcement-text {
+            color: var(--announcement-text);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .time-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease 0.2s both;
+            transition: all 0.3s ease;
+        }
+
+        .time-display {
+            font-size: 2.8rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--time-color);
+            margin-bottom: 8px;
+            font-family: 'SF Mono', 'Monaco', 'Roboto Mono', monospace;
+            transition: color 0.3s ease;
+        }
+
+        .date-display {
+            font-size: 1.1rem;
+            color: var(--date-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .works-section {
+            animation: fadeIn 1s ease 0.4s both;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--section-title-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .section-title i {
+            color: #4361ee;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .section-title i {
+            color: #818cf8;
+        }
+
+        .work-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .work-btn {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: var(--work-btn-bg);
+            border: 2px solid var(--work-btn-border);
+            border-radius: 16px;
+            padding: 20px 25px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-btn:hover {
+            transform: translateY(-3px);
+            border-color: #4361ee;
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.15);
+        }
+
+        .dark-mode .work-btn:hover {
+            border-color: #818cf8;
+            box-shadow: 0 10px 25px rgba(129, 140, 248, 0.15);
+        }
+
+        .work-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .work-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .dark-mode .work-icon {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .work-btn:hover .work-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .work-info {
+            flex-grow: 1;
+            text-align: left;
+            min-width: 0;
+        }
+
+        .work-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .work-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--work-title-color);
+            transition: color 0.3s ease;
+        }
+
+        .work-version {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: var(--tag-bg);
+            padding: 3px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .work-version:hover {
+            background: var(--tag-bg-hover);
+            transform: scale(1.05);
+        }
+
+        .work-desc {
+            font-size: 0.9rem;
+            color: var(--work-desc-color);
+            line-height: 1.4;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .work-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 5px;
+        }
+
+        .work-tag {
+            font-size: 0.75rem;
+            color: var(--tag-text);
+            background: var(--tag-bg);
+            padding: 4px 10px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .work-btn:hover .work-tag {
+            background: var(--tag-bg-hover);
+        }
+
+        .work-arrow {
+            color: var(--arrow-color);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+        }
+
+        .work-btn:hover .work-arrow {
+            transform: translateX(5px);
+            color: var(--arrow-hover);
+        }
+
+        .work-btn.disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        .work-btn.disabled:hover {
+            transform: none;
+            border-color: var(--work-btn-border);
+            box-shadow: none;
+        }
+
+        .work-btn.disabled:hover .work-icon {
+            transform: none;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--footer-color);
+            font-size: 0.9rem;
+            animation: fadeIn 1s ease 0.6s both;
+            transition: color 0.3s ease;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--github-text);
+            text-decoration: none;
+            margin-top: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: var(--github-bg);
+            transition: all 0.3s ease;
+        }
+
+        .github-link:hover {
+            background: var(--github-hover-bg);
+            color: var(--github-hover-text);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.5);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .dark-mode .theme-toggle {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .dark-mode .theme-toggle:hover {
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .theme-icon {
+            transition: all 0.3s ease;
+        }
+
+        @keyframes rotateIn {
+            from {
+                transform: rotate(-180deg) scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: rotate(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .theme-toggle .theme-icon {
+            animation: rotateIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        .toast {
+            background: var(--toast-bg);
+            border: 1px solid var(--toast-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: toastSlideIn 0.3s ease;
+            max-width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .toast.hiding {
+            animation: toastSlideOut 0.3s ease forwards;
+        }
+
+        .toast-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            width: 20px;
+            text-align: center;
+        }
+
+        .toast.info .toast-icon { color: var(--toast-info); }
+        .toast.success .toast-icon { color: var(--toast-success); }
+        .toast.warning .toast-icon { color: var(--toast-warning); }
+        .toast.error .toast-icon { color: var(--toast-error); }
+
+        .toast-message {
+            font-size: 0.95rem;
+            flex-grow: 1;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .toast-close:hover {
+            background: var(--tag-bg);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes toastSlideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--card-border);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--work-title-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-title i {
+            color: #4361ee;
+        }
+
+        .dark-mode .modal-title i {
+            color: #818cf8;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--tag-bg);
+            color: var(--work-title-color);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .changelog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .changelog-item {
+            padding: 16px;
+            background: var(--tag-bg);
+            border-radius: 12px;
+            border-left: 4px solid #4361ee;
+        }
+
+        .dark-mode .changelog-item {
+            border-left-color: #818cf8;
+        }
+
+        .changelog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .changelog-version {
+            font-weight: 600;
+            color: var(--work-title-color);
+            font-size: 1.1rem;
+        }
+
+        .changelog-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .changelog-content {
+            color: var(--work-desc-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .changelog-content ul {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .changelog-content li {
+            margin-bottom: 4px;
+        }
+
+        .project-info {
+            padding: 16px;
+            background: var(--tag-bg);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .project-info h4 {
+            margin-bottom: 8px;
+            color: var(--work-title-color);
+            font-size: 1.1rem;
+        }
+
+        .project-info p {
+            color: var(--work-desc-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .greeting {
+                font-size: 1.8rem;
+            }
+
+            .time-display {
+                font-size: 2.2rem;
+            }
+
+            .work-btn {
+                padding: 18px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .work-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+
+            .work-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .work-arrow {
+                align-self: flex-end;
+                margin-top: -30px;
+            }
+
+            .theme-toggle {
+                width: 48px;
+                height: 48px;
+                font-size: 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .modal-content {
+                max-width: 90vw;
+                max-height: 85vh;
+            }
+
+            .toast-container {
+                max-width: 90vw;
+                right: 10px;
+                left: 10px;
+            }
+        }
     </style>
     <base target="_blank">
 </head>
@@ -38,9 +794,7 @@
                 <i class="fas fa-code"></i>
                 我的作品
             </h2>
-            <div class="work-buttons" id="work-buttons">
-                <div class="loading"><i class="fas fa-spinner fa-pulse"></i> 加载作品中...</div>
-            </div>
+            <div class="work-buttons" id="work-buttons"></div>
         </div>
 
         <div class="footer">
@@ -60,72 +814,181 @@
     <div class="modal-overlay" id="changelog-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title"><i class="fas fa-history"></i> 更新日志</h3>
+                <h3 class="modal-title">
+                    <i class="fas fa-history"></i>
+                    更新日志
+                </h3>
                 <button class="modal-close" id="close-changelog">&times;</button>
             </div>
-            <div class="modal-body" id="changelog-content"></div>
+            <div class="modal-body" id="changelog-content">
+            </div>
         </div>
     </div>
 
     <script>
-        // Toast 函数
+        const PROJECTS_DATA = {
+            projects: [
+                {
+                    id: "clock",
+                    title: "在线时钟",
+                    url: "projects1/xclock_v1.html",
+                    icon: "fa-clock",
+                    version: "v1.0.0",
+                    date: "2026-02-05",
+                    description: "一个功能丰富的在线时钟，集成农历显示和天气信息，支持触屏操作。",
+                    tags: ["工具", "日期与时间", "需要API", "响应式"],
+                    changelog: [
+                        {
+                            version: "v1.0.0",
+                            date: "2026-02-05",
+                            content: "初始版本发布<br>主要功能：<ul><li>实时数字时钟显示</li><li>农历日期和节气信息</li><li>天气信息集成</li><li>目标倒计时功能</li><li>响应式设计</li><li>主题切换功能</li></ul>"
+                        }
+                    ]
+                },
+                {
+                    id: "calendar",
+                    title: "日历",
+                    url: "projects1/Xcalendar_v1.html",
+                    icon: "fa-calendar-alt",
+                    version: "v1.0.0",
+                    date: "2026-02-06",
+                    description: "就是个简易日历",
+                    tags: ["工具", "日期与时间", "非响应式"],
+                    changelog: [
+                        {
+                            version: "v1.0.0",
+                            date: "2026-02-07",
+                            content: "初始版本发布<br>主要功能：<ul><li>日历基本显示</li><li>农历和节日标注</li><li>响应式设计</li></ul>"
+                        }
+                    ]
+                },
+                {
+                    id: "counter",
+                    title: "点击计数器",
+                    url: "projects1/clicker.html",
+                    icon: "fa-calculator",
+                    version: "v1.0.0",
+                    date: "2026-04-11",
+                    description: "计数器",
+                    tags: ["娱乐", "非响应式"],
+                    changelog: [
+                        {
+                            version: "v1.0.0",
+                            date: "2026-04-11",
+                            content: "初始版本发布<br>主要功能：<ul><li>点击计数功能</li><li>计数重置</li></ul>"
+                        }
+                    ]
+                },
+                {
+                    id: "gomoku",
+                    title: "五子棋",
+                    url: "#",
+                    icon: "fa-chess-board",
+                    version: "v0.1.0",
+                    date: "开发中",
+                    description: "人机对战的五子棋游戏，AI难度可调",
+                    tags: ["游戏", "开发中", "AI对战"],
+                    changelog: [
+                        {
+                            version: "v0.1.0",
+                            date: "2026-04-13",
+                            content: "开发中<br>计划功能：<ul><li>棋盘绘制</li><li>人机对战AI</li><li>难度选择</li><li>胜负判定</li></ul>"
+                        }
+                    ]
+                },
+                {
+                    id: "future",
+                    title: "更多作品",
+                    url: "#",
+                    icon: "fa-plus",
+                    version: "敬请期待",
+                    date: "",
+                    description: "新项目正在规划中，敬请期待",
+                    tags: ["规划中"],
+                    changelog: []
+                }
+            ],
+            homepage: {
+                version: "v3.0.0",
+                changelog: [
+                    {
+                        version: "v3.0.0",
+                        date: "2026-04-11",
+                        content: "作品列表更新<br>内容：<ul><li>添加点击计数器</li><li>改用内部数据管理</li></ul>"
+                    },
+                    {
+                        version: "v2.0.0",
+                        date: "2026-02-07",
+                        content: "小更新<br>内容：<ul><li>添加Toast提示系统</li><li>添加更新日志查看功能</li><li>优化响应式设计</li><li>改进暗色模式体验</li></ul>"
+                    },
+                    {
+                        version: "v1.1.0",
+                        date: "2026-02-05",
+                        content: "作品列表更新<br>内容：<ul><li>添加日历</li></ul>"
+                    },
+                    {
+                        version: "v1.0.0",
+                        date: "2026-01-15",
+                        content: "初始版本<br>主要功能：<ul><li>个人作品展示</li><li>实时时钟显示</li><li>主题切换功能</li><li>响应式布局</li><li>GitHub链接</li></ul>"
+                    }
+                ]
+            }
+        };
+
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             if (!container) return;
+            
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            const icons = { info: 'fas fa-info-circle', success: 'fas fa-check-circle', warning: 'fas fa-exclamation-triangle', error: 'fas fa-times-circle' };
-            toast.innerHTML = `<div class="toast-icon"><i class="${icons[type] || icons.info}"></i></div><div class="toast-message">${message}</div><button class="toast-close" onclick="this.closest('.toast').remove()">×</button>`;
+            
+            const icons = {
+                info: 'fas fa-info-circle',
+                success: 'fas fa-check-circle',
+                warning: 'fas fa-exclamation-triangle',
+                error: 'fas fa-times-circle'
+            };
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="${icons[type] || icons.info}"></i>
+                </div>
+                <div class="toast-message">${message}</div>
+                <button class="toast-close" onclick="this.closest('.toast').remove()">×</button>
+            `;
+            
             container.appendChild(toast);
-            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3000);
-        }
-
-        // 全局数据
-        let projectsData = [];
-        let homepageData = null;
-
-        // 加载并渲染
-        async function loadProjects() {
-            try {
-                const response = await fetch('projects.json?v=' + Date.now());
-                if (!response.ok) throw new Error('无法加载 projects.json');
-                const data = await response.json();
-                projectsData = data.projects || [];
-                homepageData = data.homepage || null;
-                
-                // 更新主页版本
-                if (homepageData && homepageData.version) {
-                    const verEl = document.getElementById('homepage-version');
-                    if (verEl) verEl.textContent = `当前主页版本：${homepageData.version}`;
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.add('hiding');
+                    setTimeout(() => toast.remove(), 300);
                 }
-                
-                renderProjects(); // 调用渲染函数
-            } catch (error) {
-                document.getElementById('work-buttons').innerHTML = '<div class="loading">加载失败，请刷新</div>';
-                showToast('加载失败: ' + error.message, 'error');
-            }
+            }, 3000);
         }
 
-        // 渲染作品列表（这个函数必须存在）
         function renderProjects() {
             const container = document.getElementById('work-buttons');
             if (!container) return;
-            if (!projectsData.length) {
+            
+            const projects = PROJECTS_DATA.projects;
+            if (!projects.length) {
                 container.innerHTML = '<div class="loading">暂无作品</div>';
                 return;
             }
             
             let html = '';
-            for (const p of projectsData) {
+            for (const p of projects) {
                 const isDisabled = p.url === '#';
                 const disabledClass = isDisabled ? 'disabled' : '';
                 const target = isDisabled ? '' : 'target="_blank"';
-                const versionText = `${p.version || '开发中'}${p.date ? ' | ' + p.date : ''}`;
-                const tagsHtml = (p.tags || []).map(t => `<span class="work-tag">${escapeHtml(t)}</span>`).join('');
+                const versionText = `${p.version}${p.date ? ' | ' + p.date : ''}`;
+                const tagsHtml = (p.tags || []).map(tag => `<span class="work-tag">${escapeHtml(tag)}</span>`).join('');
                 
                 html += `
                     <a href="${p.url}" class="work-btn ${disabledClass}" ${target} data-id="${p.id}">
-                        <div class="work-icon"><i class="fas ${p.icon || 'fa-code'}"></i></div>
+                        <div class="work-icon">
+                            <i class="fas ${p.icon || 'fa-code'}"></i>
+                        </div>
                         <div class="work-info">
                             <div class="work-header">
                                 <div class="work-title">${escapeHtml(p.title)}</div>
@@ -134,25 +997,29 @@
                             <div class="work-desc">${escapeHtml(p.description || '暂无描述')}</div>
                             <div class="work-tags">${tagsHtml}</div>
                         </div>
-                        <div class="work-arrow"><i class="fas fa-chevron-right"></i></div>
+                        <div class="work-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                        </div>
                     </a>
                 `;
             }
+            
             container.innerHTML = html;
             
-            // 绑定版本点击事件
             document.querySelectorAll('.work-version').forEach(el => {
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     const id = el.getAttribute('data-id');
-                    const project = projectsData.find(p => p.id === id);
-                    if (project && project.changelog) showChangelog(project);
-                    else showToast('无更新日志', 'info');
+                    const project = PROJECTS_DATA.projects.find(p => p.id === id);
+                    if (project && project.changelog) {
+                        showChangelog(project);
+                    } else {
+                        showToast('未找到更新日志', 'warning');
+                    }
                 });
             });
             
-            // 禁用链接处理
             document.querySelectorAll('.work-btn.disabled').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -164,62 +1031,142 @@
         function showChangelog(project) {
             const modal = document.getElementById('changelog-modal');
             const content = document.getElementById('changelog-content');
-            let html = `<div class="project-info"><h4>${escapeHtml(project.title)}</h4><p>${escapeHtml(project.description || '')}</p></div><div class="changelog-list">`;
-            [...project.changelog].reverse().forEach(item => {
-                html += `<div class="changelog-item"><div class="changelog-header"><div class="changelog-version">${escapeHtml(item.version)}</div><div class="changelog-date">${escapeHtml(item.date)}</div></div><div class="changelog-content">${item.content}</div></div>`;
-            });
+            
+            let html = `
+                <div class="project-info">
+                    <h4>${escapeHtml(project.title)}</h4>
+                    <p>${escapeHtml(project.description || '暂无描述')}</p>
+                </div>
+                <div class="changelog-list">
+            `;
+            
+            const versions = [...project.changelog].reverse();
+            for (const item of versions) {
+                html += `
+                    <div class="changelog-item">
+                        <div class="changelog-header">
+                            <div class="changelog-version">${escapeHtml(item.version)}</div>
+                            <div class="changelog-date">${escapeHtml(item.date)}</div>
+                        </div>
+                        <div class="changelog-content">${item.content}</div>
+                    </div>
+                `;
+            }
+            
             html += '</div>';
             content.innerHTML = html;
             modal.style.display = 'flex';
         }
         
         function showHomepageChangelog() {
-            if (!homepageData || !homepageData.changelog) { showToast('无主页更新日志', 'info'); return; }
             const modal = document.getElementById('changelog-modal');
             const content = document.getElementById('changelog-content');
-            let html = `<div class="project-info"><h4>Xuan1713的个人主页</h4><p>个人作品展示页</p></div><div class="changelog-list">`;
-            [...homepageData.changelog].reverse().forEach(item => {
-                html += `<div class="changelog-item"><div class="changelog-header"><div class="changelog-version">${escapeHtml(item.version)}</div><div class="changelog-date">${escapeHtml(item.date)}</div></div><div class="changelog-content">${item.content}</div></div>`;
-            });
+            
+            let html = `
+                <div class="project-info">
+                    <h4>Xuan1713的个人主页</h4>
+                    <p>个人作品展示页</p>
+                </div>
+                <div class="changelog-list">
+            `;
+            
+            const versions = [...PROJECTS_DATA.homepage.changelog].reverse();
+            for (const item of versions) {
+                html += `
+                    <div class="changelog-item">
+                        <div class="changelog-header">
+                            <div class="changelog-version">${escapeHtml(item.version)}</div>
+                            <div class="changelog-date">${escapeHtml(item.date)}</div>
+                        </div>
+                        <div class="changelog-content">${item.content}</div>
+                    </div>
+                `;
+            }
+            
             html += '</div>';
             content.innerHTML = html;
             modal.style.display = 'flex';
         }
         
-        function closeModal() { document.getElementById('changelog-modal').style.display = 'none'; }
-        function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
-        
-        // 时钟
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('current-time').textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
-            document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+        function closeModal() {
+            document.getElementById('changelog-modal').style.display = 'none';
         }
         
-        // 主题切换
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+        
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('zh-CN', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const dateStr = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            });
+            document.getElementById('current-time').textContent = timeStr;
+            document.getElementById('current-date').textContent = dateStr;
+        }
+        
+        const versionEl = document.getElementById('homepage-version');
+        if (versionEl && PROJECTS_DATA.homepage.version) {
+            versionEl.textContent = `当前主页版本：${PROJECTS_DATA.homepage.version}`;
+        }
+        
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
-        if (localStorage.getItem('theme') === 'dark') {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
             themeIcon.classList.replace('fa-moon', 'fa-sun');
         }
-        themeToggle.addEventListener('click', () => {
+        
+        themeToggle.addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            themeIcon.className = `theme-icon fas ${isDark ? 'fa-sun' : 'fa-moon'}`;
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            showToast(isDark ? '已切换到暗色模式' : '已切换到亮色模式', 'success');
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+                showToast('已切换到暗色模式', 'success');
+            } else {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+                showToast('已切换到亮色模式', 'success');
+            }
+            themeIcon.style.animation = 'none';
+            setTimeout(() => {
+                themeIcon.style.animation = 'rotateIn 0.4s ease';
+            }, 10);
         });
         
-        // 模态框关闭
         document.getElementById('close-changelog').addEventListener('click', closeModal);
-        document.getElementById('changelog-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'h' || e.key === 'H') showHomepageChangelog(); });
+        document.getElementById('changelog-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
         
-        // 启动
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'h' || e.key === 'H') {
+                showHomepageChangelog();
+            }
+        });
+        
         updateTime();
         setInterval(updateTime, 1000);
-        loadProjects();
+        renderProjects();
     </script>
 </body>
 </html>
+
