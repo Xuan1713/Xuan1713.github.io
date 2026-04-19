@@ -2,557 +2,778 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xuan1713的主页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Xuan1713的个人主页</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
 
         :root {
-            --bg-gradient-start: #f5f7fa;
-            --bg-gradient-end: #c3cfe2;
-            --text-primary: #333;
-            --text-secondary: #8d8d8d;
-            --card-bg: white;
-            --card-border: rgba(255, 255, 255, 0.2);
-            --time-color: #2d3748;
-            --date-color: #718096;
-            --section-title-color: #2d3748;
-            --work-btn-bg: white;
-            --work-btn-border: #e2e8f0;
-            --work-title-color: #2d3748;
-            --work-desc-color: #718096;
-            --arrow-color: #a0aec0;
-            --arrow-hover: #4361ee;
-            --footer-color: #94a3b8;
-            --github-bg: rgba(255, 255, 255, 0.7);
-            --github-text: #64748b;
-            --github-hover-bg: white;
-            --github-hover-text: #1a202c;
-            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --tag-bg: #f1f5f9;
-            --tag-text: #64748b;
-            --tag-bg-hover: #e2e8f0;
-            --announcement-bg: #fef3c7;
-            --announcement-border: #fbbf24;
-            --announcement-text: #92400e;
-            --toast-bg: #ffffff;
-            --toast-border: #e2e8f0;
-            --toast-success: #10b981;
-            --toast-warning: #f59e0b;
-            --toast-error: #ef4444;
-            --toast-info: #3b82f6;
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #252526;
+            --sidebar-bg: #252526;
+            --sidebar-border: #2d2d30;
+            --text-primary: #f8f8f8;
+            --text-secondary: #9cdcfe;
+            --text-muted: #858585;
+            --card-bg: #2d2d30;
+            --card-border: #3c3c3c;
+            --hover-bg: #2a2d2e;
+            --active-bg: #37373d;
+            --active-border: #007acc;
+            --button-bg: #3c3c3c;
+            --button-hover: #4c4c4c;
+            --tag-bg: #3c3c3c;
+            --tag-text: #cecece;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --toast-bg: #2d2d30;
+            --toast-border: #3c3c3c;
+            --announcement-bg: #7A3D08;      
+            --announcement-border: #f39c12;
+            --announcement-text: #ffffff; 
+            --overlay-bg: rgba(0,0,0,0.6);
+            --modal-bg: #2d2d30;
+            --modal-border: #3c3c3c;
+            --slider-bg: #3c3c3c;
+            --slider-thumb: #007acc;
+            --icon-home: #52A3FF;
+            --icon-works: #ffae00;
+            --icon-settings: #8d8d8d;
+            --icon-contact: #4ec9b0;
+            --icon-code: #00ffcc;
+            --icon-cubes: #ce9178;
+            --icon-heart: #e62600;
+            --icon-palette: #9cdcfe;
+            --icon-film: #c586c0;
+            --icon-bell: #ce9178;
+            --icon-history: #4ec9b0;
+            --icon-info: #9cdcfe;
         }
 
-        body.dark-mode {
-            --bg-gradient-start: #1a202c;
-            --bg-gradient-end: #2d3748;
-            --text-primary: #e2e8f0;
-            --text-secondary: #a0aec0;
-            --card-bg: #2d3748;
-            --card-border: #4a5568;
-            --time-color: #f7fafc;
-            --date-color: #cbd5e0;
-            --section-title-color: #f7fafc;
-            --work-btn-bg: #2d3748;
-            --work-btn-border: #4a5568;
-            --work-title-color: #f7fafc;
-            --work-desc-color: #a0aec0;
-            --arrow-color: #718096;
-            --arrow-hover: #818cf8;
-            --footer-color: #718096;
-            --github-bg: rgba(45, 55, 72, 0.7);
-            --github-text: #cbd5e0;
-            --github-hover-bg: #2d3748;
-            --github-hover-text: #f7fafc;
-            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
-            --tag-bg: #4a5568;
-            --tag-text: #cbd5e0;
-            --tag-bg-hover: #2d3748;
-            --announcement-bg: #78350f;
-            --announcement-border: #d97706;
-            --announcement-text: #fef3c7;
-            --toast-bg: #2d3748;
-            --toast-border: #4a5568;
+        body.light-mode {
+            --bg-primary: #f3f3f3;
+            --bg-secondary: #eaeaea;
+            --sidebar-bg: #ececec;
+            --sidebar-border: #cccccc;
+            --text-primary: #333333;
+            --text-secondary: #007acc;
+            --text-muted: #6a6a6a;
+            --card-bg: #ffffff;
+            --card-border: #cccccc;
+            --hover-bg: #eaeaea;
+            --active-bg: #e4e4e4;
+            --active-border: #007acc;
+            --button-bg: #e4e4e4;
+            --button-hover: #d4d4d4;
+            --tag-bg: #e4e4e4;
+            --tag-text: #333333;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --toast-bg: #ffffff;
+            --toast-border: #cccccc;
+            --announcement-bg: #f5a623;
+            --announcement-border: #ffcc80; 
+            --announcement-text: #2c2c2c;
+            --overlay-bg: rgba(0,0,0,0.4);
+            --modal-bg: #ffffff;
+            --modal-border: #cccccc;
+            --slider-bg: #cccccc;
+            --slider-thumb: #007acc;
+            --icon-home: #0077ff;
+            --icon-works: #ffae00;
+            --icon-settings: #8d8d8d;
+            --icon-contact: #4ec9b0;
+            --icon-code: #007acc;
+            --icon-cubes: #d97706;
+            --icon-heart: #e53e3e;
+            --icon-palette: #007acc;
+            --icon-film: #7c3aed;
+            --icon-bell: #d97706;
+            --icon-history: #2b7a4b;
+            --icon-info: #007acc;
         }
 
         body {
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.2s ease, color 0.2s ease;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        body {
+            --anim-duration: 0.35s;
+            --card-anim-duration: 0.4s;
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), background 0.2s ease;
+            z-index: 200;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                box-shadow: none;
+                z-index: 1000;
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+                box-shadow: 2px 0 12px rgba(0,0,0,0.3);
+            }
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--overlay-bg);
+            z-index: 900;
+            backdrop-filter: blur(2px);
+        }
+        .mobile-overlay.show {
+            display: block;
+        }
+
+        .mobile-header {
+            display: none;
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            padding: 14px 20px;
             align-items: center;
-            padding: 40px 20px;
+            gap: 16px;
+            border-bottom: 1px solid var(--sidebar-border);
+            z-index: 100;
+        }
+        @media (max-width: 768px) {
+            .mobile-header {
+                display: flex;
+            }
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
             color: var(--text-primary);
-            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 8px;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        .container {
-            width: 100%;
-            max-width: 550px;
+        .menu-toggle:active {
+            background: var(--hover-bg);
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: fadeIn 0.8s ease;
-        }
-
-        .greeting {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            line-height: 1.2;
-            transition: all 0.3s ease;
-        }
-
-        .dark-mode .greeting {
-            background: linear-gradient(90deg, #5263ff 0%, #1a56fa 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
-
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            font-weight: normal;
-            transition: color 0.3s ease;
-        }
-
-        .announcement {
-            background: var(--announcement-bg);
-            border: 1px solid var(--announcement-border);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            animation: fadeIn 1s ease 0.3s both;
-        }
-
-        .announcement-icon {
-            color: var(--announcement-text);
-            font-size: 1.1rem;
-            margin-top: 2px;
-        }
-
-        .announcement-content {
+        .mobile-header-title {
+            font-size: 1.2rem;
+            font-weight: 600;
             flex: 1;
         }
+        .mobile-theme-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 8px;
+            border-radius: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .mobile-theme-btn:active {
+            background: var(--hover-bg);
+        }
 
-        .announcement-title {
+        .sidebar-header {
+            padding: 32px 24px 20px;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+        .logo-area h1 {
+            font-size: 1.6rem;
             font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--announcement-text);
-            font-size: 0.95rem;
-        }
-
-        .announcement-text {
-            color: var(--announcement-text);
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .time-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 40px;
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(10px);
-            animation: fadeIn 1s ease 0.2s both;
-            transition: all 0.3s ease;
-        }
-
-        .time-display {
-            font-size: 2.8rem;
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-            color: var(--time-color);
+            letter-spacing: -0.3px;
+            color: var(--text-primary);
             margin-bottom: 8px;
-            font-family: 'SF Mono', 'Monaco', 'Roboto Mono', monospace;
-            transition: color 0.3s ease;
+        }
+        .logo-area .tagline {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
 
-        .date-display {
-            font-size: 1.1rem;
-            color: var(--date-color);
+        .nav-menu {
+            flex: 1;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.15s ease;
+            font-size: 1rem;
             font-weight: 500;
-            transition: color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-item:active {
+            background: var(--hover-bg);
+        }
+        .nav-item i {
+            width: 22px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        .nav-item[data-page="home"] i { color: var(--icon-home); }
+        .nav-item[data-page="works"] i { color: var(--icon-works); }
+        .nav-item[data-page="settings"] i { color: var(--icon-settings); }
+        .nav-item[data-page="contact"] i { color: var(--icon-contact); }
+        .nav-item.active {
+            background: var(--active-bg);
+            color: var(--text-primary);
+            border-left: 3px solid var(--active-border);
+            margin-left: -3px;
+        }
+        @media (max-width: 768px) {
+            .nav-item {
+                padding: 14px 20px;
+            }
+            .nav-item i {
+                margin-right: 14px;
+                width: 24px;
+                font-size: 1.3rem;
+            }
         }
 
-        .works-section {
-            animation: fadeIn 1s ease 0.4s both;
+        .sidebar-footer {
+            padding: 20px 16px 24px;
+            border-top: 1px solid var(--sidebar-border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 25px;
-            color: var(--section-title-color);
+        .github-link-footer {
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: color 0.3s ease;
-        }
-
-        .section-title i {
-            color: #4361ee;
-            transition: color 0.3s ease;
-        }
-
-        .dark-mode .section-title i {
-            color: #818cf8;
-        }
-
-        .work-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .work-btn {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            background: var(--work-btn-bg);
-            border: 2px solid var(--work-btn-border);
-            border-radius: 16px;
-            padding: 20px 25px;
+            color: var(--text-secondary);
             text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+        }
+        .github-link-footer:active {
+            background: var(--hover-bg);
+        }
+        .copyright-footer {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 0.7rem;
         }
 
-        .work-btn:hover {
-            transform: translateY(-3px);
-            border-color: #4361ee;
-            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.15);
+        .mobile-copyright {
+            display: none;
+            text-align: center;
+            padding: 16px 20px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--sidebar-border);
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .mobile-copyright {
+                display: block;
+            }
         }
 
-        .dark-mode .work-btn:hover {
-            border-color: #818cf8;
-            box-shadow: 0 10px 25px rgba(129, 140, 248, 0.15);
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--bg-primary);
+            transition: background 0.2s ease;
+        }
+        .content-panel {
+            display: none;
+            padding: 32px 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .content-panel.active-panel {
+            display: block;
+            animation: slideInFromRight var(--anim-duration) cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(120px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @media (max-width: 768px) {
+            .content-panel {
+                padding: 20px;
+            }
         }
 
-        .work-btn:active {
-            transform: translateY(-1px);
+        .welcome-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
         }
-
-        .work-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #4361ee, #3a0ca3);
-            border-radius: 12px;
+        @media (max-width: 768px) {
+            .welcome-title { font-size: 1.8rem; }
+        }
+        .welcome-desc {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            max-width: 600px;
+        }
+        .time-card-mini {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0 20px 0;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+        .time-display {
+            font-size: 2.5rem;
+            font-weight: 600;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            letter-spacing: 2px;
+        }
+        @media (max-width: 768px) {
+            .time-display { font-size: 1.8rem; }
+        }
+        .date-display {
+            margin-top: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .announcement-mini {
+            background: var(--announcement-bg);
+            border: 1px solid var(--announcement-border);
+            border-radius: 8px;
+            padding: 12px 16px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.3rem;
-            flex-shrink: 0;
-            transition: transform 0.3s ease;
+            gap: 12px;
+            margin: 20px 0 32px 0;
+            color: var(--announcement-text);
+            font-size: 0.85rem;
         }
 
-        .dark-mode .work-icon {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        .skill-stack {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 32px;
         }
-
-        .work-btn:hover .work-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .work-info {
-            flex-grow: 1;
-            text-align: left;
-            min-width: 0;
-        }
-
-        .work-header {
+        .skill-stack h3 { margin-bottom: 16px; font-size: 1.2rem; color: var(--text-secondary); }
+        .skill-stack h3 i { margin-right: 8px; }
+        .skill-grid {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .skill-badge {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .interest-tags {
+            display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
-
-        .work-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--work-title-color);
-            transition: color 0.3s ease;
+        .interest-tag {
+            background: var(--button-bg);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 18px;
+            font-size: 0.8rem;
         }
 
-        .work-version {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+        }
+        @media (max-width: 768px) {
+            .works-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .work-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            -webkit-tap-highlight-color: transparent;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: cardSlideIn var(--card-anim-duration) cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        }
+        .work-card:last-child {
+            animation: cardSlideIn var(--card-anim-duration) cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        }
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .work-card:nth-child(1) { animation-delay: 0s; }
+        .work-card:nth-child(2) { animation-delay: 0.05s; }
+        .work-card:nth-child(3) { animation-delay: 0.1s; }
+        .work-card:nth-child(4) { animation-delay: 0.15s; }
+        .work-card:nth-child(5) { animation-delay: 0.2s; }
+        .work-card:nth-child(6) { animation-delay: 0.25s; }
+        .work-card:nth-child(7) { animation-delay: 0.3s; }
+        .work-card:nth-child(8) { animation-delay: 0.35s; }
+        .work-card:nth-child(9) { animation-delay: 0.4s; }
+        .work-card:nth-child(10) { animation-delay: 0.45s; }
+
+        .work-card:active {
+            transform: scale(0.98);
+            background: var(--hover-bg);
+        }
+        .work-card.disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .work-card.disabled:active { transform: none; }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
             background: var(--tag-bg);
-            padding: 3px 10px;
-            border-radius: 20px;
-            white-space: nowrap;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-version {
+            font-size: 0.7rem;
+            background: var(--tag-bg);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-weight: normal;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-
-        .work-version:hover {
-            background: var(--tag-bg-hover);
-            transform: scale(1.05);
-        }
-
-        .work-desc {
-            font-size: 0.9rem;
-            color: var(--work-desc-color);
+        .card-version:active { background: var(--button-hover); }
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
             line-height: 1.4;
-            margin-bottom: 10px;
-            transition: color 0.3s ease;
+            margin: 10px 0;
         }
-
-        .work-tags {
+        .card-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-top: 5px;
+            margin-top: 12px;
         }
-
-        .work-tag {
-            font-size: 0.75rem;
-            color: var(--tag-text);
+        .card-tag {
+            font-size: 0.7rem;
             background: var(--tag-bg);
             padding: 4px 10px;
+            border-radius: 14px;
+            color: var(--tag-text);
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .contact-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .work-btn:hover .work-tag {
-            background: var(--tag-bg-hover);
-        }
-
-        .work-arrow {
-            color: var(--arrow-color);
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            margin-top: 5px;
-        }
-
-        .work-btn:hover .work-arrow {
-            transform: translateX(5px);
-            color: var(--arrow-hover);
-        }
-
-        .work-btn.disabled {
-            opacity: 0.7;
-            cursor: default;
-        }
-
-        .work-btn.disabled:hover {
-            transform: none;
-            border-color: var(--work-btn-border);
-            box-shadow: none;
-        }
-
-        .work-btn.disabled:hover .work-icon {
-            transform: none;
-        }
-
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            color: var(--footer-color);
-            font-size: 0.9rem;
-            animation: fadeIn 1s ease 0.6s both;
-            transition: color 0.3s ease;
-        }
-
-        .github-link {
-            display: inline-flex;
+            padding: 20px 24px;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            color: var(--github-text);
+            gap: 18px;
             text-decoration: none;
-            margin-top: 15px;
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: var(--github-bg);
-            transition: all 0.3s ease;
-        }
-
-        .github-link:hover {
-            background: var(--github-hover-bg);
-            color: var(--github-hover-text);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .theme-toggle {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: none;
+            color: inherit;
+            transition: all 0.2s ease;
             cursor: pointer;
-            background: linear-gradient(135deg, #4361ee, #3a0ca3);
-            color: white;
-            font-size: 1.4rem;
-            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
-            transition: all 0.3s ease;
+        }
+        .contact-card:hover {
+            transform: translateX(6px);
+            border-color: var(--active-border);
+            background: var(--hover-bg);
+        }
+        .contact-card:active {
+            transform: translateX(3px);
+        }
+        .contact-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--tag-bg);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+        .contact-info {
+            flex: 1;
+        }
+        .contact-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .contact-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .contact-arrow {
+            color: var(--text-muted);
+            font-size: 1.1rem;
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.1) rotate(15deg);
-            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.5);
+        .settings-group {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .settings-group h3 { margin-bottom: 20px; font-size: 1.1rem; color: var(--text-secondary); }
+        .settings-group h3 i { margin-right: 10px; }
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .setting-item:last-child { border-bottom: none; }
+        .setting-label { font-weight: 500; }
+        .setting-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        .setting-control { display: flex; align-items: center; gap: 12px; }
+        .toggle-switch {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--button-bg);
+            transition: 0.2s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.2s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #007acc; }
+        input:checked + .slider:before { transform: translateX(24px); }
+        
+        input[type="range"] {
+            width: 180px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--slider-bg);
+            border-radius: 2px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--slider-thumb);
+            cursor: pointer;
+            border: none;
+        }
+        .range-value {
+            min-width: 45px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        select {
+            background: var(--button-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
         }
 
-        .theme-toggle:active {
-            transform: scale(0.95);
+        .changelog-list-settings {
+            margin-top: 16px;
+            max-height: 400px;
+            overflow-y: auto;
         }
-
-        .dark-mode .theme-toggle {
-            background: linear-gradient(135deg, #f59e0b, #f97316);
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        .changelog-item-simple {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 3px solid #007acc;
         }
-
-        .dark-mode .theme-toggle:hover {
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        .version-badge {
+            display: inline-block;
+            background: #007acc;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
         }
-
-        .theme-icon {
-            transition: all 0.3s ease;
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
         }
-
-        @keyframes rotateIn {
-            from {
-                transform: rotate(-180deg) scale(0);
-                opacity: 0;
-            }
-            to {
-                transform: rotate(0) scale(1);
-                opacity: 1;
-            }
+        .info-label {
+            font-weight: 500;
+            color: var(--text-secondary);
         }
-
-        .theme-toggle .theme-icon {
-            animation: rotateIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .info-value {
+            color: var(--text-primary);
         }
 
         .toast-container {
             position: fixed;
-            top: 20px;
-            right: 20px;
             z-index: 9999;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-width: 350px;
         }
-
+        .toast-container.top-right { top: 20px; right: 20px; left: auto; bottom: auto; }
+        .toast-container.top-left { top: 20px; left: 20px; right: auto; bottom: auto; }
+        .toast-container.bottom-right { bottom: 20px; right: 20px; top: auto; left: auto; }
+        .toast-container.bottom-left { bottom: 20px; left: 20px; top: auto; right: auto; }
+        @media (max-width: 768px) {
+            .toast-container { left: 20px; right: 20px; }
+            .toast-container.top-right, .toast-container.top-left { top: 70px; }
+        }
         .toast {
             background: var(--toast-bg);
             border: 1px solid var(--toast-border);
-            border-radius: 12px;
-            padding: 12px 16px;
-            box-shadow: var(--shadow-lg);
+            border-radius: 8px;
+            padding: 12px 20px;
+            box-shadow: var(--shadow-md);
             display: flex;
             align-items: center;
             gap: 12px;
-            animation: toastSlideIn 0.3s ease;
-            max-width: 100%;
-            transition: all 0.3s ease;
+            animation: toastIn 0.2s ease;
         }
-
         .toast.hiding {
-            animation: toastSlideOut 0.3s ease forwards;
+            animation: toastOut 0.2s ease forwards;
         }
-
-        .toast-icon {
-            font-size: 16px;
-            flex-shrink: 0;
-            width: 20px;
-            text-align: center;
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
         }
-
-        .toast.info .toast-icon { color: var(--toast-info); }
-        .toast.success .toast-icon { color: var(--toast-success); }
-        .toast.warning .toast-icon { color: var(--toast-warning); }
-        .toast.error .toast-icon { color: var(--toast-error); }
-
-        .toast-message {
-            font-size: 0.95rem;
-            flex-grow: 1;
-            word-break: break-word;
-            line-height: 1.4;
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
         }
-
-        .toast-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 12px;
-            padding: 4px;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.2s ease;
+        .toast-container.top-left .toast,
+        .toast-container.bottom-left .toast {
+            animation: toastInLeft 0.2s ease;
         }
-
-        .toast-close:hover {
-            background: var(--tag-bg);
+        .toast-container.top-left .toast.hiding,
+        .toast-container.bottom-left .toast.hiding {
+            animation: toastOutLeft 0.2s ease forwards;
         }
-
-        @keyframes toastSlideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        @keyframes toastInLeft {
+            from { opacity: 0; transform: translateX(-100%); }
+            to { opacity: 1; transform: translateX(0); }
         }
-
-        @keyframes toastSlideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
+        @keyframes toastOutLeft {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-100%); }
         }
 
         .modal-overlay {
@@ -561,622 +782,584 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: var(--overlay-bg);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            z-index: 2000;
             padding: 20px;
-            backdrop-filter: blur(4px);
         }
-
         .modal-content {
-            background: var(--card-bg);
-            border-radius: 20px;
+            background: var(--modal-bg);
+            border-radius: 8px;
             width: 100%;
             max-width: 500px;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--card-border);
-            animation: modalSlideIn 0.3s ease;
+            border: 1px solid var(--modal-border);
+            box-shadow: var(--shadow-md);
+            animation: modalIn 0.2s ease;
         }
-
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
         .modal-header {
-            padding: 24px 24px 16px;
-            border-bottom: 1px solid var(--card-border);
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--modal-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .modal-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            color: var(--work-title-color);
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
-        .modal-title i {
-            color: #4361ee;
-        }
-
-        .dark-mode .modal-title i {
-            color: #818cf8;
-        }
-
         .modal-close {
             background: none;
             border: none;
-            font-size: 1.4rem;
-            color: var(--text-secondary);
+            font-size: 1.5rem;
             cursor: pointer;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.2s ease;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 6px;
         }
-
-        .modal-close:hover {
-            background: var(--tag-bg);
-            color: var(--work-title-color);
+        .modal-close:hover { background: var(--hover-bg); }
+        .modal-body { padding: 24px; }
+        .changelog-modal-list { display: flex; flex-direction: column; gap: 16px; }
+        .changelog-modal-item {
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid #007acc;
         }
-
-        .modal-body {
-            padding: 24px;
-        }
-
-        .changelog-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .changelog-item {
-            padding: 16px;
-            background: var(--tag-bg);
-            border-radius: 12px;
-            border-left: 4px solid #4361ee;
-        }
-
-        .dark-mode .changelog-item {
-            border-left-color: #818cf8;
-        }
-
-        .changelog-header {
+        .changelog-modal-version {
+            font-weight: 600;
+            margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
         }
+        .changelog-modal-date { font-size: 0.7rem; color: var(--text-muted); }
+        .changelog-modal-content { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
 
-        .changelog-version {
-            font-weight: 600;
-            color: var(--work-title-color);
-            font-size: 1.1rem;
-        }
-
-        .changelog-date {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .changelog-content {
-            color: var(--work-desc-color);
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .changelog-content ul {
-            padding-left: 20px;
-            margin: 8px 0;
-        }
-
-        .changelog-content li {
-            margin-bottom: 4px;
-        }
-
-        .project-info {
-            padding: 16px;
-            background: var(--tag-bg);
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .project-info h4 {
-            margin-bottom: 8px;
-            color: var(--work-title-color);
-            font-size: 1.1rem;
-        }
-
-        .project-info p {
-            color: var(--work-desc-color);
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 0 10px;
-            }
-
-            .greeting {
-                font-size: 1.8rem;
-            }
-
-            .time-display {
-                font-size: 2.2rem;
-            }
-
-            .work-btn {
-                padding: 18px 20px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .work-icon {
-                width: 45px;
-                height: 45px;
-                font-size: 1.1rem;
-            }
-
-            .work-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .work-arrow {
-                align-self: flex-end;
-                margin-top: -30px;
-            }
-
-            .theme-toggle {
-                width: 48px;
-                height: 48px;
-                font-size: 1.2rem;
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .modal-content {
-                max-width: 90vw;
-                max-height: 85vh;
-            }
-
-            .toast-container {
-                max-width: 90vw;
-                right: 10px;
-                left: 10px;
-            }
-        }
+        .main-content::-webkit-scrollbar { width: 10px; }
+        .main-content::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        .main-content::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 5px; }
     </style>
-    <base target="_blank">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1 class="greeting">HI！这里是Xuan1713的主页</h1>
-            <p class="subtitle">做的有些潦草，但是又不是不能用😉</p>
-            <p class="subtitle">会持续优化的</p>
-        </div>
+<div class="app">
+    <div class="mobile-overlay" id="mobile-overlay"></div>
 
-        <div class="announcement">
-            <i class="fas fa-bullhorn announcement-icon"></i>
-            <div class="announcement-content">
-                <div class="announcement-title">公告</div>
-                <div class="announcement-text">严重的页面显示问题已修复，可放心访问✅</div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-area">
+                <h1>你好</h1>
+                <div class="tagline">这里是 Xuan1713的个人页</div>
             </div>
         </div>
-
-        <div class="time-card">
-            <div class="time-display" id="current-time">00:00:00</div>
-            <div class="date-display" id="current-date">加载中...</div>
+        <div class="nav-menu">
+            <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>首页</span></div>
+            <div class="nav-item" data-page="works"><i class="fas fa-code"></i><span>我的作品</span></div>
+            <div class="nav-item" data-page="contact"><i class="fas fa-envelope"></i><span>联系作者</span></div>
+            <div class="nav-item" data-page="settings"><i class="fas fa-cog"></i><span>设置</span></div>
         </div>
-
-        <div class="works-section">
-            <h2 class="section-title">
-                <i class="fas fa-code"></i>
-                我的作品
-            </h2>
-            <div class="work-buttons" id="work-buttons"></div>
-        </div>
-
-        <div class="footer">
-            <p>© 2026 Xuan1713. 保留所有权利.</p>
-            <p>使用“H”按键查看主页的更新日志，点击作品标题旁的版本信息可查看该作品更新日志</p>
-            <p id="homepage-version">当前主页版本：加载中...</p>
-            <a href="https://github.com/Xuan1713" class="github-link" target="_blank">
-                <i class="fab fa-github"></i>
-                访问我的 GitHub
-            </a>
-        </div>
-    </div>
-    <button class="theme-toggle" id="themeToggle" title="切换主题">
-        <i class="fas fa-moon theme-icon" id="themeIcon"></i>
-    </button>
-    <div class="toast-container" id="toast-container"></div>
-    <div class="modal-overlay" id="changelog-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">
-                    <i class="fas fa-history"></i>
-                    更新日志
-                </h3>
-                <button class="modal-close" id="close-changelog">&times;</button>
-            </div>
-            <div class="modal-body" id="changelog-content">
-            </div>
+        <div class="sidebar-footer">
+            <div class="copyright-footer">© 2026 Xuan1713. 保留所有权利.</div>
+            <a href="https://github.com/Xuan1713" class="github-link-footer" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i><span>GitHub</span></a>
         </div>
     </div>
 
-    <script>
-        const PROJECTS_DATA = {
-            projects: [
-                {
-                    id: "clock",
-                    title: "在线时钟",
-                    url: "projects1/xclock_v1.html",
-                    icon: "fa-clock",
-                    version: "v1.0.0",
-                    date: "2026-02-05",
-                    description: "一个功能丰富的在线时钟，集成农历显示和天气信息，支持触屏操作。",
-                    tags: ["工具", "日期与时间", "需要API", "响应式"],
-                    changelog: [
-                        {
-                            version: "v1.0.0",
-                            date: "2026-02-05",
-                            content: "初始版本发布<br>主要功能：<ul><li>实时数字时钟显示</li><li>农历日期和节气信息</li><li>天气信息集成</li><li>目标倒计时功能</li><li>响应式设计</li><li>主题切换功能</li></ul>"
-                        }
-                    ]
-                },
-                {
-                    id: "calendar",
-                    title: "日历",
-                    url: "projects1/Xcalendar_v1.html",
-                    icon: "fa-calendar-alt",
-                    version: "v1.0.0",
-                    date: "2026-02-06",
-                    description: "就是个简易日历",
-                    tags: ["工具", "日期与时间", "非响应式"],
-                    changelog: [
-                        {
-                            version: "v1.0.0",
-                            date: "2026-02-07",
-                            content: "初始版本发布<br>主要功能：<ul><li>日历基本显示</li><li>农历和节日标注</li><li>响应式设计</li></ul>"
-                        }
-                    ]
-                },
-                {
-                    id: "counter",
-                    title: "点击计数器",
-                    url: "projects1/clicker.html",
-                    icon: "fa-calculator",
-                    version: "v1.0.0",
-                    date: "2026-04-11",
-                    description: "计数器",
-                    tags: ["娱乐", "非响应式"],
-                    changelog: [
-                        {
-                            version: "v1.0.0",
-                            date: "2026-04-11",
-                            content: "初始版本发布<br>主要功能：<ul><li>点击计数功能</li><li>计数重置</li></ul>"
-                        }
-                    ]
-                },
-                {
-                    id: "gomoku",
-                    title: "五子棋",
-                    url: "projects1/gomoku.html",
-                    icon: "fa-chess-board",
-                    version: "v1.0.0",
-                    date: "2026-04-17",
-                    description: "人机对战的五子棋游戏，AI难度可调",
-                    tags: ["游戏", "非响应式", "AI对战"],
-                    changelog: [
-                        {
-                            version: "v1.0.0",
-                            date: "2026-04-17",
-                            content: "初始版本发布<br>主要功能：<ul><li>五子棋</li><li>内置两种AI算法（启发式/minimax+剪枝）</li></ul>"
-                        }
-                    ]
-                },
-                {
-                    id: "future",
-                    title: "更多作品",
-                    url: "#",
-                    icon: "fa-plus",
-                    version: "敬请期待",
-                    date: "",
-                    description: "新项目正在规划中，敬请期待",
-                    tags: ["规划中"],
-                    changelog: []
-                }
-            ],
-            homepage: {
-                version: "v3.2.0",
-                changelog: [
-                    {
-                        version: "v3.2.0",
-                        date: "2026-04-17",
-                        content: "作品列表更新<br>内容：<ul><li>添加 五子棋</li></ul>"
-                    },
-                    {
-                        version: "v3.1.0",
-                        date: "2026-04-13",
-                        content: "问题修复<br>内容：<ul><li>修复了CSS渲染异常导致的严重页面显示错乱问题</li></ul>"
-                    },
-                    {
-                        version: "v3.0.0",
-                        date: "2026-04-11",
-                        content: "作品列表更新<br>内容：<ul><li>添加点击计数器</li><li>改用内部数据管理</li></ul>"
-                    },
-                    {
-                        version: "v2.0.0",
-                        date: "2026-02-07",
-                        content: "小更新<br>内容：<ul><li>添加Toast提示系统</li><li>添加更新日志查看功能</li><li>优化响应式设计</li><li>改进暗色模式体验</li></ul>"
-                    },
-                    {
-                        version: "v1.1.0",
-                        date: "2026-02-05",
-                        content: "作品列表更新<br>内容：<ul><li>添加日历</li></ul>"
-                    },
-                    {
-                        version: "v1.0.0",
-                        date: "2026-01-15",
-                        content: "初始版本<br>主要功能：<ul><li>个人作品展示</li><li>实时时钟显示</li><li>主题切换功能</li><li>响应式布局</li><li>GitHub链接</li></ul>"
-                    }
-                ]
-            }
-        };
+    <div class="main-content">
+        <div class="mobile-header">
+            <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+            <div class="mobile-header-title" id="mobile-title">首页</div>
+            <button class="mobile-theme-btn" id="mobile-theme-btn"><i class="fas fa-moon" id="mobile-theme-icon"></i></button>
+        </div>
 
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-            
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            const icons = {
-                info: 'fas fa-info-circle',
-                success: 'fas fa-check-circle',
-                warning: 'fas fa-exclamation-triangle',
-                error: 'fas fa-times-circle'
-            };
-            
-            toast.innerHTML = `
-                <div class="toast-icon">
-                    <i class="${icons[type] || icons.info}"></i>
+        <div id="home-panel" class="content-panel active-panel">
+            <div class="welcome-section">
+                <div class="welcome-title">Hi，我是 Xuan1713</div>
+                <div class="welcome-desc">热爱编程，喜欢做一些奇奇怪怪的东西，也开发mc模组</div>
+            </div>
+            <div class="time-card-mini">
+                <div class="time-display" id="home-time">--:--:--</div>
+                <div class="date-display" id="home-date">----年--月--日</div>
+            </div>
+            <div class="announcement-mini"><i class="fas fa-bullhorn"></i><span> V5.0.0更新：整体布局重构，大幅优化</span></div>
+            <div class="skill-stack">
+                <h3><i class="fas fa-code" style="color: var(--icon-code);"></i> 技术栈</h3>
+                <div class="skill-grid">
+                    <span class="skill-badge">Python</span>
+                    <span class="skill-badge">C++</span>
+                    <span class="skill-badge">HTML5/CSS3</span>
+                    <span class="skill-badge">Javascript</span>
+                    <span class="skill-badge">图形化</span>
                 </div>
-                <div class="toast-message">${message}</div>
-                <button class="toast-close" onclick="this.closest('.toast').remove()">×</button>
-            `;
+                <h3 style="margin-top: 20px;"><i class="fas fa-heart" style="color: var(--icon-heart);"></i> 兴趣爱好</h3>
+                <div class="interest-tags">
+                    <span class="interest-tag"> 摄影 </span>
+                    <span class="interest-tag"> 编程 </span>
+                    <span class="interest-tag"> 建模（3D） </span>
+                    <span class="interest-tag"> 搞机（安卓） </span>
+                    <span class="interest-tag"> 宅 </span>
+                </div>
+            </div>
+            <div class="mobile-copyright">© 2026 Xuan1713. 保留所有权利.</div>
+        </div>
+
+        <div id="works-panel" class="content-panel">
+            <h2 style="margin-bottom: 24px; font-weight: 600;"><i class="fas fa-code"></i> 我的作品</h2>
+            <div class="works-grid" id="works-grid-container"></div>
+            <div class="mobile-copyright">© 2026 Xuan1713. 保留所有权利.</div>
+        </div>
+
+        <div id="contact-panel" class="content-panel">
+            <h2 style="margin-bottom: 24px; font-weight: 600;"><i class="fas fa-address-card"></i> 联系作者</h2>
+            <div class="contact-list" id="contact-list"></div>
+            <div class="mobile-copyright">© 2026 Xuan1713. 保留所有权利.</div>
+        </div>
+
+        <div id="settings-panel" class="content-panel">
+            <h2 style="margin-bottom: 24px; font-weight: 600;"><i class="fas fa-sliders-h"></i> 设置</h2>
+            <div class="settings-group">
+                <h3><i class="fas fa-palette" style="color: var(--icon-palette);"></i> 外观</h3>
+                <div class="toggle-switch">
+                    <div><div class="setting-label">深色模式</div><div class="setting-desc">切换主页风格深色/浅色主题</div></div>
+                    <label class="switch"><input type="checkbox" id="darkmode-toggle"><span class="slider"></span></label>
+                </div>
+            </div>
+            <div class="settings-group">
+                <h3><i class="fas fa-film" style="color: var(--icon-film);"></i> 动画</h3>
+                <div class="setting-item">
+                    <div><div class="setting-label">页面切换动画速度</div><div class="setting-desc">调整面板切换和卡片滑入速度</div></div>
+                    <div class="setting-control">
+                        <input type="range" id="anim-speed" min="0.15" max="0.8" step="0.01" value="0.35">
+                        <span class="range-value" id="anim-speed-val">0.35s</span>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-group">
+                <h3><i class="fas fa-bell" style="color: var(--icon-bell);"></i> 通知 (Toast)</h3>
+                <div class="setting-item">
+                    <div><div class="setting-label">显示位置</div><div class="setting-desc">选择提示框出现的位置</div></div>
+                    <select id="toast-position">
+                        <option value="top-right">右上角</option>
+                        <option value="top-left">左上角</option>
+                        <option value="bottom-right">右下角</option>
+                        <option value="bottom-left">左下角</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <div><div class="setting-label">显示时长</div><div class="setting-desc">自动消失时间（秒）</div></div>
+                    <div class="setting-control">
+                        <input type="range" id="toast-duration" min="1" max="8" step="0.5" value="3">
+                        <span class="range-value" id="toast-duration-val">3.0秒</span>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-group">
+                <h3><i class="fas fa-info-circle" style="color: var(--icon-info);"></i> 关于</h3>
+                <div class="info-row">
+                    <span class="info-label">当前主页版本：</span>
+                    <span class="info-value" id="homepage-version-display">v5.0.0</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">最后更新时间：</span>
+                    <span class="info-value" id="homepage-update-time">2026-04-19</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">作者：</span>
+                    <span class="info-value">Xuan1713</span>
+                </div>
+            <div class="settings-group">
+                <h3><i class="fas fa-history" style="color: var(--icon-history);"></i> 主页更新日志</h3>
+                <div class="changelog-list-settings" id="settings-changelog"></div>
+            </div>
+            <div class="mobile-copyright">© 2026 Xuan1713. 保留所有权利.</div>
+        </div>
+    </div>
+</div>
+<div class="toast-container top-right" id="toast-container"></div>
+<div class="modal-overlay" id="changelog-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title"><i class="fas fa-history"></i> <span id="modal-title">更新日志</span></div>
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<script id="projects-data">
+    const PROJECTS_DATA = {
+        projects: [
+            { id: "clock", title: "在线时钟", url: "projects1/xclock_v1.html", icon: "fa-clock", iconColor: "#4ec9b0", version: "v1.0.0", date: "2026-02-05", description: "集成农历和天气的在线时钟，但是需要自行申请API Key", tags: ["工具", "天气", "响应式"], changelog: [{ version: "v1.0.0", date: "2026-02-05", content: "初始版本发布<br>• 实时数字时钟<br>• 农历日期和节气<br>• 天气信息集成" }] },
+            { id: "calendar", title: "日历", url: "projects1/Xcalendar_v1.html", icon: "fa-calendar-alt", iconColor: "#9cdcfe", version: "v1.0.0", date: "2026-02-06", description: "简洁日历，农历节日标注", tags: ["工具", "日历"], changelog: [{ version: "v1.0.0", date: "2026-02-07", content: "初始版本发布<br>• 日历基本显示<br>• 农历和节日标注" }] },
+            { id: "counter", title: "点击计数器", url: "projects1/clicker.html", icon: "fa-calculator", iconColor: "#ce9178", version: "v1.0.0", date: "2026-04-11", description: "简单的点击计数器（移动端可能存在bug）", tags: ["娱乐"], changelog: [{ version: "v1.0.0", date: "2026-04-11", content: "初始版本发布<br>• 点击计数功能<br>• 计数重置" }] },
+            { id: "gomoku", title: "五子棋", url: "projects1/gomoku.html", icon: "fa-chess-board", iconColor: "#c586c0", version: "v1.0.0", date: "2026-04-17", description: "人机对战五子棋，AI难度可调", tags: ["游戏", "AI"], changelog: [{ version: "v1.0.0", date: "2026-04-17", content: "初始版本发布<br>• 五子棋完整对局<br>• 内置两种AI算法" }] },
+            { id: "future", title: "更多作品", url: "#", icon: "fa-plus", iconColor: "#d4d4d4", version: "敬请期待", date: "", description: "新项目规划中", tags: ["规划中"], changelog: [] }
+        ],
+        homepage: {
+            version: "v5.0.0",
+            lastUpdate: "2026-04-19",
+            changelog: [
+                {
+                    version: "v1.0.0",
+                    date: "2026-01-15",
+                    content: "初始版本<br>• 个人作品展示<br>• 实时时钟显示<br>• 主题切换功能<br>• 响应式布局<br>• GitHub链接"
+                },
+                {
+                    version: "v1.1.0",
+                    date: "2026-02-05",
+                    content: "作品列表更新<br>• 添加日历"
+                },
+                {
+                    version: "v2.0.0",
+                    date: "2026-02-07",
+                    content: "小更新<br>• 添加Toast提示系统<br>• 添加更新日志查看功能<br>• 优化响应式设计<br>• 改进暗色模式体验"
+                },
+                {
+                    version: "v3.0.0",
+                    date: "2026-04-11",
+                    content: "作品列表更新<br>• 添加点击计数器<br>• 改用内部数据管理"
+                },
+                {
+                    version: "v3.1.0",
+                    date: "2026-04-13",
+                    content: "问题修复<br>• 修复了CSS渲染异常导致的严重页面显示错乱问题"
+                },
+                {
+                    version: "v4.0.0",
+                    date: "2026-04-13",
+                    content: "未发布的更新<br>全面重构开始"
+                },
+                {
+                    version: "v5.0.0",
+                    date: "2026-04-19",
+                    content: "当前版本<br>• UI全部重构，过渡动画优化<br>• 新增侧边抽屉导航<br>• 完善自我介绍<br>• 新增联系作者页面<br>• 优化移动端体验"
+                }
+            ]
+        }
+    };
+</script>
+
+<script>
+    (function() {
+        let PROJECTS = { projects: [], homepage: { version: "v1.0", lastUpdate: "", changelog: [] } };
+        if (typeof PROJECTS_DATA !== 'undefined') {
+            PROJECTS = PROJECTS_DATA;
+        }
+        const versionDisplaySpan = document.getElementById('homepage-version-display');
+        if (versionDisplaySpan && PROJECTS.homepage.version) {
+            versionDisplaySpan.textContent = PROJECTS.homepage.version;
+        }
+        const updateTimeSpan = document.getElementById('homepage-update-time');
+        if (updateTimeSpan && PROJECTS.homepage.lastUpdate) {
+            updateTimeSpan.textContent = PROJECTS.homepage.lastUpdate;
+        }
+
+        let toastDurationSetting = 3;
+        let toastPositionSetting = 'top-right';
+        
+        function getToastContainer() {
+            let container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                document.body.appendChild(container);
+            }
+            container.className = `toast-container ${toastPositionSetting}`;
+            return container;
+        }
+
+        function showToast(msg, type = 'info') {
+            const container = getToastContainer();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            const icons = {
+                info: { icon: 'fa-info-circle', color: '#007acc' },
+                success: { icon: 'fa-check-circle', color: '#4ec9b0' },
+                warning: { icon: 'fa-exclamation-triangle', color: '#ffae00' },
+                error: { icon: 'fa-times-circle', color: '#e62600' }
+            };
+            const selected = icons[type] || icons.info;
             
+            toast.innerHTML = `<i class="fas ${selected.icon}" style="color: ${selected.color}"></i><span>${escapeHtml(msg)}</span>`;
             container.appendChild(toast);
+            
+            const durationMs = toastDurationSetting * 1000;
             setTimeout(() => {
                 if (toast.parentNode) {
                     toast.classList.add('hiding');
-                    setTimeout(() => toast.remove(), 300);
+                    setTimeout(() => toast.remove(), 200);
                 }
-            }, 3000);
+            }, durationMs);
         }
 
-        function renderProjects() {
-            const container = document.getElementById('work-buttons');
+        function escapeHtml(str) { if (!str) return ''; return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+        
+        function updateHomeTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false });
+            const dateStr = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+            const timeEl = document.getElementById('home-time');
+            const dateEl = document.getElementById('home-date');
+            if (timeEl) timeEl.textContent = timeStr;
+            if (dateEl) dateEl.textContent = dateStr;
+        }
+        updateHomeTime();
+        setInterval(updateHomeTime, 1000);
+
+        function renderWorksGrid() {
+            const container = document.getElementById('works-grid-container');
             if (!container) return;
-            
-            const projects = PROJECTS_DATA.projects;
-            if (!projects.length) {
-                container.innerHTML = '<div class="loading">暂无作品</div>';
-                return;
-            }
-            
             let html = '';
-            for (const p of projects) {
+            for (const p of PROJECTS.projects) {
                 const isDisabled = p.url === '#';
-                const disabledClass = isDisabled ? 'disabled' : '';
-                const target = isDisabled ? '' : 'target="_blank"';
-                const versionText = `${p.version}${p.date ? ' | ' + p.date : ''}`;
-                const tagsHtml = (p.tags || []).map(tag => `<span class="work-tag">${escapeHtml(tag)}</span>`).join('');
-                
+                const versionDisplay = p.version + (p.date ? ` | ${p.date}` : '');
+                const tagsHtml = (p.tags || []).map(t => `<span class="card-tag">${escapeHtml(t)}</span>`).join('');
+                const iconColor = p.iconColor || '#d4d4d4';
                 html += `
-                    <a href="${p.url}" class="work-btn ${disabledClass}" ${target} data-id="${p.id}">
-                        <div class="work-icon">
-                            <i class="fas ${p.icon || 'fa-code'}"></i>
+                    <a href="${p.url}" class="work-card ${isDisabled ? 'disabled' : ''}" ${isDisabled ? '' : 'target="_blank" rel="noopener noreferrer"'} data-id="${p.id}">
+                        <div class="card-icon"><i class="fas ${p.icon || 'fa-code'}" style="color: ${iconColor};"></i></div>
+                        <div class="card-title">
+                            ${escapeHtml(p.title)}
+                            <span class="card-version" data-id="${p.id}">${escapeHtml(versionDisplay)}</span>
                         </div>
-                        <div class="work-info">
-                            <div class="work-header">
-                                <div class="work-title">${escapeHtml(p.title)}</div>
-                                <div class="work-version" data-id="${p.id}">${escapeHtml(versionText)}</div>
-                            </div>
-                            <div class="work-desc">${escapeHtml(p.description || '暂无描述')}</div>
-                            <div class="work-tags">${tagsHtml}</div>
-                        </div>
-                        <div class="work-arrow">
-                                <i class="fas fa-chevron-right"></i>
-                        </div>
+                        <div class="card-desc">${escapeHtml(p.description)}</div>
+                        <div class="card-tags">${tagsHtml}</div>
                     </a>
                 `;
             }
-            
             container.innerHTML = html;
-            
-            document.querySelectorAll('.work-version').forEach(el => {
+
+            document.querySelectorAll('.card-version').forEach(el => {
                 el.addEventListener('click', (e) => {
-                    e.stopPropagation();
                     e.preventDefault();
+                    e.stopPropagation();
                     const id = el.getAttribute('data-id');
-                    const project = PROJECTS_DATA.projects.find(p => p.id === id);
-                    if (project && project.changelog) {
-                        showChangelog(project);
+                    const project = PROJECTS.projects.find(p => p.id === id);
+                    if (project && project.changelog && project.changelog.length > 0) {
+                        showChangelogModal(project.title, project.changelog);
                     } else {
-                        showToast('未找到更新日志', 'warning');
+                        showToast('该作品暂无更新日志', 'info');
                     }
                 });
             });
-            
-            document.querySelectorAll('.work-btn.disabled').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showToast('该项目正在规划中，敬请期待！', 'info');
+            document.querySelectorAll('.work-card.disabled').forEach(card => {
+                card.addEventListener('click', (e) => { e.preventDefault(); showToast('项目规划中，敬请期待', 'info'); });
+            });
+        }
+
+        function renderContactList() {
+            const container = document.getElementById('contact-list');
+            if (!container) return;
+            const contacts = [
+                { name: "GitHub", desc: "查看我的开源项目/提交反馈", icon: "fab fa-github", iconColor: "#333", url: "https://github.com/Xuan1713", bgColor: "#24292e", isLink: true },
+                { name: "Bilibili", desc: "我的B站账号，但是目前没有投稿", icon: "fab fa-bilibili", iconColor: "#00a1d6", url: "https://space.bilibili.com/3537123625929585", bgColor: "#00a1d6", isLink: true },
+                { name: "QQ", desc: "联系我（请备注来意，非诚勿扰）", icon: "fab fa-qq", iconColor: "#12b7f5", url: "", bgColor: "#12b7f5", isLink: false }
+            ];
+            let html = '';
+            for (const c of contacts) {
+                if (c.isLink) {
+                    html += `
+                        <a href="${c.url}" class="contact-card" target="_blank" rel="noopener noreferrer">
+                            <div class="contact-icon" style="background: ${c.bgColor}20;">
+                                <i class="${c.icon}" style="color: ${c.iconColor};"></i>
+                            </div>
+                            <div class="contact-info">
+                                <div class="contact-name">${escapeHtml(c.name)}</div>
+                                <div class="contact-desc">${escapeHtml(c.desc)}</div>
+                            </div>
+                            <div class="contact-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </a>
+                    `;
+                } else {
+                    html += `
+                        <div class="contact-card" data-contact="qq" style="cursor: pointer;">
+                            <div class="contact-icon" style="background: ${c.bgColor}20;">
+                                <i class="${c.icon}" style="color: ${c.iconColor};"></i>
+                            </div>
+                            <div class="contact-info">
+                                <div class="contact-name">${escapeHtml(c.name)}</div>
+                                <div class="contact-desc">${escapeHtml(c.desc)}</div>
+                            </div>
+                            <div class="contact-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            container.innerHTML = html;
+            const qqCard = document.querySelector('.contact-card[data-contact="qq"]');
+            if (qqCard) {
+                qqCard.addEventListener('click', () => {
+                    showToast('无法跳转链接', 'error');
                 });
-            });
+            }
         }
-        
-        function showChangelog(project) {
+
+        function showChangelogModal(title, changelog) {
             const modal = document.getElementById('changelog-modal');
-            const content = document.getElementById('changelog-content');
-            
-            let html = `
-                <div class="project-info">
-                    <h4>${escapeHtml(project.title)}</h4>
-                    <p>${escapeHtml(project.description || '暂无描述')}</p>
-                </div>
-                <div class="changelog-list">
-            `;
-            
-            const versions = [...project.changelog].reverse();
-            for (const item of versions) {
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            modalTitle.textContent = `${title} - 更新日志`;
+            let html = '<div class="changelog-modal-list">';
+            [...changelog].reverse().forEach(item => {
                 html += `
-                    <div class="changelog-item">
-                        <div class="changelog-header">
-                            <div class="changelog-version">${escapeHtml(item.version)}</div>
-                            <div class="changelog-date">${escapeHtml(item.date)}</div>
+                    <div class="changelog-modal-item">
+                        <div class="changelog-modal-version">
+                            <span>${escapeHtml(item.version)}</span>
+                            <span class="changelog-modal-date">${escapeHtml(item.date)}</span>
                         </div>
-                        <div class="changelog-content">${item.content}</div>
+                        <div class="changelog-modal-content">${item.content}</div>
                     </div>
                 `;
-            }
-            
+            });
             html += '</div>';
-            content.innerHTML = html;
+            modalBody.innerHTML = html;
             modal.style.display = 'flex';
         }
-        
-        function showHomepageChangelog() {
-            const modal = document.getElementById('changelog-modal');
-            const content = document.getElementById('changelog-content');
-            
-            let html = `
-                <div class="project-info">
-                    <h4>Xuan1713的个人主页</h4>
-                    <p>个人作品展示页</p>
-                </div>
-                <div class="changelog-list">
-            `;
-            
-            const versions = [...PROJECTS_DATA.homepage.changelog].reverse();
-            for (const item of versions) {
-                html += `
-                    <div class="changelog-item">
-                        <div class="changelog-header">
-                            <div class="changelog-version">${escapeHtml(item.version)}</div>
-                            <div class="changelog-date">${escapeHtml(item.date)}</div>
-                        </div>
-                        <div class="changelog-content">${item.content}</div>
-                    </div>
-                `;
-            }
-            
-            html += '</div>';
-            content.innerHTML = html;
-            modal.style.display = 'flex';
-        }
-        
-        function closeModal() {
-            document.getElementById('changelog-modal').style.display = 'none';
-        }
-        
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        }
-        
-        function updateTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('zh-CN', { 
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+
+        function renderSettingsChangelog() {
+            const c = document.getElementById('settings-changelog');
+            if (!c) return;
+            let html = '';
+            [...PROJECTS.homepage.changelog].reverse().forEach(log => {
+                html += `<div class="changelog-item-simple"><div><strong>${escapeHtml(log.version)}</strong> <span style="font-size:0.75rem;color:var(--text-muted)">${escapeHtml(log.date)}</span></div><div style="font-size:0.85rem;margin-top:6px">${log.content}</div></div>`;
             });
-            const dateStr = now.toLocaleDateString('zh-CN', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                weekday: 'long'
-            });
-            document.getElementById('current-time').textContent = timeStr;
-            document.getElementById('current-date').textContent = dateStr;
+            c.innerHTML = html;
         }
-        
-        const versionEl = document.getElementById('homepage-version');
-        if (versionEl && PROJECTS_DATA.homepage.version) {
-            versionEl.textContent = `当前主页版本：${PROJECTS_DATA.homepage.version}`;
+
+        function setAnimationSpeed(speed) {
+            document.body.style.setProperty('--anim-duration', speed + 's');
+            document.body.style.setProperty('--card-anim-duration', speed + 's');
         }
+
+        const darkToggle = document.getElementById('darkmode-toggle');
+        const mobileThemeBtn = document.getElementById('mobile-theme-btn');
+        const mobileThemeIcon = document.getElementById('mobile-theme-icon');
         
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-            themeIcon.classList.replace('fa-moon', 'fa-sun');
-        }
-        
-        themeToggle.addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
-                localStorage.setItem('theme', 'dark');
-                showToast('已切换到暗色模式', 'success');
+        function initTheme() {
+            const saved = localStorage.getItem('theme_vscode');
+            if (saved === 'light') {
+                document.body.classList.add('light-mode');
+                if (darkToggle) darkToggle.checked = false;
+                if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-moon';
             } else {
-                themeIcon.classList.replace('fa-sun', 'fa-moon');
-                localStorage.setItem('theme', 'light');
-                showToast('已切换到亮色模式', 'success');
+                document.body.classList.remove('light-mode');
+                if (darkToggle) darkToggle.checked = true;
+                if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-sun';
             }
-            themeIcon.style.animation = 'none';
-            setTimeout(() => {
-                themeIcon.style.animation = 'rotateIn 0.4s ease';
-            }, 10);
-        });
-        
-        document.getElementById('close-changelog').addEventListener('click', closeModal);
-        document.getElementById('changelog-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
+        }
+        function applyTheme(isDark) {
+            if (isDark) {
+                document.body.classList.remove('light-mode');
+                localStorage.setItem('theme_vscode', 'dark');
+                if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-sun';
+            } else {
+                document.body.classList.add('light-mode');
+                localStorage.setItem('theme_vscode', 'light');
+                if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-moon';
             }
-        });
+        }
+        if (darkToggle) {
+            darkToggle.addEventListener('change', (e) => { applyTheme(e.target.checked); showToast(e.target.checked ? '已切换至深色模式' : '已切换至浅色模式'); });
+        }
+        if (mobileThemeBtn) {
+            mobileThemeBtn.addEventListener('click', () => { 
+                const isDark = document.body.classList.contains('light-mode');
+                applyTheme(isDark); 
+                if (darkToggle) darkToggle.checked = isDark;
+                showToast(isDark ? '已切换至深色模式' : '已切换至浅色模式');
+            });
+        }
+        initTheme();
+
+        function loadSettings() {
+            const savedSpeed = localStorage.getItem('anim_speed');
+            if (savedSpeed) { setAnimationSpeed(parseFloat(savedSpeed)); document.getElementById('anim-speed').value = savedSpeed; document.getElementById('anim-speed-val').textContent = savedSpeed + 's'; }
+            const savedToastPos = localStorage.getItem('toast_position');
+            if (savedToastPos) { toastPositionSetting = savedToastPos; document.getElementById('toast-position').value = savedToastPos; getToastContainer().className = `toast-container ${toastPositionSetting}`; }
+            const savedToastDur = localStorage.getItem('toast_duration');
+            if (savedToastDur) { toastDurationSetting = parseFloat(savedToastDur); document.getElementById('toast-duration').value = toastDurationSetting; document.getElementById('toast-duration-val').textContent = toastDurationSetting + '秒'; }
+        }
         
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'h' || e.key === 'H') {
-                showHomepageChangelog();
+        const animSlider = document.getElementById('anim-speed');
+        if (animSlider) {
+            animSlider.addEventListener('input', (e) => { const v = parseFloat(e.target.value); setAnimationSpeed(v); document.getElementById('anim-speed-val').textContent = v + 's'; localStorage.setItem('anim_speed', v); });
+        }
+        const posSelect = document.getElementById('toast-position');
+        if (posSelect) {
+            posSelect.addEventListener('change', (e) => { toastPositionSetting = e.target.value; getToastContainer().className = `toast-container ${toastPositionSetting}`; localStorage.setItem('toast_position', toastPositionSetting); });
+        }
+        const durSlider = document.getElementById('toast-duration');
+        if (durSlider) {
+            durSlider.addEventListener('input', (e) => { toastDurationSetting = parseFloat(e.target.value); document.getElementById('toast-duration-val').textContent = toastDurationSetting + '秒'; localStorage.setItem('toast_duration', toastDurationSetting); });
+        }
+
+        const panels = { home: document.getElementById('home-panel'), works: document.getElementById('works-panel'), contact: document.getElementById('contact-panel'), settings: document.getElementById('settings-panel') };
+        const navItems = document.querySelectorAll('.nav-item');
+        const mobileTitle = document.getElementById('mobile-title');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+
+        function closeMenu() { if (sidebar) sidebar.classList.remove('mobile-open'); if (overlay) overlay.classList.remove('show'); }
+        function openMenu() { if (sidebar) sidebar.classList.add('mobile-open'); if (overlay) overlay.classList.add('show'); }
+
+        function switchPage(pageId) {
+            Object.keys(panels).forEach(k => { if (panels[k]) panels[k].classList.remove('active-panel'); });
+            if (panels[pageId]) panels[pageId].classList.add('active-panel');
+            navItems.forEach(item => {
+                if (item.getAttribute('data-page') === pageId) item.classList.add('active');
+                else item.classList.remove('active');
+            });
+            if (mobileTitle) {
+                const titles = { home: '首页', works: '我的作品', contact: '联系作者', settings: '设置' };
+                mobileTitle.textContent = titles[pageId];
             }
+            if (pageId === 'works') renderWorksGrid();
+            if (pageId === 'settings') renderSettingsChangelog();
+            if (pageId === 'contact') renderContactList();
+            closeMenu();
+        }
+
+        navItems.forEach(item => {
+            const handler = (e) => { e.preventDefault(); e.stopPropagation(); switchPage(item.getAttribute('data-page')); };
+            item.addEventListener('click', handler);
+            item.addEventListener('touchstart', handler, { passive: false });
         });
-        
-        updateTime();
-        setInterval(updateTime, 1000);
-        renderProjects();
-    </script>
+
+        const menuToggle = document.getElementById('menu-toggle');
+        if (menuToggle) {
+            const toggleHandler = (e) => { e.stopPropagation(); sidebar.classList.contains('mobile-open') ? closeMenu() : openMenu(); };
+            menuToggle.addEventListener('click', toggleHandler);
+            menuToggle.addEventListener('touchstart', toggleHandler, { passive: false });
+        }
+        if (overlay) {
+            overlay.addEventListener('click', closeMenu);
+            overlay.addEventListener('touchstart', closeMenu);
+        }
+
+        document.addEventListener('keydown', (e) => { if (e.key === 'h' || e.key === 'H') switchPage('settings'); });
+
+        const modalOverlay = document.getElementById('changelog-modal');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', () => modalOverlay.style.display = 'none');
+        if (modalOverlay) modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.style.display = 'none'; });
+
+        renderWorksGrid();
+        renderSettingsChangelog();
+        renderContactList();
+        loadSettings();
+    })();
+</script>
 </body>
 </html>
-
