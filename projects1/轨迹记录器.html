@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>（生草）路径记录器</title>
+    <style>
+        * { box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; margin: 0; padding: 0; }
+        body { background: #1e1e1e; min-height: 100vh; padding: 12px; display: flex; justify-content: center; align-items: flex-start; color: #cccccc; }
+        .app { max-width: 840px; width: 100%; background: #252526; border-radius: 4px; padding: 20px 18px 30px; border: 1px solid #3e3e42; margin: 0 auto; }
+        h1 { font-size: 1.7rem; font-weight: 600; color: #d4d4d4; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; letter-spacing: -0.2px; }
+        h1 small { font-size: 0.8rem; font-weight: 400; color: #858585; margin-left: auto; }
+        .subhead { color: #858585; font-size: 0.85rem; border-bottom: 1px solid #3e3e42; padding-bottom: 14px; margin-bottom: 18px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 16px; }
+        .btn { border: none; background: #3c3c3c; padding: 8px 16px; border-radius: 2px; font-size: 0.8rem; font-weight: 500; color: #cccccc; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1px solid #3e3e42; transition: 0.15s; }
+        .btn:hover { background: #4a4a4a; color: #ffffff; }
+        .btn-primary { background: #0e639c; color: white; border-color: #1177bb; }
+        .btn-primary:hover { background: #1177bb; }
+        .btn-outline { background: transparent; border-color: #3e3e42; color: #858585; }
+        .btn-outline:hover { background: #3c3c3c; color: #cccccc; }
+        .btn-danger { background: #a12626; color: white; border-color: #c42b2b; }
+        .btn-danger:hover { background: #c42b2b; }
+        .btn-success { background: #0e639c; color: white; border-color: #1177bb; }
+        .btn-success:hover { background: #1177bb; }
+        .btn-sm { padding: 4px 12px; font-size: 0.75rem; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .card { background: #1e1e1e; border-radius: 2px; padding: 16px 14px; margin-bottom: 20px; border: 1px solid #3e3e42; }
+        .row { display: flex; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 10px; align-items: center; }
+        .row label { font-size: 0.8rem; font-weight: 500; color: #858585; min-width: 60px; }
+        .row input, .row select, .row textarea { flex: 1; min-width: 140px; padding: 8px 12px; border: 1px solid #3e3e42; border-radius: 2px; font-size: 0.9rem; background: #1e1e1e; color: #cccccc; transition: 0.1s; }
+        .row input:focus, .row select:focus, .row textarea:focus { outline: none; border-color: #0e639c; box-shadow: 0 0 0 2px rgba(14, 99, 156, 0.2); }
+        .row textarea { min-height: 56px; resize: vertical; border-radius: 2px; }
+        .row input::placeholder, .row textarea::placeholder { color: #5a5a5a; }
+        .coord-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex: 1; }
+        .coord-row input { flex: 1; min-width: 90px; }
+        .time-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex: 1; }
+        .time-row input { flex: 1; min-width: 140px; }
+        .file-upload-area { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; }
+        .file-upload-area .btn { background: #1e1e1e; border-color: #3e3e42; color: #858585; }
+        .file-upload-area .btn:hover { background: #3c3c3c; color: #cccccc; }
+        .file-preview { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+        .file-preview .img-thumb { width: 56px; height: 56px; object-fit: cover; border-radius: 2px; border: 1px solid #3e3e42; background: #1e1e1e; cursor: pointer; }
+        .preset-fields { background: #1e1e1e; border-radius: 2px; padding: 10px 12px; border: 1px solid #2d2d30; margin-bottom: 10px; display: none; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .preset-fields.show { display: flex; }
+        .preset-fields label { font-size: 0.75rem; color: #858585; min-width: 44px; }
+        .preset-fields input { flex: 1; min-width: 100px; padding: 6px 10px; border: 1px solid #3e3e42; border-radius: 2px; font-size: 0.85rem; background: #1e1e1e; color: #cccccc; }
+        .preset-fields input:focus { outline: none; border-color: #0e639c; }
+        .node-list { display: flex; flex-direction: column; gap: 8px; max-height: 460px; overflow-y: auto; padding-right: 4px; }
+        .node-item { background: #1e1e1e; border-radius: 2px; padding: 12px 14px; border: 1px solid #3e3e42; transition: 0.1s; }
+        .node-item:hover { border-color: #5a5a5a; background: #252526; }
+        .node-header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px; margin-bottom: 4px; }
+        .node-type { font-weight: 600; color: #d4d4d4; }
+        .node-time { font-size: 0.7rem; color: #858585; background: #2d2d30; padding: 0 10px; border-radius: 2px; }
+        .node-coord { font-size: 0.75rem; color: #858585; font-family: monospace; }
+        .node-note { margin: 4px 0 4px; font-size: 0.9rem; color: #bbbbbb; word-break: break-word; }
+        .node-images { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+        .node-images img { width: 56px; height: 56px; object-fit: cover; border-radius: 2px; border: 1px solid #3e3e42; background: #1e1e1e; cursor: pointer; transition: 0.1s; }
+        .node-images img:active { transform: scale(0.92); }
+        .node-actions { margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap; }
+        .node-preset-info { font-size: 0.75rem; color: #858585; margin-top: 2px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .node-preset-info span { background: #2d2d30; padding: 0 8px; border-radius: 2px; border: 1px solid #3e3e42; }
+        .empty-message { text-align: center; padding: 30px 10px; color: #5a5a5a; font-size: 0.9rem; }
+        .node-list::-webkit-scrollbar { width: 4px; }
+        .node-list::-webkit-scrollbar-track { background: #1e1e1e; border-radius: 2px; }
+        .node-list::-webkit-scrollbar-thumb { background: #3e3e42; border-radius: 2px; }
+        .preview-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+        .preview-overlay .preview-box { background: #1e1e1e; border: 1px solid #3e3e42; border-radius: 2px; padding: 24px 20px; max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+        .preview-overlay .preview-box h2 { color: #d4d4d4; font-size: 1.2rem; border-bottom: 1px solid #3e3e42; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .preview-overlay .preview-box h2 .close-btn { background: #3c3c3c; border: none; color: #cccccc; padding: 4px 14px; border-radius: 2px; cursor: pointer; font-size: 0.8rem; }
+        .preview-overlay .preview-box h2 .close-btn:hover { background: #4a4a4a; }
+        .preview-node { background: #252526; border-radius: 2px; padding: 12px 14px; margin-bottom: 8px; border: 1px solid #3e3e42; }
+        .preview-node .pn-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px; }
+        .preview-node .pn-type { font-weight: 600; color: #d4d4d4; }
+        .preview-node .pn-time { font-size: 0.7rem; color: #858585; }
+        .preview-node .pn-coord { font-size: 0.75rem; color: #858585; font-family: monospace; }
+        .preview-node .pn-note { color: #bbbbbb; font-size: 0.85rem; margin: 4px 0; }
+        .preview-node .pn-preset { font-size: 0.75rem; color: #858585; }
+        .preview-node .pn-images { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+        .preview-node .pn-images img { width: 48px; height: 48px; object-fit: cover; border-radius: 2px; border: 1px solid #3e3e42; background: #1e1e1e; }
+        .preview-empty { color: #5a5a5a; text-align: center; padding: 30px 0; }
+        @media (max-width: 500px) { .app { padding: 14px 12px; } .row label { min-width: 50px; font-size: 0.75rem; } .row input, .row select { font-size: 0.85rem; padding: 6px 10px; } .btn { font-size: 0.75rem; padding: 6px 10px; } .preset-fields input { min-width: 70px; } .preview-overlay .preview-box { padding: 16px 14px; } }
+    </style>
+</head>
+<body>
+<div class="app" id="app">
+    <h1>路径记录器 <small>Made By Xuan1713</small></h1>
+    <div class="subhead">
+        <span>当前版本：1.0.0</span>
+        <span id="nodeCount" style="background:#2d2d30; padding:0 12px; border-radius:2px; font-size:0.75rem; color:#858585;">0 个节点</span>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-success" id="getLocationBtn">📍 获取当前位置</button>
+        <button class="btn btn-outline" id="fillTimeBtn">🕐 填充当前时间</button>
+        <button class="btn btn-primary" id="saveToLocalBtn">💾 手动保存</button>
+        <button class="btn btn-outline" id="exportJsonBtn">📤 导出 JSON</button>
+        <button class="btn btn-outline" id="importJsonBtn">📥 导入 JSON</button>
+        <button class="btn btn-outline" id="previewBtn">👁️ 预览所有节点</button>
+        <button class="btn btn-danger" id="clearAllBtn">🗑️ 清空</button>
+    </div>
+
+    <div class="card">
+        <div class="row">
+            <label>📍 类型</label>
+            <select id="nodeTypeSelect">
+                <option value="公路途中">公路途中</option>
+                <option value="立交">立交</option>
+                <option value="收费站">收费站</option>
+                <option value="省界">省界</option>
+                <option value="停留(抵达)">停留(抵达)</option>
+                <option value="出发">出发</option>
+                <option value="进服务区">进服务区</option>
+                <option value="出服务区">出服务区</option>
+                <option value="景区">景区</option>
+                <option value="加油站">加油站</option>
+                <option value="特殊">特殊</option>
+            </select>
+        </div>
+
+        <div class="preset-fields" id="presetFields">
+            <label id="presetLabel">名称</label>
+            <input type="text" id="presetInput" placeholder="输入名称...">
+        </div>
+
+        <div class="row">
+            <label>🌐 经纬度</label>
+            <div class="coord-row">
+                <input type="text" id="latInput" placeholder="纬度 如 30.123456">
+                <input type="text" id="lngInput" placeholder="经度 如 104.123456">
+                <button class="btn btn-sm btn-outline" id="fillLocationBtn" style="white-space:nowrap;">📥 填入定位</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <label>🕐 时间</label>
+            <div class="time-row">
+                <input type="datetime-local" id="timeInput">
+                <button class="btn btn-sm btn-outline" id="fillTimeBtn2">🕐 现在</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <label>📝 叙述</label>
+            <textarea id="noteInput" placeholder="写一段文字描述…"></textarea>
+        </div>
+
+        <div class="row" style="flex-direction: column; gap: 4px;">
+            <label style="min-width:unset;">🖼️ 上传图片（可多张）</label>
+            <div class="file-upload-area">
+                <input type="file" id="imageInput" accept="image/*" multiple style="display:none;">
+                <button class="btn btn-outline" id="uploadBtn">📎 选择图片</button>
+                <span id="imageCount" style="font-size:0.75rem; color:#5a5a5a;">(0 张)</span>
+                <button class="btn btn-outline btn-sm" id="clearImagesBtn">清除图片</button>
+            </div>
+            <div class="file-preview" id="imagePreview"></div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="addNodeBtn" style="flex:1;">➕ 添加节点</button>
+            <button class="btn btn-outline" id="editCancelBtn" style="display:none;">取消编辑</button>
+        </div>
+        <input type="hidden" id="editingNodeId" value="">
+        <div id="locationStatus" style="margin-top:6px; font-size:0.75rem; color:#5a5a5a;"></div>
+    </div>
+
+    <div style="margin-top: 4px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-weight:500; color:#cccccc;">📌 路径节点</span>
+            <span style="font-size:0.7rem; color:#5a5a5a;">最新在上 · 点击图片放大</span>
+        </div>
+        <div class="node-list" id="nodeList">
+            <div class="empty-message">还没有节点，添加你的第一个旅途点吧</div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    let nodes = [];
+    let editingId = null;
+    let tempImageFiles = [];
+    let tempImageDataUrls = [];
+    let currentLocation = null;
+
+    const nodeTypeSelect = document.getElementById('nodeTypeSelect');
+    const latInput = document.getElementById('latInput');
+    const lngInput = document.getElementById('lngInput');
+    const timeInput = document.getElementById('timeInput');
+    const noteInput = document.getElementById('noteInput');
+    const imageInput = document.getElementById('imageInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const clearImagesBtn = document.getElementById('clearImagesBtn');
+    const imagePreview = document.getElementById('imagePreview');
+    const imageCount = document.getElementById('imageCount');
+    const addNodeBtn = document.getElementById('addNodeBtn');
+    const editCancelBtn = document.getElementById('editCancelBtn');
+    const editingNodeIdInput = document.getElementById('editingNodeId');
+    const nodeListEl = document.getElementById('nodeList');
+    const nodeCountEl = document.getElementById('nodeCount');
+    const saveToLocalBtn = document.getElementById('saveToLocalBtn');
+    const exportJsonBtn = document.getElementById('exportJsonBtn');
+    const importJsonBtn = document.getElementById('importJsonBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const getLocationBtn = document.getElementById('getLocationBtn');
+    const fillLocationBtn = document.getElementById('fillLocationBtn');
+    const fillTimeBtn = document.getElementById('fillTimeBtn');
+    const fillTimeBtn2 = document.getElementById('fillTimeBtn2');
+    const previewBtn = document.getElementById('previewBtn');
+    const locationStatus = document.getElementById('locationStatus');
+    const presetFields = document.getElementById('presetFields');
+    const presetLabel = document.getElementById('presetLabel');
+    const presetInput = document.getElementById('presetInput');
+
+    const presetConfig = {
+        '收费站': { label: '收费站名', placeholder: '如 沈阳收费站' },
+        '省界': { label: '省界', placeholder: '如 河北/辽宁界' },
+        '立交': { label: '立交名称', placeholder: '如 绕城立交' },
+        '公路途中': { label: '公路名', placeholder: '如 G1京哈高速' },
+        '进服务区': { label: '服务区名', placeholder: '如 山海关服务区' },
+        '出服务区': { label: '服务区名', placeholder: '如 山海关服务区' },
+        '停留(抵达)': { label: '地点名称', placeholder: '如 北京市区' },
+        '出发': { label: '出发地', placeholder: '如 北京' },
+        '景区': { label: '景区名称', placeholder: '如 八达岭长城' },
+        '加油站': { label: '加油站名', placeholder: '如 中石油 XX 站' },
+        '特殊': { label: '特殊标签', placeholder: '输入任意名称' }
+    };
+
+    function updatePresetFields(type) {
+        const config = presetConfig[type];
+        if (config) {
+            presetFields.classList.add('show');
+            presetLabel.textContent = config.label;
+            presetInput.placeholder = config.placeholder;
+        } else {
+            presetFields.classList.remove('show');
+        }
+    }
+
+    nodeTypeSelect.addEventListener('change', function() { updatePresetFields(this.value); });
+
+    function fillCurrentTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        timeInput.value = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+    }
+
+    fillCurrentTime();
+    fillTimeBtn.addEventListener('click', fillCurrentTime);
+    fillTimeBtn2.addEventListener('click', fillCurrentTime);
+
+    // ========== 图片点击放大 ==========
+    function showImageOverlay(src) {
+        if (document.getElementById('imgOverlay')) return;
+        const overlay = document.createElement('div');
+        overlay.id = 'imgOverlay';
+        overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:99999;display:flex;align-items:center;justify-content:center;touch-action:none;';
+        const img = document.createElement('img');
+        img.src = src;
+        img.style.cssText = 'max-width:94vw;max-height:88vh;width:auto;height:auto;object-fit:contain;border-radius:2px;box-shadow:0 8px 40px rgba(0,0,0,0.6);';
+        const close = function() { const el = document.getElementById('imgOverlay'); if (el) el.remove(); };
+        overlay.addEventListener('click', close);
+        overlay.addEventListener('touchstart', close);
+        overlay.appendChild(img);
+        document.body.appendChild(overlay);
+    }
+
+    function bindImageClick() {
+        document.querySelectorAll('.node-images img').forEach(img => {
+            img.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const src = this.getAttribute('src');
+                if (src) showImageOverlay(src);
+            });
+        });
+    }
+
+    // ========== localStorage ==========
+    function saveToLocal() {
+        try {
+            localStorage.setItem('driveRouteData', JSON.stringify(nodes));
+            console.log('✅ 已保存到 localStorage，节点数:', nodes.length);
+        } catch(e) {
+            console.warn('❌ 保存失败:', e);
+        }
+    }
+
+    function loadFromLocal() {
+        try {
+            const data = localStorage.getItem('driveRouteData');
+            if (data) {
+                const parsed = JSON.parse(data);
+                if (Array.isArray(parsed)) {
+                    return parsed.map(n => ({ 
+                        ...n, 
+                        images: n.images || [],
+                        presetValue: n.presetValue || '',
+                        presetLabel: n.presetLabel || ''
+                    }));
+                }
+            }
+        } catch(e) { 
+            console.warn('读取失败:', e);
+            localStorage.removeItem('driveRouteData');
+        }
+        return null;
+    }
+
+    // ========== 辅助 ==========
+    function formatTime(isoStr) {
+        if (!isoStr) return '--';
+        const d = new Date(isoStr);
+        return d.toLocaleString('zh-CN', { hour12: false });
+    }
+
+    function parseTimeInput(value) {
+        if (!value) return new Date().toISOString();
+        const d = new Date(value);
+        if (isNaN(d.getTime())) return new Date().toISOString();
+        return d.toISOString();
+    }
+
+    function genId() { return 'n_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8); }
+
+    function validateLatLng(lat, lng) {
+        const latNum = parseFloat(lat);
+        const lngNum = parseFloat(lng);
+        if (isNaN(latNum) || isNaN(lngNum)) return null;
+        if (latNum < -90 || latNum > 90) return null;
+        if (lngNum < -180 || lngNum > 180) return null;
+        return { lat: latNum, lng: lngNum };
+    }
+
+    function resetImageUpload() {
+        tempImageFiles = [];
+        tempImageDataUrls = [];
+        imageInput.value = '';
+        updateImagePreview();
+    }
+
+    function updateImagePreview() {
+        imagePreview.innerHTML = '';
+        tempImageDataUrls.forEach((url) => {
+            const img = document.createElement('img');
+            img.src = url;
+            img.className = 'img-thumb';
+            img.addEventListener('click', function() { showImageOverlay(this.src); });
+            imagePreview.appendChild(img);
+        });
+        imageCount.textContent = '(' + tempImageDataUrls.length + ' 张)';
+    }
+
+    function loadImagesToDataURL(files) {
+        const promises = [];
+        for (let file of files) {
+            if (!file.type.startsWith('image/')) continue;
+            const p = new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+            promises.push(p);
+        }
+        return Promise.all(promises);
+    }
+
+    async function handleImageUpload(files) {
+        if (!files.length) return;
+        const dataUrls = await loadImagesToDataURL(files);
+        const validUrls = dataUrls.filter(url => url);
+        if (validUrls.length === 0) return;
+        tempImageDataUrls = tempImageDataUrls.concat(validUrls);
+        tempImageFiles = tempImageFiles.concat(Array.from(files).filter(f => f.type.startsWith('image/')));
+        updateImagePreview();
+    }
+
+    // ========== 定位 ==========
+    function getLocation() {
+        if (!navigator.geolocation) { locationStatus.textContent = '❌ 浏览器不支持定位'; return; }
+        getLocationBtn.disabled = true;
+        locationStatus.textContent = '⏳ 正在获取位置...';
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude, accuracy } = position.coords;
+                currentLocation = { lat: latitude, lng: longitude };
+                locationStatus.textContent = '✅ 定位成功 (精度 ±' + Math.round(accuracy) + 'm)';
+                getLocationBtn.disabled = false;
+                latInput.value = latitude.toFixed(6);
+                lngInput.value = longitude.toFixed(6);
+            },
+            (error) => {
+                let msg = '定位失败: ';
+                switch (error.code) {
+                    case error.PERMISSION_DENIED: msg += '用户拒绝权限'; break;
+                    case error.POSITION_UNAVAILABLE: msg += '位置不可用'; break;
+                    case error.TIMEOUT: msg += '请求超时'; break;
+                    default: msg += error.message;
+                }
+                locationStatus.textContent = '❌ ' + msg;
+                getLocationBtn.disabled = false;
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+        );
+    }
+
+    function fillLocation() {
+        if (!currentLocation) { alert('请先点击 "获取当前位置"'); return; }
+        latInput.value = currentLocation.lat.toFixed(6);
+        lngInput.value = currentLocation.lng.toFixed(6);
+        locationStatus.textContent = '📥 已填入定位';
+    }
+
+    // ========== 渲染 ==========
+    function render() {
+        if (nodes.length === 0) {
+            nodeListEl.innerHTML = '<div class="empty-message">🚙 旅途尚未开始，添加你的第一站</div>';
+        } else {
+            const sorted = [...nodes].sort((a, b) => new Date(b.time) - new Date(a.time));
+            let html = '';
+            sorted.forEach(node => {
+                let imgHtml = '';
+                if (node.images && node.images.length) {
+                    imgHtml = '<div class="node-images">' + node.images.map((img) =>
+                        '<img src="' + img + '" alt="旅途图片">'
+                    ).join('') + '</div>';
+                }
+                let presetInfo = '';
+                if (node.presetValue) {
+                    presetInfo = '<div class="node-preset-info"><span>' + (node.presetLabel || '名称') + ': ' +
+                        node.presetValue + '</span></div>';
+                }
+                html += '<div class="node-item" data-id="' + node.id + '">' +
+                    '<div class="node-header"><span class="node-type">' + (node.type || '高速途中') +
+                    '</span><span class="node-time">' + formatTime(node.time) + '</span></div>' +
+                    '<div class="node-coord">' + node.lat.toFixed(6) + ', ' + node.lng.toFixed(6) + '</div>' +
+                    presetInfo +
+                    (node.note ? '<div class="node-note">' + escapeHtml(node.note) + '</div>' : '') +
+                    imgHtml +
+                    '<div class="node-actions"><button class="btn btn-outline btn-sm edit-btn" data-id="' + node
+                    .id + '">✏️ 编辑</button><button class="btn btn-danger btn-sm delete-btn" data-id="' + node
+                    .id + '">🗑️ 删除</button></div>' +
+                    '</div>';
+            });
+            nodeListEl.innerHTML = html;
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => { const id = btn.dataset.id;
+                    startEdit(id); });
+            });
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.dataset.id;
+                    if (confirm('确定删除此节点吗？')) { deleteNode(id); }
+                });
+            });
+            setTimeout(bindImageClick, 100);
+        }
+        nodeCountEl.textContent = nodes.length + ' 个节点';
+        saveToLocal();
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // ========== CRUD ==========
+    function addNode(lat, lng, time, type, note, images, presetValue, presetLabel) {
+        presetValue = presetValue || '';
+        presetLabel = presetLabel || '';
+        const node = {
+            id: genId(),
+            lat, lng,
+            time: time || new Date().toISOString(),
+            type: type || '高速途中',
+            note: note || '',
+            images: images || [],
+            presetValue: presetValue,
+            presetLabel: presetLabel
+        };
+        nodes.push(node);
+        render();
+        clearForm();
+    }
+
+    function deleteNode(id) { nodes = nodes.filter(n => n.id !== id); if (editingId === id) cancelEdit();
+        render(); }
+
+    function startEdit(id) {
+        const node = nodes.find(n => n.id === id);
+        if (!node) return;
+        editingId = id;
+        editingNodeIdInput.value = id;
+        nodeTypeSelect.value = node.type || '高速途中';
+        updatePresetFields(node.type);
+        latInput.value = node.lat;
+        lngInput.value = node.lng;
+        const d = new Date(node.time);
+        if (!isNaN(d.getTime())) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            timeInput.value = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+        }
+        noteInput.value = node.note || '';
+        presetInput.value = node.presetValue || '';
+        tempImageDataUrls = node.images ? [...node.images] : [];
+        tempImageFiles = [];
+        updateImagePreview();
+        addNodeBtn.textContent = '💾 保存修改';
+        editCancelBtn.style.display = 'inline-flex';
+    }
+
+    function saveEdit(id, lat, lng, time, type, note, images, presetValue, presetLabel) {
+        const node = nodes.find(n => n.id === id);
+        if (!node) return;
+        node.lat = lat;
+        node.lng = lng;
+        node.time = time || new Date().toISOString();
+        node.type = type;
+        node.note = note || '';
+        node.images = images || [];
+        node.presetValue = presetValue || '';
+        node.presetLabel = presetLabel || '';
+        render();
+        cancelEdit();
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        editingNodeIdInput.value = '';
+        addNodeBtn.textContent = '➕ 添加节点';
+        editCancelBtn.style.display = 'none';
+        clearForm();
+    }
+
+    function clearForm() {
+        noteInput.value = '';
+        presetInput.value = '';
+        resetImageUpload();
+        fillCurrentTime();
+    }
+
+    // ========== 导入/导出 JSON（修复卡死问题） ==========
+    function exportData() {
+        if (nodes.length === 0) { alert('暂无节点可导出'); return; }
+
+        // 显示导出中状态
+        exportJsonBtn.textContent = '⏳ 导出中...';
+        exportJsonBtn.disabled = true;
+
+        // 用 setTimeout 让 UI 先刷新
+        setTimeout(() => {
+            try {
+                const json = JSON.stringify(nodes, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '自驾路径_' + new Date().toISOString().slice(0, 10) + '.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+                exportJsonBtn.textContent = '📤 导出 JSON';
+                exportJsonBtn.disabled = false;
+            } catch (e) {
+                alert('导出失败: ' + e.message);
+                exportJsonBtn.textContent = '📤 导出 JSON';
+                exportJsonBtn.disabled = false;
+            }
+        }, 100);
+    }
+
+    function importData() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (!Array.isArray(data)) { alert('格式错误：不是数组'); return; }
+                    if (data.length === 0) { alert('文件为空'); return; }
+                    if (nodes.length > 0 && !confirm('导入将覆盖当前所有数据，确定吗？')) return;
+                    nodes = data.map(n => ({ ...n, images: n.images || [] }));
+                    cancelEdit();
+                    render();
+                    alert('✅ 导入成功！共 ' + nodes.length + ' 个节点');
+                } catch (err) {
+                    alert('导入失败：' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    }
+
+    // ========== 预览 ==========
+    function openPreview() {
+        const existing = document.getElementById('previewOverlay');
+        if (existing) existing.remove();
+
+        const overlay = document.createElement('div');
+        overlay.id = 'previewOverlay';
+        overlay.className = 'preview-overlay';
+
+        const box = document.createElement('div');
+        box.className = 'preview-box';
+
+        const title = document.createElement('h2');
+        title.innerHTML = '📋 所有路径节点 <span style="font-size:0.7rem;font-weight:400;color:#858585;">共 ' + nodes.length +
+            ' 个节点</span> <button class="close-btn" id="previewCloseBtn">✕ 关闭</button>';
+
+        const content = document.createElement('div');
+        content.id = 'previewContent';
+
+        if (nodes.length === 0) {
+            content.innerHTML = '<div class="preview-empty">暂无节点</div>';
+        } else {
+            const sorted = [...nodes].sort((a, b) => new Date(b.time) - new Date(a.time));
+            let html = '';
+            sorted.forEach(node => {
+                let imgHtml = '';
+                if (node.images && node.images.length) {
+                    imgHtml = '<div class="pn-images">' + node.images.map((img) =>
+                        '<img src="' + img + '" alt="图片">'
+                    ).join('') + '</div>';
+                }
+                let presetHtml = '';
+                if (node.presetValue) {
+                    presetHtml = '<div class="pn-preset">' + (node.presetLabel || '名称') + ': ' + node
+                    .presetValue + '</div>';
+                }
+                html += '<div class="preview-node">' +
+                    '<div class="pn-header"><span class="pn-type">' + (node.type || '高速途中') +
+                    '</span><span class="pn-time">' + formatTime(node.time) + '</span></div>' +
+                    '<div class="pn-coord">' + node.lat.toFixed(6) + ', ' + node.lng.toFixed(6) + '</div>' +
+                    presetHtml +
+                    (node.note ? '<div class="pn-note">' + escapeHtml(node.note) + '</div>' : '') +
+                    imgHtml +
+                    '</div>';
+            });
+            content.innerHTML = html;
+        }
+
+        box.appendChild(title);
+        box.appendChild(content);
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        document.getElementById('previewCloseBtn').addEventListener('click', function() {
+            const el = document.getElementById('previewOverlay');
+            if (el) el.remove();
+        });
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                const el = document.getElementById('previewOverlay');
+                if (el) el.remove();
+            }
+        });
+    }
+
+    // ========== 事件绑定 ==========
+    uploadBtn.addEventListener('click', () => imageInput.click());
+    imageInput.addEventListener('change', async (e) => {
+        const files = e.target.files;
+        if (files.length) { await handleImageUpload(files); }
+        imageInput.value = '';
+    });
+    clearImagesBtn.addEventListener('click', resetImageUpload);
+
+    addNodeBtn.addEventListener('click', function() {
+        const latRaw = latInput.value.trim(),
+            lngRaw = lngInput.value.trim();
+        const timeStr = timeInput.value;
+        const time = timeStr ? parseTimeInput(timeStr) : new Date().toISOString();
+        const type = nodeTypeSelect.value,
+            note = noteInput.value.trim(),
+            images = [...tempImageDataUrls];
+        const presetValue = presetInput.value.trim();
+        const config = presetConfig[type];
+        const presetLabel = config ? config.label : '';
+        const coord = validateLatLng(latRaw, lngRaw);
+        if (!coord) { alert('请输入有效的经纬度'); return; }
+        if (editingId) {
+            saveEdit(editingId, coord.lat, coord.lng, time, type, note, images, presetValue, presetLabel);
+        } else {
+            addNode(coord.lat, coord.lng, time, type, note, images, presetValue, presetLabel);
+        }
+    });
+
+    editCancelBtn.addEventListener('click', cancelEdit);
+    clearAllBtn.addEventListener('click', function() {
+        if (nodes.length === 0) return;
+        if (confirm('⚠️ 确定清空所有节点吗？')) { nodes = [];
+            cancelEdit();
+            render(); }
+    });
+    getLocationBtn.addEventListener('click', getLocation);
+    fillLocationBtn.addEventListener('click', fillLocation);
+    saveToLocalBtn.addEventListener('click', function() { saveToLocal();
+        alert('✅ 已手动保存到 localStorage'); });
+    exportJsonBtn.addEventListener('click', exportData);
+    importJsonBtn.addEventListener('click', importData);
+    previewBtn.addEventListener('click', openPreview);
+
+    // ========== 初始化 ==========
+    updatePresetFields(nodeTypeSelect.value);
+
+    const savedData = loadFromLocal();
+    if (savedData && savedData.length) {
+        nodes = savedData;
+        console.log('📂 从 localStorage 加载了 ' + nodes.length + ' 个节点');
+    } else {
+        nodes = [{
+            id: genId(),
+            lat: 123,
+            lng: 45,
+            type: '出发',
+            note: '北京出发，天气晴（这只是一个示例，可以删除）',
+            time: new Date(Date.now() - 3600000).toISOString(),
+            images: [],
+            presetValue: '北京',
+            presetLabel: '出发地'
+        }];
+        saveToLocal();
+    }
+
+    render();
+
+    setInterval(() => { saveToLocal(); }, 30000);
+    window.addEventListener('beforeunload', function() { saveToLocal(); });
+    setTimeout(() => { if (navigator.geolocation) { getLocation(); } }, 500);
+})();
+</script>
+</body>
+</html>
