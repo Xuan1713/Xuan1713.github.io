@@ -53,6 +53,7 @@
             --icon-bell: #ce9178;
             --icon-history: #4ec9b0;
             --icon-info: #9cdcfe;
+            --icon-tools: #f39c12;
         }
 
         body.light-mode {
@@ -96,6 +97,7 @@
             --icon-bell: #d97706;
             --icon-history: #2b7a4b;
             --icon-info: #007acc;
+            --icon-tools: #d97706;
         }
 
         body {
@@ -188,6 +190,8 @@
             padding: 8px;
             border-radius: 8px;
             -webkit-tap-highlight-color: transparent;
+            position: relative;
+            overflow: hidden;
         }
         .menu-toggle:active {
             background: var(--hover-bg);
@@ -206,6 +210,8 @@
             padding: 8px;
             border-radius: 8px;
             -webkit-tap-highlight-color: transparent;
+            position: relative;
+            overflow: hidden;
         }
         .mobile-theme-btn:active {
             background: var(--hover-bg);
@@ -246,6 +252,8 @@
             font-size: 1rem;
             font-weight: 500;
             -webkit-tap-highlight-color: transparent;
+            position: relative;
+            overflow: hidden;
         }
         .nav-item:active {
             background: var(--hover-bg);
@@ -257,6 +265,7 @@
         }
         .nav-item[data-page="home"] i { color: var(--icon-home); }
         .nav-item[data-page="works"] i { color: var(--icon-works); }
+        .nav-item[data-page="tools"] i { color: var(--icon-tools); }
         .nav-item[data-page="settings"] i { color: var(--icon-settings); }
         .nav-item[data-page="contact"] i { color: var(--icon-contact); }
         .nav-item.active {
@@ -291,6 +300,8 @@
             padding: 8px 12px;
             border-radius: 6px;
             margin-top: 12px;
+            position: relative;
+            overflow: hidden;
         }
         .github-link-footer:active {
             background: var(--hover-bg);
@@ -433,6 +444,121 @@
             font-size: 0.8rem;
         }
 
+        .works-header {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .works-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .works-header-top h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: border-color 0.2s ease;
+            flex: 1;
+            max-width: 400px;
+            min-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+        .search-box:focus-within {
+            border-color: var(--active-border);
+            box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.15);
+        }
+        .search-box i {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            width: 100%;
+            font-family: inherit;
+        }
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+        .search-clear {
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            border-radius: 4px;
+            display: none;
+        }
+        .search-clear:hover {
+            background: var(--hover-bg);
+        }
+        .search-clear.visible {
+            display: block;
+        }
+        .search-stats {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .no-results {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-muted);
+        }
+        .no-results i {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+        .no-results p {
+            font-size: 0.95rem;
+        }
+
+        .tag-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0 4px;
+        }
+        .tag-filter-btn {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border: 1px solid transparent;
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+        .tag-filter-btn:hover {
+            background: var(--button-hover);
+        }
+        .tag-filter-btn.active {
+            background: var(--active-border);
+            color: #fff;
+            border-color: var(--active-border);
+        }
+        .tag-filter-btn:active {
+            transform: scale(0.95);
+        }
+
         .works-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -442,6 +568,14 @@
             .works-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
+            }
+            .works-header-top {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                max-width: 100%;
+                min-width: auto;
             }
         }
 
@@ -458,9 +592,11 @@
             opacity: 0;
             transform: translateX(-20px);
             animation: cardSlideIn var(--card-anim-duration) cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+            position: relative;
+            overflow: hidden;
         }
-        .work-card:last-child {
-            animation: cardSlideIn var(--card-anim-duration) cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        .work-card.hidden {
+            display: none;
         }
         @keyframes cardSlideIn {
             from {
@@ -523,6 +659,8 @@
             font-weight: normal;
             cursor: pointer;
             transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
         }
         .card-version:active { background: var(--button-hover); }
         .card-desc {
@@ -562,6 +700,8 @@
             color: inherit;
             transition: all 0.2s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
         .contact-card:hover {
             transform: translateX(6px);
@@ -672,11 +812,6 @@
             cursor: pointer;
             border: none;
         }
-        .range-value {
-            min-width: 45px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
         select {
             background: var(--button-bg);
             color: var(--text-primary);
@@ -720,6 +855,178 @@
         }
         .info-value {
             color: var(--text-primary);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+        .tool-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tool-card h3 i {
+            color: var(--icon-tools);
+        }
+        .tool-card .tool-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .tool-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .tool-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .tool-row label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+        .tool-row input, .tool-row textarea {
+            flex: 1;
+            min-width: 120px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: border-color 0.2s;
+        }
+        .tool-row input:focus, .tool-row textarea:focus {
+            outline: none;
+            border-color: var(--active-border);
+        }
+        .tool-row textarea {
+            resize: vertical;
+            min-height: 60px;
+            width: 100%;
+        }
+        .tool-row .result-area {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            word-break: break-all;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .tool-btn {
+            background: var(--button-bg);
+            border: none;
+            border-radius: 6px;
+            padding: 6px 16px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+        .tool-btn:hover {
+            background: var(--button-hover);
+        }
+        .tool-btn:active {
+            transform: scale(0.95);
+        }
+        .tool-btn.primary {
+            background: var(--active-border);
+            color: #fff;
+        }
+        .tool-btn.primary:hover {
+            opacity: 0.85;
+        }
+        .tool-btn.success {
+            background: #2b7a4b;
+            color: #fff;
+        }
+        .tool-btn.success:hover {
+            opacity: 0.85;
+        }
+        .tool-btn.danger {
+            background: #a02b2b;
+            color: #fff;
+        }
+        .tool-btn.danger:hover {
+            opacity: 0.85;
+        }
+
+        .tool-result-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            word-break: break-all;
+            max-height: 150px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .tool-result-block img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 4px;
+            display: block;
+            margin: 4px 0;
+        }
+        
+        .tool-result-block canvas {
+            max-width: 100%;
+            max-height: 200px;
+            display: block;
+            margin: 4px 0;
+        }
+
+        .tool-result-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .tool-result-actions .tool-btn {
+            flex: 0 0 auto;
+        }
+        
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            flex-shrink: 0;
         }
 
         .toast-container {
@@ -826,6 +1133,8 @@
             color: var(--text-muted);
             padding: 4px 8px;
             border-radius: 6px;
+            position: relative;
+            overflow: hidden;
         }
         .modal-close:hover { background: var(--hover-bg); }
         .modal-body { padding: 24px; }
@@ -848,6 +1157,31 @@
         .main-content::-webkit-scrollbar { width: 10px; }
         .main-content::-webkit-scrollbar-track { background: var(--bg-secondary); }
         .main-content::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 5px; }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(0);
+            animation: ripple-anim 0.6s ease-out forwards;
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+
+        .ripple.dark {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        .ripple.light {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes ripple-anim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -864,6 +1198,7 @@
         <div class="nav-menu">
             <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>首页</span></div>
             <div class="nav-item" data-page="works"><i class="fas fa-code"></i><span>我的作品</span></div>
+            <div class="nav-item" data-page="tools"><i class="fas fa-tools"></i><span>工具箱</span></div>
             <div class="nav-item" data-page="contact"><i class="fas fa-envelope"></i><span>联系作者</span></div>
             <div class="nav-item" data-page="settings"><i class="fas fa-cog"></i><span>设置</span></div>
         </div>
@@ -889,7 +1224,7 @@
                 <div class="time-display" id="home-time">--:--:--</div>
                 <div class="date-display" id="home-date">----年--月--日</div>
             </div>
-            <div class="announcement-mini"><i class="fas fa-bullhorn"></i><span> V5.1.0更新！<br>新项目开发中</span></div>
+            <div class="announcement-mini"><i class="fas fa-bullhorn"></i><span> V5.2.0更新！</span></div>
             <div class="github-graph-card" style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 16px; margin: 20px 0 0 0;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                     <i class="fab fa-github"></i>
@@ -913,19 +1248,190 @@
                 </div>
                 <h3 style="margin-top: 20px;"><i class="fas fa-heart" style="color: var(--icon-heart);"></i> 兴趣爱好</h3>
                 <div class="interest-tags">
-                    <span class="interest-tag"> 摄影 </span>
-                    <span class="interest-tag"> 编程 </span>
-                    <span class="interest-tag"> 建模（3D） </span>
-                    <span class="interest-tag"> 搞机（安卓） </span>
-                    <span class="interest-tag"> 宅 </span>
+                    <span class="interest-tag">摄影</span>
+                    <span class="interest-tag">编程</span>
+                    <span class="interest-tag">建模（3D）</span>
+                    <span class="interest-tag">搞机（安卓）</span>
+                    <span class="interest-tag">宅</span>
                 </div>
             </div>
             <div class="mobile-copyright">© 2026 Xuan1713. 保留所有权利.</div>
         </div>
 
         <div id="works-panel" class="content-panel">
-            <h2 style="margin-bottom: 24px; font-weight: 600;"><i class="fas fa-code"></i> 我的作品</h2>
+            <div class="works-header">
+                <div class="works-header-top">
+                    <h2><i class="fas fa-code"></i> 我的作品</h2>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="works-search" placeholder="搜索作品标题、描述或标签...">
+                        <span class="search-clear" id="search-clear"><i class="fas fa-times-circle"></i></span>
+                    </div>
+                </div>
+                <div class="tag-filter" id="tag-filter"></div>
+                <div class="search-stats" id="search-stats"></div>
+            </div>
             <div class="works-grid" id="works-grid-container"></div>
+            <div class="mobile-copyright">© 2026 Xuan1713. 保留所有权利.</div>
+        </div>
+
+        <div id="tools-panel" class="content-panel">
+            <h2 style="margin-bottom: 8px; font-weight: 600;"><i class="fas fa-tools"></i> 在线工具箱</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px;"><i class="fas fa-wrench" style="margin-right: 6px; color: var(--icon-tools);"></i>一些常用的小工具，方便日常开发</p>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3><i class="fas fa-clock"></i> 时间戳转换</h3>
+                    <div class="tool-desc">Unix时间戳与日期时间互转</div>
+                    <div class="tool-group">
+                        <div class="tool-row">
+                            <label>时间戳</label>
+                            <input type="text" id="timestamp-input" placeholder="例如: 1700000000">
+                            <button class="tool-btn primary" id="ts-to-date">→ 转日期</button>
+                        </div>
+                        <div class="tool-row">
+                            <label>日期时间</label>
+                            <input type="text" id="datetime-input" placeholder="例如: 2024-01-15 12:30:00">
+                            <button class="tool-btn primary" id="date-to-ts">→ 转时间戳</button>
+                        </div>
+                        <div class="tool-row">
+                            <label>结果</label>
+                            <div class="result-area" id="timestamp-result">等待转换...</div>
+                        </div>
+                        <div class="tool-result-actions">
+                            <button class="tool-btn success" id="copy-timestamp"><i class="fa-regular fa-copy"></i> 复制结果</button>
+                            <button class="tool-btn" id="ts-now">当前时间戳</button>
+                            <button class="tool-btn" id="ts-local">当前本地时间</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3><i class="fas fa-link"></i> URL 编解码</h3>
+                    <div class="tool-desc">URL 编码/解码（百分号编码）</div>
+                    <div class="tool-group">
+                        <div class="tool-row" style="flex-direction: column; align-items: stretch;">
+                            <textarea id="url-input" placeholder="输入要编码或解码的文本/URL..." rows="2"></textarea>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                                <button class="tool-btn primary" id="url-encode">编码</button>
+                                <button class="tool-btn primary" id="url-decode">解码</button>
+                                <button class="tool-btn" id="url-clear">清空</button>
+                            </div>
+                            <div style="margin-top: 8px;">
+                                <label style="font-size:0.8rem;color:var(--text-secondary);">结果</label>
+                                <div class="tool-result-block" id="url-result">等待操作...</div>
+                            </div>
+                            <div class="tool-result-actions">
+                                <button class="tool-btn success" id="copy-url-result"><i class="fa-regular fa-copy"></i> 复制结果</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3><i class="fas fa-file-code"></i> Base64 编解码</h3>
+                    <div class="tool-desc">文本/图片 Base64 编码解码，支持图片预览</div>
+                    <div class="tool-group">
+                        <div class="tool-row" style="flex-direction: column; align-items: stretch;">
+                            <textarea id="base64-input" placeholder="输入要编码的文本，或粘贴Base64编码进行解码..." rows="2"></textarea>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                                <button class="tool-btn primary" id="b64-encode">编码</button>
+                                <button class="tool-btn primary" id="b64-decode">解码</button>
+                                <button class="tool-btn" id="b64-clear">清空</button>
+                            </div>
+                            <div style="margin-top: 8px;">
+                                <label style="font-size:0.8rem;color:var(--text-secondary);">结果</label>
+                                <div class="tool-result-block" id="base64-result">等待操作...</div>
+                            </div>
+                            <div class="tool-result-actions">
+                                <button class="tool-btn success" id="copy-base64-result"><i class="fa-regular fa-copy"></i> 复制结果</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3><i class="fas fa-brackets-curly"></i> JSON 格式化</h3>
+                    <div class="tool-desc">JSON 美化/压缩/验证</div>
+                    <div class="tool-group">
+                        <div class="tool-row" style="flex-direction: column; align-items: stretch;">
+                            <textarea id="json-input" placeholder="粘贴 JSON 数据..." rows="3"></textarea>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                                <button class="tool-btn primary" id="json-format">美化</button>
+                                <button class="tool-btn primary" id="json-minify">压缩</button>
+                                <button class="tool-btn" id="json-validate">验证</button>
+                                <button class="tool-btn" id="json-clear">清空</button>
+                            </div>
+                            <div style="margin-top: 8px;">
+                                <label style="font-size:0.8rem;color:var(--text-secondary);">结果</label>
+                                <div class="tool-result-block" id="json-result" style="max-height:200px;">等待操作...</div>
+                            </div>
+                            <div class="tool-result-actions">
+                                <button class="tool-btn success" id="copy-json-result"><i class="fa-regular fa-copy"></i> 复制结果</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3><i class="fas fa-palette"></i> 颜色转换</h3>
+                    <div class="tool-desc">HEX ↔ RGB ↔ HSL 互转，颜色预览</div>
+                    <div class="tool-group">
+                        <div class="tool-row" style="justify-content:space-between; align-items:center;">
+                            <label style="min-width:50px;">取色器</label>
+                            <input type="color" id="color-picker" value="#1e1e1e" style="width:60px; height:40px; padding:2px; cursor:pointer; background:var(--bg-secondary); border:1px solid var(--card-border); border-radius:6px;">
+                            <span style="font-size:0.8rem;color:var(--text-muted);flex:1;" id="color-picker-text">#1e1e1e</span>
+                        </div>
+                        <div style="height:8px;"></div>
+                        <div class="tool-row">
+                            <label>HEX</label>
+                            <input type="text" id="color-hex" placeholder="#1e1e1e" style="flex:0.8;">
+                            <button class="tool-btn primary" id="color-hex-btn">→ 转换</button>
+                        </div>
+                        <div class="tool-row">
+                            <label>RGB</label>
+                            <input type="text" id="color-rgb" placeholder="rgb(30,30,30)" style="flex:0.8;">
+                            <button class="tool-btn primary" id="color-rgb-btn">→ 转换</button>
+                        </div>
+                        <div class="tool-row">
+                            <label>HSL</label>
+                            <input type="text" id="color-hsl" placeholder="hsl(0,0%,12%)" style="flex:0.8;">
+                            <button class="tool-btn primary" id="color-hsl-btn">→ 转换</button>
+                        </div>
+                        <div class="tool-row" style="justify-content:space-between;">
+                            <span style="font-size:0.8rem;color:var(--text-secondary);">预览</span>
+                            <div class="color-preview" id="color-preview" style="background:#1e1e1e;"></div>
+                            <span style="font-size:0.8rem;color:var(--text-muted);" id="color-preview-text">#1e1e1e</span>
+                        </div>
+                        <div class="tool-result-actions">
+                            <button class="tool-btn success" id="copy-color-result"><i class="fa-regular fa-copy"></i> 复制结果</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3><i class="fas fa-fingerprint"></i> 哈希生成</h3>
+                    <div class="tool-desc">MD5 / SHA-1 / SHA-256 / SHA-512</div>
+                    <div class="tool-group">
+                        <div class="tool-row" style="flex-direction: column; align-items: stretch;">
+                            <textarea id="hash-input" placeholder="输入要计算哈希的文本..." rows="2"></textarea>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                                <button class="tool-btn primary" id="hash-md5">MD5</button>
+                                <button class="tool-btn primary" id="hash-sha1">SHA-1</button>
+                                <button class="tool-btn primary" id="hash-sha256">SHA-256</button>
+                                <button class="tool-btn primary" id="hash-sha512">SHA-512</button>
+                                <button class="tool-btn" id="hash-clear">清空</button>
+                            </div>
+                            <div style="margin-top: 8px;">
+                                <label style="font-size:0.8rem;color:var(--text-secondary);">结果</label>
+                                <div class="tool-result-block" id="hash-result" style="max-height:120px;">等待操作...</div>
+                            </div>
+                            <div class="tool-result-actions">
+                                <button class="tool-btn success" id="copy-hash-result"><i class="fa-regular fa-copy"></i> 复制结果</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="mobile-copyright">© 2026 Xuan1713. 保留所有权利.</div>
         </div>
 
@@ -977,16 +1483,17 @@
                 <h3><i class="fas fa-info-circle" style="color: var(--icon-info);"></i> 关于</h3>
                 <div class="info-row">
                     <span class="info-label">当前主页版本：</span>
-                    <span class="info-value" id="homepage-version-display">v5.1.0</span>
+                    <span class="info-value" id="homepage-version-display">v5.2.0</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">最后更新时间：</span>
-                    <span class="info-value" id="homepage-update-time">2026-04-19</span>
+                    <span class="info-value" id="homepage-update-time">2026-07-01</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">作者：</span>
                     <span class="info-value">Xuan1713</span>
                 </div>
+            </div>
             <div class="settings-group">
                 <h3><i class="fas fa-history" style="color: var(--icon-history);"></i> 主页更新日志</h3>
                 <div class="changelog-list-settings" id="settings-changelog"></div>
@@ -995,7 +1502,9 @@
         </div>
     </div>
 </div>
+
 <div class="toast-container top-right" id="toast-container"></div>
+
 <div class="modal-overlay" id="changelog-modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -1016,49 +1525,18 @@
             { id: "future", title: "更多作品", url: "#", icon: "fa-plus", iconColor: "#d4d4d4", version: "敬请期待", date: "", description: "新项目规划中", tags: ["规划中"], changelog: [] }
         ],
         homepage: {
-            version: "v5.1.0",
-            lastUpdate: "2026-06-07",
+            version: "v5.2.0",
+            lastUpdate: "2026-07-01",
             changelog: [
-                {
-                    version: "v1.0.0",
-                    date: "2026-01-15",
-                    content: "初始版本<br>• 个人作品展示<br>• 实时时钟显示<br>• 主题切换功能<br>• 响应式布局<br>• GitHub链接"
-                },
-                {
-                    version: "v1.1.0",
-                    date: "2026-02-05",
-                    content: "作品列表更新<br>• 添加日历"
-                },
-                {
-                    version: "v2.0.0",
-                    date: "2026-02-07",
-                    content: "小更新<br>• 添加Toast提示系统<br>• 添加更新日志查看功能<br>• 优化响应式设计<br>• 改进暗色模式体验"
-                },
-                {
-                    version: "v3.0.0",
-                    date: "2026-04-11",
-                    content: "作品列表更新<br>• 添加点击计数器<br>• 改用内部数据管理"
-                },
-                {
-                    version: "v3.1.0",
-                    date: "2026-04-13",
-                    content: "问题修复<br>• 修复了CSS渲染异常导致的严重页面显示错乱问题"
-                },
-                {
-                    version: "v4.0.0",
-                    date: "2026-04-13",
-                    content: "未发布的更新<br>全面重构开始"
-                },
-                {
-                    version: "v5.0.0",
-                    date: "2026-04-19",
-                    content: "大更新<br>• UI全部重构，过渡动画优化<br>• 新增侧边抽屉导航<br>• 完善自我介绍<br>• 新增联系作者页面<br>• 优化移动端体验"
-                },
-                {
-                    version: "v5.1.0",
-                    date: "2026-06-07",
-                    content: "当前版本<br>• 首页新增 Github贡献图"
-                }
+                { version: "v1.0.0", date: "2026-01-15", content: "初始版本<br>• 个人作品展示<br>• 实时时钟显示<br>• 主题切换功能<br>• 响应式布局<br>• GitHub链接" },
+                { version: "v1.1.0", date: "2026-02-05", content: "作品列表更新<br>• 添加日历" },
+                { version: "v2.0.0", date: "2026-02-07", content: "小更新<br>• 添加Toast提示系统<br>• 添加更新日志查看功能<br>• 优化响应式设计<br>• 改进暗色模式体验" },
+                { version: "v3.0.0", date: "2026-04-11", content: "作品列表更新<br>• 添加点击计数器<br>• 改用内部数据管理" },
+                { version: "v3.1.0", date: "2026-04-13", content: "问题修复<br>• 修复了CSS渲染异常导致的严重页面显示错乱问题" },
+                { version: "v4.0.0", date: "2026-04-13", content: "未发布的更新<br>全面重构开始" },
+                { version: "v5.0.0", date: "2026-04-19", content: "大更新<br>• UI全部重构，过渡动画优化<br>• 新增侧边抽屉导航<br>• 完善自我介绍<br>• 新增联系作者页面<br>• 优化移动端体验" },
+                { version: "v5.1.0", date: "2026-06-07", content: "版本更新<br>• 首页新增 GitHub贡献图" },
+                { version: "v5.2.0", date: "2026-07-01", content: "新功能 <br>• JSON 格式化/压缩/验证<br>• 颜色转换 HEX/RGB/HSL<br>• 时间戳<br>• 编/解码<br>• MD5/SHA-1/SHA-256/SHA-512 哈希生成<br>• 新增点击动效" }
             ]
         }
     };
@@ -1119,6 +1597,38 @@
 
         function escapeHtml(str) { if (!str) return ''; return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
         
+        function copyToClipboard(text) {
+            if (!text || text === '等待转换...' || text === '等待操作...' || text === '等待生成...') {
+                showToast('没有可复制的内容', 'warning');
+                return;
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('已复制到剪贴板', 'success');
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('已复制到剪贴板', 'success');
+            } catch (e) {
+                showToast('复制失败，请手动复制', 'error');
+            }
+            document.body.removeChild(textarea);
+        }
+
         function updateHomeTime() {
             const now = new Date();
             const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false });
@@ -1131,6 +1641,94 @@
         updateHomeTime();
         setInterval(updateHomeTime, 1000);
 
+        let currentSearchTerm = '';
+        let currentTagFilter = '';
+
+        function getAllTags() {
+            const tagsSet = new Set();
+            PROJECTS.projects.forEach(p => {
+                (p.tags || []).forEach(t => tagsSet.add(t));
+            });
+            return Array.from(tagsSet).sort();
+        }
+
+        function renderTagFilters() {
+            const container = document.getElementById('tag-filter');
+            if (!container) return;
+            const tags = getAllTags();
+            let html = `<button class="tag-filter-btn active" data-tag="">全部</button>`;
+            tags.forEach(tag => {
+                html += `<button class="tag-filter-btn" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>`;
+            });
+            container.innerHTML = html;
+            
+            container.querySelectorAll('.tag-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    container.querySelectorAll('.tag-filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTagFilter = btn.dataset.tag;
+                    filterProjects();
+                });
+            });
+        }
+
+        function filterProjects() {
+            const cards = document.querySelectorAll('.work-card');
+            let visibleCount = 0;
+            const term = currentSearchTerm.toLowerCase().trim();
+            
+            cards.forEach(card => {
+                const title = (card.dataset.title || '').toLowerCase();
+                const desc = (card.dataset.desc || '').toLowerCase();
+                const tags = (card.dataset.tags || '').toLowerCase();
+                
+                let matchSearch = true;
+                if (term) {
+                    matchSearch = title.includes(term) || desc.includes(term) || tags.includes(term);
+                }
+                
+                let matchTag = true;
+                if (currentTagFilter) {
+                    const cardTags = (card.dataset.tags || '').toLowerCase().split(',');
+                    matchTag = cardTags.includes(currentTagFilter.toLowerCase());
+                }
+                
+                if (matchSearch && matchTag) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            const statsEl = document.getElementById('search-stats');
+            const total = PROJECTS.projects.length;
+            if (statsEl) {
+                if (term || currentTagFilter) {
+                    statsEl.textContent = `找到 ${visibleCount} 个匹配项目（共 ${total} 个）`;
+                } else {
+                    statsEl.textContent = `共 ${total} 个项目`;
+                }
+            }
+            
+            let noResults = document.querySelector('.no-results');
+            if (visibleCount === 0 && (term || currentTagFilter)) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    const grid = document.getElementById('works-grid-container');
+                    if (grid) grid.appendChild(noResults);
+                }
+                noResults.innerHTML = `
+                    <i class="fas fa-search"></i>
+                    <p>没有找到匹配的项目<br><span style="font-size:0.8rem;">试试其他关键词或标签</span></p>
+                `;
+                noResults.style.display = 'block';
+            } else if (noResults) {
+                noResults.style.display = 'none';
+            }
+        }
+
         function renderWorksGrid() {
             const container = document.getElementById('works-grid-container');
             if (!container) return;
@@ -1140,8 +1738,13 @@
                 const versionDisplay = p.version + (p.date ? ` | ${p.date}` : '');
                 const tagsHtml = (p.tags || []).map(t => `<span class="card-tag">${escapeHtml(t)}</span>`).join('');
                 const iconColor = p.iconColor || '#d4d4d4';
+                const tagsAttr = (p.tags || []).join(',');
                 html += `
-                    <a href="${p.url}" class="work-card ${isDisabled ? 'disabled' : ''}" ${isDisabled ? '' : 'target="_blank" rel="noopener noreferrer"'} data-id="${p.id}">
+                    <a href="${p.url}" class="work-card ${isDisabled ? 'disabled' : ''}" ${isDisabled ? '' : 'target="_blank" rel="noopener noreferrer"'} 
+                       data-id="${p.id}"
+                       data-title="${escapeHtml(p.title)}"
+                       data-desc="${escapeHtml(p.description)}"
+                       data-tags="${escapeHtml(tagsAttr)}">
                         <div class="card-icon"><i class="fas ${p.icon || 'fa-code'}" style="color: ${iconColor};"></i></div>
                         <div class="card-title">
                             ${escapeHtml(p.title)}
@@ -1153,7 +1756,7 @@
                 `;
             }
             container.innerHTML = html;
-
+            
             document.querySelectorAll('.card-version').forEach(el => {
                 el.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1167,9 +1770,382 @@
                     }
                 });
             });
+            
             document.querySelectorAll('.work-card.disabled').forEach(card => {
                 card.addEventListener('click', (e) => { e.preventDefault(); showToast('项目规划中，敬请期待', 'info'); });
             });
+            
+            renderTagFilters();
+            filterProjects();
+        }
+
+        const searchInput = document.getElementById('works-search');
+        const searchClear = document.getElementById('search-clear');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                currentSearchTerm = searchInput.value;
+                if (searchClear) {
+                    searchClear.classList.toggle('visible', currentSearchTerm.length > 0);
+                }
+                filterProjects();
+            });
+        }
+        
+        if (searchClear) {
+            searchClear.addEventListener('click', () => {
+                if (searchInput) {
+                    searchInput.value = '';
+                    currentSearchTerm = '';
+                    searchClear.classList.remove('visible');
+                    filterProjects();
+                    searchInput.focus();
+                }
+            });
+        }
+
+        function initTools() {
+            const tsInput = document.getElementById('timestamp-input');
+            const dtInput = document.getElementById('datetime-input');
+            const tsResult = document.getElementById('timestamp-result');
+
+            document.getElementById('ts-to-date').addEventListener('click', () => {
+                const val = tsInput.value.trim();
+                if (!val) { showToast('请输入时间戳', 'warning'); return; }
+                const ts = parseInt(val);
+                if (isNaN(ts) || ts < 0) { showToast('请输入有效的时间戳（正整数）', 'error'); return; }
+                const date = new Date(ts * 1000);
+                if (isNaN(date.getTime())) { showToast('无效的时间戳', 'error'); return; }
+                const str = date.toLocaleString('zh-CN', { hour12: false });
+                tsResult.textContent = str;
+                showToast('转换成功', 'success');
+            });
+
+            document.getElementById('date-to-ts').addEventListener('click', () => {
+                const val = dtInput.value.trim();
+                if (!val) { showToast('请输入日期时间', 'warning'); return; }
+                const date = new Date(val);
+                if (isNaN(date.getTime())) { showToast('日期格式无效，请使用 YYYY-MM-DD HH:mm:ss', 'error'); return; }
+                const ts = Math.floor(date.getTime() / 1000);
+                tsResult.textContent = ts;
+                showToast('转换成功', 'success');
+            });
+
+            document.getElementById('ts-now').addEventListener('click', () => {
+                const ts = Math.floor(Date.now() / 1000);
+                tsInput.value = ts;
+                tsResult.textContent = ts;
+                showToast('已获取当前时间戳', 'success');
+            });
+
+            document.getElementById('ts-local').addEventListener('click', () => {
+                const now = new Date();
+                const str = now.toLocaleString('zh-CN', { hour12: false });
+                dtInput.value = str;
+                tsResult.textContent = str;
+                showToast('已获取当前时间', 'success');
+            });
+
+            document.getElementById('copy-timestamp').addEventListener('click', () => {
+                copyToClipboard(tsResult.textContent);
+            });
+
+            const urlInput = document.getElementById('url-input');
+            const urlResult = document.getElementById('url-result');
+
+            document.getElementById('url-encode').addEventListener('click', () => {
+                const val = urlInput.value;
+                if (!val) { showToast('请输入要编码的内容', 'warning'); return; }
+                try {
+                    urlResult.textContent = encodeURIComponent(val);
+                    showToast('编码成功', 'success');
+                } catch (e) {
+                    showToast('编码失败：' + e.message, 'error');
+                }
+            });
+
+            document.getElementById('url-decode').addEventListener('click', () => {
+                const val = urlInput.value;
+                if (!val) { showToast('请输入要解码的内容', 'warning'); return; }
+                try {
+                    urlResult.textContent = decodeURIComponent(val);
+                    showToast('解码成功', 'success');
+                } catch (e) {
+                    showToast('解码失败：请检查输入是否为有效的URL编码', 'error');
+                }
+            });
+
+            document.getElementById('url-clear').addEventListener('click', () => {
+                urlInput.value = '';
+                urlResult.textContent = '等待操作...';
+            });
+
+            document.getElementById('copy-url-result').addEventListener('click', () => {
+                copyToClipboard(urlResult.textContent);
+            });
+
+            const b64Input = document.getElementById('base64-input');
+            const b64Result = document.getElementById('base64-result');
+
+            document.getElementById('b64-encode').addEventListener('click', () => {
+                const val = b64Input.value;
+                if (!val) { showToast('请输入要编码的内容', 'warning'); return; }
+                try {
+                    b64Result.innerHTML = escapeHtml(btoa(val));
+                    showToast('编码成功', 'success');
+                } catch (e) {
+                    showToast('编码失败：内容包含非Latin1字符，请检查', 'error');
+                }
+            });
+
+            document.getElementById('b64-decode').addEventListener('click', () => {
+                const val = b64Input.value.trim();
+                if (!val) { showToast('请输入要解码的内容', 'warning'); return; }
+                try {
+                    b64Result.innerHTML = escapeHtml(atob(val));
+                    showToast('解码成功', 'success');
+                } catch (e) {
+                    try {
+                        const img = document.createElement('img');
+                        img.src = 'data:image/png;base64,' + val;
+                        img.onload = function() {
+                            b64Result.innerHTML = '';
+                            b64Result.appendChild(img);
+                            showToast('图片解码成功，显示预览', 'success');
+                        };
+                        img.onerror = function() {
+                            showToast('解码失败：不是有效的Base64编码或图片数据', 'error');
+                        };
+                    } catch (e2) {
+                        showToast('解码失败：请检查是否为有效的Base64编码', 'error');
+                    }
+                }
+            });
+
+            document.getElementById('b64-clear').addEventListener('click', () => {
+                b64Input.value = '';
+                b64Result.innerHTML = '等待操作...';
+            });
+
+            document.getElementById('copy-base64-result').addEventListener('click', () => {
+                const text = b64Result.textContent;
+                if (text && text !== '等待操作...' && !b64Result.querySelector('img')) {
+                    copyToClipboard(text);
+                } else if (b64Result.querySelector('img')) {
+                    showToast('图片无法复制文本，请手动保存', 'warning');
+                } else {
+                    showToast('没有可复制的内容', 'warning');
+                }
+            });
+
+            const jsonInput = document.getElementById('json-input');
+            const jsonResult = document.getElementById('json-result');
+
+            function formatJSON(spaces) {
+                const val = jsonInput.value.trim();
+                if (!val) { showToast('请输入JSON数据', 'warning'); return; }
+                try {
+                    const parsed = JSON.parse(val);
+                    jsonResult.textContent = JSON.stringify(parsed, null, spaces);
+                    showToast('格式化成功', 'success');
+                } catch (e) {
+                    showToast('JSON格式错误：' + e.message, 'error');
+                }
+            }
+
+            document.getElementById('json-format').addEventListener('click', () => formatJSON(2));
+            document.getElementById('json-minify').addEventListener('click', () => {
+                const val = jsonInput.value.trim();
+                if (!val) { showToast('请输入JSON数据', 'warning'); return; }
+                try {
+                    jsonResult.textContent = JSON.stringify(JSON.parse(val));
+                    showToast('压缩成功', 'success');
+                } catch (e) {
+                    showToast('JSON格式错误：' + e.message, 'error');
+                }
+            });
+            document.getElementById('json-validate').addEventListener('click', () => {
+                const val = jsonInput.value.trim();
+                if (!val) { showToast('请输入JSON数据', 'warning'); return; }
+                try {
+                    JSON.parse(val);
+                    showToast('JSON 格式正确', 'success');
+                } catch (e) {
+                    showToast('JSON 格式异常：' + e.message, 'error');
+                }
+            });
+            document.getElementById('json-clear').addEventListener('click', () => {
+                jsonInput.value = '';
+                jsonResult.textContent = '等待操作...';
+            });
+            document.getElementById('copy-json-result').addEventListener('click', () => {
+                copyToClipboard(jsonResult.textContent);
+            });
+            const colorHex = document.getElementById('color-hex');
+            const colorRgb = document.getElementById('color-rgb');
+            const colorHsl = document.getElementById('color-hsl');
+            const colorPreview = document.getElementById('color-preview');
+            const colorPreviewText = document.getElementById('color-preview-text');
+            const colorPicker = document.getElementById('color-picker');
+            const colorPickerText = document.getElementById('color-picker-text');
+            
+            colorPicker.addEventListener('input', function() {
+                const hex = this.value;
+                const rgb = hexToRgb(hex);
+                if (!rgb) return;
+                const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                colorHex.value = hex;
+                colorRgb.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                colorHsl.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+                colorPreview.style.background = hex;
+                colorPreviewText.textContent = hex;
+                colorPickerText.textContent = hex;
+            });
+            
+            function hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
+            }
+
+            function rgbToHex(r, g, b) {
+                return '#' + [r, g, b].map(x => Math.round(x).toString(16).padStart(2, '0')).join('');
+            }
+
+            function rgbToHsl(r, g, b) {
+                r /= 255; g /= 255; b /= 255;
+                const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+                if (max === min) { h = s = 0; }
+                else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                        case g: h = ((b - r) / d + 2) / 6; break;
+                        case b: h = ((r - g) / d + 4) / 6; break;
+                    }
+                }
+                return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+            }
+
+            function hslToRgb(h, s, l) {
+                h /= 360; s /= 100; l /= 100;
+                if (s === 0) { return { r: l * 255, g: l * 255, b: l * 255 }; }
+                const hue2rgb = (p, q, t) => {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                };
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+                return { r: Math.round(hue2rgb(p, q, h + 1/3) * 255), g: Math.round(hue2rgb(p, q, h) * 255), b: Math.round(hue2rgb(p, q, h - 1/3) * 255) };
+            }
+
+            function updateColorPreview(hex) {
+                colorPreview.style.background = hex;
+                colorPreviewText.textContent = hex;
+            }
+
+            document.getElementById('color-hex-btn').addEventListener('click', () => {
+                const val = colorHex.value.trim();
+                if (!val) { showToast('请输入HEX色值', 'warning'); return; }
+                const rgb = hexToRgb(val);
+                if (!rgb) { showToast('HEX格式错误，请使用 #RRGGBB', 'error'); return; }
+                const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+                const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                colorRgb.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                colorHsl.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+                updateColorPreview(hex);
+                showToast('转换成功', 'success');
+            });
+
+            document.getElementById('color-rgb-btn').addEventListener('click', () => {
+                const val = colorRgb.value.trim();
+                if (!val) { showToast('请输入RGB值', 'warning'); return; }
+                const match = val.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
+                if (!match) { showToast('RGB格式错误，请使用 rgb(255,255,255)', 'error'); return; }
+                const r = parseInt(match[1]), g = parseInt(match[2]), b = parseInt(match[3]);
+                if (r > 255 || g > 255 || b > 255) { showToast('RGB值应在0-255之间', 'error'); return; }
+                const hex = rgbToHex(r, g, b);
+                const hsl = rgbToHsl(r, g, b);
+                colorHex.value = hex;
+                colorHsl.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+                updateColorPreview(hex);
+                showToast('转换成功', 'success');
+            });
+
+            document.getElementById('color-hsl-btn').addEventListener('click', () => {
+                const val = colorHsl.value.trim();
+                if (!val) { showToast('请输入HSL值', 'warning'); return; }
+                const match = val.match(/hsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)/i);
+                if (!match) { showToast('HSL格式错误，请使用 hsl(0,0%,50%)', 'error'); return; }
+                const h = parseInt(match[1]), s = parseInt(match[2]), l = parseInt(match[3]);
+                if (h > 360 || s > 100 || l > 100) { showToast('HSL值范围：h(0-360), s(0-100), l(0-100)', 'error'); return; }
+                const rgb = hslToRgb(h, s, l);
+                const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+                colorHex.value = hex;
+                colorRgb.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                updateColorPreview(hex);
+                showToast('转换成功', 'success');
+            });
+
+            document.getElementById('copy-color-result').addEventListener('click', () => {
+                const text = colorHex.value + ' | ' + colorRgb.value + ' | ' + colorHsl.value;
+                copyToClipboard(text);
+            });
+
+            const hashInput = document.getElementById('hash-input');
+            const hashResult = document.getElementById('hash-result');
+
+            async function generateHash(algorithm) {
+                const val = hashInput.value;
+                if (!val) { showToast('请输入要计算哈希的文本', 'warning'); return; }
+                try {
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(val);
+                    const hashBuffer = await crypto.subtle.digest(algorithm, data);
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    hashResult.textContent = hashHex;
+                    showToast('哈希生成成功', 'success');
+                } catch (e) {
+                    showToast('生成失败：' + e.message, 'error');
+                }
+            }
+
+            document.getElementById('hash-md5').addEventListener('click', () => {
+                const val = hashInput.value;
+                if (!val) { showToast('请输入要计算哈希的文本', 'warning'); return; }
+                try {
+                    const md5Hash = md5(val);
+                    hashResult.textContent = md5Hash;
+                    showToast('MD5生成成功', 'success');
+                } catch (e) {
+                    showToast('MD5生成失败，请刷新页面重试', 'error');
+                }
+            });
+            document.getElementById('hash-sha1').addEventListener('click', () => generateHash('SHA-1'));
+            document.getElementById('hash-sha256').addEventListener('click', () => generateHash('SHA-256'));
+            document.getElementById('hash-sha512').addEventListener('click', () => generateHash('SHA-512'));
+
+            document.getElementById('hash-clear').addEventListener('click', () => {
+                hashInput.value = '';
+                hashResult.textContent = '等待操作...';
+            });
+
+            document.getElementById('copy-hash-result').addEventListener('click', () => {
+                copyToClipboard(hashResult.textContent);
+            });
+        }
+
+        function loadMd5Library() {
+            if (typeof md5 !== 'undefined') return;
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js';
+            document.head.appendChild(script);
         }
 
         function renderContactList() {
@@ -1218,7 +2194,7 @@
             const qqCard = document.querySelector('.contact-card[data-contact="qq"]');
             if (qqCard) {
                 qqCard.addEventListener('click', () => {
-                    showToast('无法跳转链接', 'error');
+                    showToast('请通过 GitHub 或 B站 联系', 'info');
                 });
             }
         }
@@ -1276,6 +2252,7 @@
                 if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-sun';
             }
         }
+        
         function applyTheme(isDark) {
             if (isDark) {
                 document.body.classList.remove('light-mode');
@@ -1287,8 +2264,12 @@
                 if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-moon';
             }
         }
+        
         if (darkToggle) {
-            darkToggle.addEventListener('change', (e) => { applyTheme(e.target.checked); showToast(e.target.checked ? '已切换至深色模式' : '已切换至浅色模式'); });
+            darkToggle.addEventListener('change', (e) => { 
+                applyTheme(e.target.checked); 
+                showToast(e.target.checked ? '已切换至深色模式' : '已切换至浅色模式'); 
+            });
         }
         if (mobileThemeBtn) {
             mobileThemeBtn.addEventListener('click', () => { 
@@ -1322,7 +2303,13 @@
             durSlider.addEventListener('input', (e) => { toastDurationSetting = parseFloat(e.target.value); document.getElementById('toast-duration-val').textContent = toastDurationSetting + '秒'; localStorage.setItem('toast_duration', toastDurationSetting); });
         }
 
-        const panels = { home: document.getElementById('home-panel'), works: document.getElementById('works-panel'), contact: document.getElementById('contact-panel'), settings: document.getElementById('settings-panel') };
+        const panels = { 
+            home: document.getElementById('home-panel'), 
+            works: document.getElementById('works-panel'), 
+            tools: document.getElementById('tools-panel'),
+            contact: document.getElementById('contact-panel'), 
+            settings: document.getElementById('settings-panel') 
+        };
         const navItems = document.querySelectorAll('.nav-item');
         const mobileTitle = document.getElementById('mobile-title');
         const sidebar = document.getElementById('sidebar');
@@ -1339,12 +2326,28 @@
                 else item.classList.remove('active');
             });
             if (mobileTitle) {
-                const titles = { home: '首页', works: '我的作品', contact: '联系作者', settings: '设置' };
-                mobileTitle.textContent = titles[pageId];
+                const titles = { home: '首页', works: '我的作品', tools: '工具箱', contact: '联系作者', settings: '设置' };
+                mobileTitle.textContent = titles[pageId] || pageId;
             }
-            if (pageId === 'works') renderWorksGrid();
+            
+            if (pageId === 'works') {
+                renderWorksGrid();
+                if (searchInput && currentSearchTerm) {
+                    searchInput.value = currentSearchTerm;
+                    filterProjects();
+                }
+            }
             if (pageId === 'settings') renderSettingsChangelog();
             if (pageId === 'contact') renderContactList();
+            if (pageId === 'tools') {
+                if (!window._toolsInited) {
+                    loadMd5Library();
+                    setTimeout(() => {
+                        initTools();
+                        window._toolsInited = true;
+                    }, 300);
+                }
+            }
             closeMenu();
         }
 
@@ -1372,10 +2375,144 @@
         if (modalCloseBtn) modalCloseBtn.addEventListener('click', () => modalOverlay.style.display = 'none');
         if (modalOverlay) modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.style.display = 'none'; });
 
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                switchPage('works');
+                setTimeout(() => {
+                    if (searchInput) {
+                        searchInput.focus();
+                        searchInput.select();
+                    }
+                }, 100);
+            }
+        });
+
+        function createRipple(e, element) {
+            const rect = element.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const maxSize = Math.max(rect.width, rect.height) * 1.2;
+            const size = Math.min(maxSize, 300);
+            const radius = size / 2;
+            
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            
+            const isLight = document.body.classList.contains('light-mode');
+            ripple.classList.add(isLight ? 'light' : 'dark');
+            
+            ripple.style.width = size + 'px';
+            ripple.style.height = size + 'px';
+            ripple.style.left = (x - radius) + 'px';
+            ripple.style.top = (y - radius) + 'px';
+            ripple.style.animationDuration = '600ms';
+            
+            element.style.position = 'relative';
+            element.style.overflow = 'hidden';
+            element.appendChild(ripple);
+            
+            setTimeout(() => {
+                if (ripple.parentNode) {
+                    ripple.remove();
+                }
+            }, 650);
+        }
+
+        function isInteractive(element) {
+            const tag = element.tagName.toLowerCase();
+            const interactiveTags = ['button', 'a', 'label'];
+            if (interactiveTags.includes(tag)) return true;
+            if (element.onclick) return true;
+            if (element.getAttribute('role') === 'button') return true;
+            if (element.classList && element.classList.contains('nav-item')) return true;
+            if (element.classList && element.classList.contains('work-card')) return true;
+            if (element.classList && element.classList.contains('contact-card')) return true;
+            if (element.classList && element.classList.contains('tool-btn')) return true;
+            if (element.classList && element.classList.contains('tag-filter-btn')) return true;
+            if (element.classList && element.classList.contains('card-version')) return true;
+            if (element.classList && element.classList.contains('menu-toggle')) return true;
+            if (element.classList && element.classList.contains('mobile-theme-btn')) return true;
+            if (element.classList && element.classList.contains('modal-close')) return true;
+            if (element.closest('.nav-item')) return true;
+            if (element.closest('.work-card')) return true;
+            if (element.closest('.contact-card')) return true;
+            if (element.closest('.tool-btn')) return true;
+            if (element.closest('.tag-filter-btn')) return true;
+            if (element.closest('.card-version')) return true;
+            if (element.closest('.menu-toggle')) return true;
+            if (element.closest('.mobile-theme-btn')) return true;
+            if (element.closest('.modal-close')) return true;
+            return false;
+        }
+
+        function shouldIgnoreRipple(target) {
+            const ignoreSelectors = '.no-ripple, .switch, .switch input, .slider, input[type="range"], input[type="color"], select, .search-box input, .search-clear, textarea, .tool-row input, .tool-row textarea, .color-preview';
+            if (target.matches && target.matches(ignoreSelectors)) {
+                return true;
+            }
+            if (target.closest && target.closest('.switch')) return true;
+            if (target.closest && target.closest('.search-box input')) return true;
+            if (target.closest && target.closest('.tool-row input')) return true;
+            if (target.closest && target.closest('.tool-row textarea')) return true;
+            return false;
+        }
+
+        document.addEventListener('click', function(e) {
+            const target = e.target;
+            if (shouldIgnoreRipple(target)) return;
+            
+            let element = target;
+            if (isInteractive(target)) {
+                createRipple(e, target);
+            } else {
+                let parent = target.parentElement;
+                while (parent) {
+                    if (isInteractive(parent)) {
+                        createRipple(e, parent);
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
+            }
+        });
+
+        document.addEventListener('touchstart', function(e) {
+            const target = e.target;
+            if (shouldIgnoreRipple(target)) return;
+            
+            const touch = e.touches[0];
+            const fakeEvent = { clientX: touch.clientX, clientY: touch.clientY };
+            
+            if (isInteractive(target)) {
+                createRipple(fakeEvent, target);
+            } else {
+                let parent = target.parentElement;
+                while (parent) {
+                    if (isInteractive(parent)) {
+                        createRipple(fakeEvent, parent);
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
+            }
+        }, { passive: true });
+
         renderWorksGrid();
         renderSettingsChangelog();
         renderContactList();
         loadSettings();
+        setTimeout(() => {
+            loadMd5Library();
+            
+            if (!window._toolsInited) {
+                setTimeout(() => {
+                    initTools();
+                    window._toolsInited = true;
+                }, 500);
+            }
+        }, 300);
     })();
 </script>
 </body>
