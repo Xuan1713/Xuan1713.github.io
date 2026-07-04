@@ -54,6 +54,7 @@
             --icon-history: #4ec9b0;
             --icon-info: #9cdcfe;
             --icon-tools: #f39c12;
+            --icon-test: #c586c0;
         }
 
         body.light-mode {
@@ -98,6 +99,7 @@
             --icon-history: #2b7a4b;
             --icon-info: #007acc;
             --icon-tools: #d97706;
+            --icon-test: #7c3aed;
         }
 
         body {
@@ -239,6 +241,7 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            overflow-y: auto;
         }
         .nav-item {
             display: flex;
@@ -268,6 +271,7 @@
         .nav-item[data-page="tools"] i { color: var(--icon-tools); }
         .nav-item[data-page="settings"] i { color: var(--icon-settings); }
         .nav-item[data-page="contact"] i { color: var(--icon-contact); }
+        .nav-item[data-page="test"] i { color: var(--icon-test); }
         .nav-item.active {
             background: var(--active-bg);
             color: var(--text-primary);
@@ -1182,6 +1186,296 @@
                 opacity: 0;
             }
         }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 768px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .test-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+        .test-section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .test-section h3 i {
+            color: var(--icon-test);
+        }
+        .test-section .test-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .test-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        .test-item label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .test-item .hint {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .test-item input[type="text"],
+        .test-item input[type="password"],
+        .test-item input[type="email"],
+        .test-item input[type="number"],
+        .test-item input[type="search"] {
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+        .test-item input:focus {
+            outline: none;
+            border-color: var(--active-border);
+        }
+        .test-item textarea {
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: border-color 0.2s;
+            resize: vertical;
+            min-height: 60px;
+            width: 100%;
+        }
+        .test-item textarea:focus {
+            outline: none;
+            border-color: var(--active-border);
+        }
+        .test-item .file-upload-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .test-item .file-upload-wrapper input[type="file"] {
+            flex: 1;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .test-item .file-upload-wrapper input[type="file"]::file-selector-button {
+            background: var(--button-bg);
+            border: none;
+            border-radius: 6px;
+            padding: 6px 16px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            margin-right: 12px;
+            transition: background 0.2s;
+        }
+        .test-item .file-upload-wrapper input[type="file"]::file-selector-button:hover {
+            background: var(--button-hover);
+        }
+        .test-item .checkbox-group,
+        .test-item .radio-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .test-item .checkbox-group label,
+        .test-item .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: normal;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        .test-item .checkbox-group input[type="checkbox"],
+        .test-item .radio-group input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #007acc;
+            cursor: pointer;
+        }
+        .test-item select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: 100%;
+        }
+        .test-item select:focus {
+            outline: none;
+            border-color: var(--active-border);
+        }
+        .test-item .toggle-switch-mini {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .test-item .toggle-switch-mini .switch-mini {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .test-item .toggle-switch-mini .switch-mini input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .test-item .toggle-switch-mini .slider-mini {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--button-bg);
+            transition: 0.2s;
+            border-radius: 24px;
+        }
+        .test-item .toggle-switch-mini .slider-mini:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.2s;
+            border-radius: 50%;
+        }
+        .test-item .toggle-switch-mini input:checked + .slider-mini {
+            background-color: #007acc;
+        }
+        .test-item .toggle-switch-mini input:checked + .slider-mini:before {
+            transform: translateX(20px);
+        }
+        .test-item .toggle-switch-mini .toggle-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .test-item .range-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+        .test-item .range-wrapper input[type="range"] {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--slider-bg);
+            border-radius: 2px;
+            outline: none;
+        }
+        .test-item .range-wrapper input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--slider-thumb);
+            cursor: pointer;
+            border: none;
+        }
+        .test-item .range-wrapper .range-value {
+            min-width: 36px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .test-item .color-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .test-item .color-wrapper input[type="color"] {
+            width: 44px;
+            height: 44px;
+            padding: 2px;
+            cursor: pointer;
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+        }
+        .test-item .color-wrapper .color-hex {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+        .test-item .date-wrapper {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .test-item .date-wrapper input[type="date"],
+        .test-item .date-wrapper input[type="time"],
+        .test-item .date-wrapper input[type="datetime-local"] {
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 120px;
+        }
+        .test-item .date-wrapper input:focus {
+            outline: none;
+            border-color: var(--active-border);
+        }
+        .test-btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .test-btn-group .tool-btn {
+            flex: 0 0 auto;
+        }
+        .test-result-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            min-height: 36px;
+            word-break: break-all;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -1199,6 +1493,7 @@
             <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>首页</span></div>
             <div class="nav-item" data-page="works"><i class="fas fa-code"></i><span>我的作品</span></div>
             <div class="nav-item" data-page="tools"><i class="fas fa-tools"></i><span>工具箱</span></div>
+            <div class="nav-item" data-page="test"><i class="fas fa-flask"></i><span>控件测试</span></div>
             <div class="nav-item" data-page="contact"><i class="fas fa-envelope"></i><span>联系作者</span></div>
             <div class="nav-item" data-page="settings"><i class="fas fa-cog"></i><span>设置</span></div>
         </div>
@@ -1224,7 +1519,7 @@
                 <div class="time-display" id="home-time">--:--:--</div>
                 <div class="date-display" id="home-date">----年--月--日</div>
             </div>
-            <div class="announcement-mini"><i class="fas fa-bullhorn"></i><span> V5.2.0更新！</span></div>
+            <div class="announcement-mini"><i class="fas fa-bullhorn"></i><span> 你好！</span></div>
             <div class="github-graph-card" style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 16px; margin: 20px 0 0 0;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                     <i class="fab fa-github"></i>
@@ -1435,6 +1730,209 @@
             <div class="mobile-copyright">© 2026 Xuan1713. 保留所有权利.</div>
         </div>
 
+        <div id="test-panel" class="content-panel">
+            <h2 style="margin-bottom: 8px; font-weight: 600;"><i class="fas fa-flask"></i> 控件测试</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px;"><i class="fas fa-vial" style="margin-right: 6px; color: var(--icon-test);"></i>基础输入类 + 选择类控件交互测试</p>
+            <div class="test-grid">
+                <div class="test-section">
+                    <h3><i class="fas fa-keyboard"></i> 基础输入类</h3>
+                    <div class="test-desc">文本输入、数字、密码、邮箱等</div>
+
+                    <div class="test-item">
+                        <label>文本框 (Text Field)</label>
+                        <input type="text" id="test-text" placeholder="输入一些文字..." value="Hello World">
+                        <span class="hint">id: test-text</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>密码框 (Password Field)</label>
+                        <input type="password" id="test-password" placeholder="输入密码..." value="123456">
+                        <span class="hint">id: test-password</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>邮箱 (Email Input)</label>
+                        <input type="email" id="test-email" placeholder="example@domain.com" value="test@example.com">
+                        <span class="hint">id: test-email</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>数字输入 (Number Input)</label>
+                        <input type="number" id="test-number" placeholder="输入数字..." value="42" min="0" max="100" step="1">
+                        <span class="hint">id: test-number | min:0 max:100</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>搜索框 (Search Box)</label>
+                        <input type="search" id="test-search" placeholder="搜索关键词...">
+                        <span class="hint">id: test-search</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>文本域 (Text Area)</label>
+                        <textarea id="test-textarea" placeholder="多行文本输入..." rows="3">这是多行文本内容&#10;第二行内容</textarea>
+                        <span class="hint">id: test-textarea | rows: 3</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>文件上传 (File Upload)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="test-file" accept="image/*,.pdf,.txt">
+                        </div>
+                        <span class="hint">id: test-file | accept: 图片/PDF/TXT</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>按钮组 (Button)</label>
+                        <div class="test-btn-group">
+                            <button class="tool-btn primary" id="test-btn-primary">主要按钮</button>
+                            <button class="tool-btn success" id="test-btn-success">成功按钮</button>
+                            <button class="tool-btn danger" id="test-btn-danger">危险按钮</button>
+                            <button class="tool-btn" id="test-btn-normal">普通按钮</button>
+                        </div>
+                        <span class="hint">点击触发 Toast 反馈</span>
+                    </div>
+                </div>
+
+                <div class="test-section">
+                    <h3><i class="fas fa-check-square"></i> 选择类</h3>
+                    <div class="test-desc">复选框、单选框、开关、下拉菜单、滑块、取色器、日期等</div>
+
+                    <div class="test-item">
+                        <label>复选框 (Checkbox) - 多选</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="test-cb1" checked> 选项 A</label>
+                            <label><input type="checkbox" id="test-cb2"> 选项 B</label>
+                            <label><input type="checkbox" id="test-cb3" checked> 选项 C</label>
+                            <label><input type="checkbox" id="test-cb4"> 选项 D</label>
+                        </div>
+                        <span class="hint">id: test-cb1 ~ test-cb4</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>单选框 (Radio Button) - 单选</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="test-radio" value="1" checked> 选项 1</label>
+                            <label><input type="radio" name="test-radio" value="2"> 选项 2</label>
+                            <label><input type="radio" name="test-radio" value="3"> 选项 3</label>
+                        </div>
+                        <span class="hint">name: test-radio | 互斥选择</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>开关 (Toggle Switch)</label>
+                        <div class="toggle-switch-mini">
+                            <label class="switch-mini">
+                                <input type="checkbox" id="test-switch1" checked>
+                                <span class="slider-mini"></span>
+                            </label>
+                            <span class="toggle-label" id="test-switch1-label">已开启</span>
+                        </div>
+                        <div class="toggle-switch-mini" style="margin-top:6px;">
+                            <label class="switch-mini">
+                                <input type="checkbox" id="test-switch2">
+                                <span class="slider-mini"></span>
+                            </label>
+                            <span class="toggle-label" id="test-switch2-label">已关闭</span>
+                        </div>
+                        <span class="hint">id: test-switch1, test-switch2</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>下拉菜单 (Select/Dropdown)</label>
+                        <select id="test-select">
+                            <option value="option1">选项一</option>
+                            <option value="option2" selected>选项二</option>
+                            <option value="option3">选项三</option>
+                            <option value="option4">选项四</option>
+                        </select>
+                        <span class="hint">id: test-select | 当前选中: <span id="test-select-display">option2</span></span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>滑块 (Slider)</label>
+                        <div class="range-wrapper">
+                            <input type="range" id="test-range" min="0" max="100" value="65" step="1">
+                            <span class="range-value" id="test-range-display">65</span>
+                        </div>
+                        <span class="hint">id: test-range | 0 ~ 100</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>取色器 (Color Picker)</label>
+                        <div class="color-wrapper">
+                            <input type="color" id="test-color" value="#007acc">
+                            <span class="color-hex" id="test-color-display">#007acc</span>
+                        </div>
+                        <span class="hint">id: test-color</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>日期选择器 (Date Picker)</label>
+                        <div class="date-wrapper">
+                            <input type="date" id="test-date" value="2026-07-02">
+                            <input type="time" id="test-time" value="14:30">
+                            <input type="datetime-local" id="test-datetime" value="2026-07-02T14:30:00">
+                        </div>
+                        <span class="hint">id: test-date, test-time, test-datetime</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>组合框 (Combo Box) - 输入+下拉</label>
+                        <input type="text" id="test-combo" placeholder="输入或选择..." list="combo-options">
+                        <datalist id="combo-options">
+                            <option value="Python">
+                            <option value="JavaScript">
+                            <option value="C++">
+                            <option value="Java">
+                            <option value="Go">
+                        </datalist>
+                        <span class="hint">id: test-combo | 输入或从列表选择编程语言</span>
+                    </div>
+
+                    <div class="test-item">
+                        <label>评分 (Rating) - 模拟</label>
+                        <div style="display:flex; gap:4px; font-size:1.6rem; cursor:pointer;">
+                            <span data-star="1" style="color:var(--text-muted);">☆</span>
+                            <span data-star="2" style="color:var(--text-muted);">☆</span>
+                            <span data-star="3" style="color:var(--text-muted);">☆</span>
+                            <span data-star="4" style="color:var(--text-muted);">☆</span>
+                            <span data-star="5" style="color:var(--text-muted);">☆</span>
+                        </div>
+                        <span class="hint" id="test-rating-display">点击星星评分 (当前: 0星)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:24px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:8px; padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                    <span style="font-weight:500;"><i class="fas fa-terminal"></i> 控件状态输出</span>
+                    <div style="display:flex; gap:8px;">
+                        <button class="tool-btn" id="test-log-btn">📋 输出所有控件值</button>
+                        <button class="tool-btn success" id="test-copy-log-btn"><i class="fa-regular fa-copy"></i> 复制</button>
+                    </div>
+                </div>
+                <textarea id="test-log-output" style="width:100%; min-height:200px; background:var(--bg-secondary); border:1px solid var(--card-border); border-radius:6px; padding:12px; color:var(--text-primary); font-family:'SF Mono', monospace; font-size:0.8rem; resize:vertical; line-height:1.6;" readonly>点击「输出所有控件值」查看结果...</textarea>
+            </div>
+            <div style="margin-top:24px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:8px; padding:16px;">
+                <h3 style="font-size:1rem; font-weight:600; margin-bottom:12px; color:var(--text-secondary); display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-comment-dots" style="color:var(--icon-test);"></i> 浏览器交互测试
+                </h3>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">测试 Alert / Confirm / Prompt 弹窗 和 震动 (Vibration)</p>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="tool-btn primary" id="browser-alert">Alert</button>
+                    <button class="tool-btn primary" id="browser-confirm">Confirm</button>
+                    <button class="tool-btn primary" id="browser-prompt">Prompt</button>
+                    <button class="tool-btn danger" id="browser-vibrate">震动（仅部分设备）</button>
+                </div>
+                <div style="margin-top:12px; padding:10px 14px; background:var(--bg-secondary); border:1px solid var(--card-border); border-radius:6px; font-size:0.85rem; color:var(--text-secondary); min-height:36px;" id="browser-result">
+                    点击上方按钮测试浏览器交互...
+                </div>
+            </div>
+            
+            <div class="mobile-copyright">© 2026 Xuan1713. 保留所有权利.</div>
+        </div>
+
         <div id="contact-panel" class="content-panel">
             <h2 style="margin-bottom: 24px; font-weight: 600;"><i class="fas fa-address-card"></i> 联系作者</h2>
             <div class="contact-list" id="contact-list"></div>
@@ -1483,11 +1981,11 @@
                 <h3><i class="fas fa-info-circle" style="color: var(--icon-info);"></i> 关于</h3>
                 <div class="info-row">
                     <span class="info-label">当前主页版本：</span>
-                    <span class="info-value" id="homepage-version-display">v5.2.0</span>
+                    <span class="info-value" id="homepage-version-display">---</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">最后更新时间：</span>
-                    <span class="info-value" id="homepage-update-time">2026-07-01</span>
+                    <span class="info-value" id="homepage-update-time">---</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">作者：</span>
@@ -1525,8 +2023,8 @@
             { id: "future", title: "更多作品", url: "#", icon: "fa-plus", iconColor: "#d4d4d4", version: "敬请期待", date: "", description: "新项目规划中", tags: ["规划中"], changelog: [] }
         ],
         homepage: {
-            version: "v5.2.0",
-            lastUpdate: "2026-07-01",
+            version: "v5.3.0",
+            lastUpdate: "2026-07-04",
             changelog: [
                 { version: "v1.0.0", date: "2026-01-15", content: "初始版本<br>• 个人作品展示<br>• 实时时钟显示<br>• 主题切换功能<br>• 响应式布局<br>• GitHub链接" },
                 { version: "v1.1.0", date: "2026-02-05", content: "作品列表更新<br>• 添加日历" },
@@ -1536,7 +2034,8 @@
                 { version: "v4.0.0", date: "2026-04-13", content: "未发布的更新<br>全面重构开始" },
                 { version: "v5.0.0", date: "2026-04-19", content: "大更新<br>• UI全部重构，过渡动画优化<br>• 新增侧边抽屉导航<br>• 完善自我介绍<br>• 新增联系作者页面<br>• 优化移动端体验" },
                 { version: "v5.1.0", date: "2026-06-07", content: "版本更新<br>• 首页新增 GitHub贡献图" },
-                { version: "v5.2.0", date: "2026-07-01", content: "新功能 <br>• JSON 格式化/压缩/验证<br>• 颜色转换 HEX/RGB/HSL<br>• 时间戳<br>• 编/解码<br>• MD5/SHA-1/SHA-256/SHA-512 哈希生成<br>• 新增点击动效" }
+                { version: "v5.2.0", date: "2026-07-01", content: "新功能 <br>• JSON 格式化/压缩/验证<br>• 颜色转换 HEX/RGB/HSL<br>• 时间戳<br>• 编/解码<br>• MD5/SHA-1/SHA-256/SHA-512 哈希生成<br>• 新增点击动效" },
+                { version: "v5.3.0", date: "2026-07-04", content: "小更新 <br>• 新增控件测试页面" }
             ]
         }
     };
@@ -2307,6 +2806,7 @@
             home: document.getElementById('home-panel'), 
             works: document.getElementById('works-panel'), 
             tools: document.getElementById('tools-panel'),
+            test: document.getElementById('test-panel'),
             contact: document.getElementById('contact-panel'), 
             settings: document.getElementById('settings-panel') 
         };
@@ -2326,7 +2826,7 @@
                 else item.classList.remove('active');
             });
             if (mobileTitle) {
-                const titles = { home: '首页', works: '我的作品', tools: '工具箱', contact: '联系作者', settings: '设置' };
+                const titles = { home: '首页', works: '我的作品', tools: '工具箱', test: '控件测试', contact: '联系作者', settings: '设置' };
                 mobileTitle.textContent = titles[pageId] || pageId;
             }
             
@@ -2347,6 +2847,9 @@
                         window._toolsInited = true;
                     }, 300);
                 }
+            }
+            if (pageId === 'test') {
+                initTestPanel();
             }
             closeMenu();
         }
@@ -2499,6 +3002,184 @@
             }
         }, { passive: true });
 
+        function initTestPanel() {
+            if (window._testPanelInited) return;
+            window._testPanelInited = true;
+
+            document.getElementById('test-btn-primary').addEventListener('click', function(e) {
+                e.stopPropagation();
+                showToast('点击了「主要按钮」', 'success');
+            });
+            document.getElementById('test-btn-success').addEventListener('click', function(e) {
+                e.stopPropagation();
+                showToast('点击了「成功按钮」', 'success');
+            });
+            document.getElementById('test-btn-danger').addEventListener('click', function(e) {
+                e.stopPropagation();
+                showToast('点击了「危险按钮」', 'error');
+            });
+            document.getElementById('test-btn-normal').addEventListener('click', function(e) {
+                e.stopPropagation();
+                showToast('点击了「普通按钮」', 'info');
+            });
+
+            document.getElementById('test-switch1').addEventListener('change', function() {
+                document.getElementById('test-switch1-label').textContent = this.checked ? '已开启' : '已关闭';
+                showToast('开关1: ' + (this.checked ? '开启' : '关闭'), 'info');
+            });
+            document.getElementById('test-switch2').addEventListener('change', function() {
+                document.getElementById('test-switch2-label').textContent = this.checked ? '已开启' : '已关闭';
+                showToast('开关2: ' + (this.checked ? '开启' : '关闭'), 'info');
+            });
+
+            document.getElementById('test-select').addEventListener('change', function() {
+                const display = document.getElementById('test-select-display');
+                display.textContent = this.value;
+                showToast('选择了: ' + this.options[this.selectedIndex].text, 'info');
+            });
+
+            document.getElementById('test-range').addEventListener('input', function() {
+                document.getElementById('test-range-display').textContent = this.value;
+            });
+
+            document.getElementById('test-color').addEventListener('input', function() {
+                document.getElementById('test-color-display').textContent = this.value;
+            });
+
+            var ratingStars = document.querySelectorAll('[data-star]');
+            var currentRating = 0;
+            ratingStars.forEach(function(star) {
+                star.addEventListener('click', function() {
+                    currentRating = parseInt(this.dataset.star);
+                    ratingStars.forEach(function(s, index) {
+                        if (index < currentRating) {
+                            s.textContent = '★';
+                            s.style.color = '#f5a623';
+                        } else {
+                            s.textContent = '☆';
+                            s.style.color = 'var(--text-muted)';
+                        }
+                    });
+                    document.getElementById('test-rating-display').textContent = '点击星星评分 (当前: ' + currentRating + '星)';
+                    showToast('评分: ' + currentRating + ' 星', 'success');
+                });
+                star.addEventListener('mouseenter', function() {
+                    var hover = parseInt(this.dataset.star);
+                    ratingStars.forEach(function(s, index) {
+                        if (index < hover) {
+                            s.textContent = '★';
+                            s.style.color = '#f5a623';
+                        } else {
+                            s.textContent = '☆';
+                            s.style.color = 'var(--text-muted)';
+                        }
+                    });
+                });
+                star.addEventListener('mouseleave', function() {
+                    ratingStars.forEach(function(s, index) {
+                        if (index < currentRating) {
+                            s.textContent = '★';
+                            s.style.color = '#f5a623';
+                        } else {
+                            s.textContent = '☆';
+                            s.style.color = 'var(--text-muted)';
+                        }
+                    });
+                });
+            });
+
+            document.getElementById('test-combo').addEventListener('change', function() {
+                showToast('输入/选择了: ' + this.value, 'info');
+            });
+
+            document.getElementById('test-log-btn').addEventListener('click', function() {
+                var output = document.getElementById('test-log-output');
+                var logs = [];
+                logs.push('文本框: ' + document.getElementById('test-text').value);
+                logs.push('密码框: ' + '•'.repeat(document.getElementById('test-password').value.length));
+                logs.push('邮箱: ' + document.getElementById('test-email').value);
+                logs.push('数字: ' + document.getElementById('test-number').value);
+                logs.push('搜索: ' + document.getElementById('test-search').value);
+                logs.push('文本域: ' + document.getElementById('test-textarea').value);
+                logs.push('文件: ' + (document.getElementById('test-file').files[0] ? document.getElementById('test-file').files[0].name : '未选择'));
+                logs.push('复选框: ' + ['A','B','C','D'].filter(function(id, i) {
+                    return document.getElementById('test-cb' + (i+1)).checked;
+                }).join(', ') || '无');
+                logs.push('单选框: ' + document.querySelector('input[name="test-radio"]:checked').value);
+                logs.push('开关1: ' + (document.getElementById('test-switch1').checked ? '开启' : '关闭'));
+                logs.push('开关2: ' + (document.getElementById('test-switch2').checked ? '开启' : '关闭'));
+                logs.push('下拉菜单: ' + document.getElementById('test-select').options[document.getElementById('test-select').selectedIndex].text);
+                logs.push('滑块: ' + document.getElementById('test-range').value);
+                logs.push('取色器: ' + document.getElementById('test-color').value);
+                logs.push('日期: ' + document.getElementById('test-date').value);
+                logs.push('时间: ' + document.getElementById('test-time').value);
+                logs.push('日期时间: ' + document.getElementById('test-datetime').value);
+                logs.push('组合框: ' + document.getElementById('test-combo').value);
+                logs.push('评分: ' + currentRating + ' 星');
+                output.value = logs.join('\n');
+                showToast('已输出所有控件值', 'success');
+            });
+            
+            document.getElementById('test-copy-log-btn').addEventListener('click', function() {
+                var output = document.getElementById('test-log-output');
+                if (output.value && output.value !== '点击「输出所有控件值」查看结果...') {
+                    navigator.clipboard.writeText(output.value).then(function() {
+                        showToast('已复制所有控件值', 'success');
+                    }).catch(function() {
+                        output.select();
+                        document.execCommand('copy');
+                        showToast('已复制所有控件值', 'success');
+                    });
+                } else {
+                    showToast('请先点击「输出所有控件值」', 'warning');
+                }
+            });
+        }
+        
+        var browserResult = document.getElementById('browser-result');
+        function setBrowserResult(msg, type) {
+            browserResult.textContent = msg;
+            if (type === 'success') {
+                browserResult.style.color = '#4ec9b0';
+            } else if (type === 'error') {
+                browserResult.style.color = '#e62600';
+            } else if (type === 'warning') {
+                browserResult.style.color = '#ffae00';
+            } else {
+                browserResult.style.color = 'var(--text-secondary)';
+            }
+        }
+        
+        document.getElementById('browser-alert').addEventListener('click', function() {
+            alert('这是一个 Alert 弹窗！\n点击「确定」继续。');
+            setBrowserResult('✅ Alert 弹窗已显示', 'success');
+        });
+        
+        document.getElementById('browser-confirm').addEventListener('click', function() {
+            var result = confirm('这是一个 Confirm 弹窗\n你确认要执行这个操作吗？');
+            setBrowserResult(result ? '✅ 用户点击了「确定」' : '❌ 用户点击了「取消」', result ? 'success' : 'warning');
+        });
+        
+        document.getElementById('browser-prompt').addEventListener('click', function() {
+            var result = prompt('这是一个 Prompt 弹窗\n请输入你的名字：', '访客');
+            if (result === null) {
+                setBrowserResult('❌ 用户点击了「取消」', 'warning');
+            } else if (result === '') {
+                setBrowserResult('⚠️ 用户没有输入内容', 'warning');
+            } else {
+                setBrowserResult('✅ 用户输入了: ' + result, 'success');
+            }
+        });
+        
+        document.getElementById('browser-vibrate').addEventListener('click', function() {
+            if (!navigator.vibrate) {
+                setBrowserResult('❌ 当前设备不支持震动 (Vibration API)', 'error');
+                return;
+            }
+            navigator.vibrate(200);
+            setBrowserResult('📱 震动已触发 (200ms)', 'success');
+        });
+        
         renderWorksGrid();
         renderSettingsChangelog();
         renderContactList();
